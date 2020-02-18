@@ -3,7 +3,7 @@ layout: post
 title: 'NGINX: Przetwarzanie żądań przy użyciu niezdefiniowanych nazw serwerów'
 date: 2018-04-19 12:42:51
 categories: [publications]
-tags: [PL, http, nginx, best-practice]
+tags: [PL, http, nginx, best-practices]
 comments: false
 favorite: false
 seo:

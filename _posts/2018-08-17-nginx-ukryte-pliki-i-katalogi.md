@@ -3,7 +3,7 @@ layout: post
 title: 'NGINX: Ukryte pliki i katalogi'
 date: 2018-08-17 21:02:30
 categories: [publications]
-tags: [PL, http, nginx, best-practice]
+tags: [PL, http, nginx, best-practices]
 comments: false
 favorite: false
 seo:

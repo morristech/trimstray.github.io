@@ -2,8 +2,8 @@
 layout: post
 title: 'NGINX: Luki w implementacji HTTP/2'
 date: 2019-08-02 17:25:31
-tags: [PL, http, nginx, vulnerabilities]
 categories: [publications]
+tags: [PL, http, nginx, vulnerabilities]
 comments: false
 favorite: false
 seo:
