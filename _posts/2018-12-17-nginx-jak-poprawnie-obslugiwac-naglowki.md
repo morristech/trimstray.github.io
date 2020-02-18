@@ -7,7 +7,7 @@ tags: [PL, http, nginx, best-practices]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-17 11:28:28 +0100
+  date_modified: 2020-02-18 21:56:52 +0100
 ---
 
 Nagłówki to jedna z najistotniejszych rzeczy podczas komunikacji między klientem a serwerem. NGINX dostarcza kilka sposobów ich obsługi, lecz nieodpowiednie użycie któregoś z nich może spowodować poważne problemy (w tym np. naruszenie zasada bezpieczeństwa!).

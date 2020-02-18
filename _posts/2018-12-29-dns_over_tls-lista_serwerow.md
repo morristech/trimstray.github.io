@@ -7,7 +7,7 @@ tags: [PL, dns, tls]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-16 23:50:43 +0100
+  date_modified: 2020-02-18 21:56:52 +0100
 ---
 
 Poniższa lista zawiera serwery DNS będące alternatywą dla chyba najczęściej wykorzystywanych serwerów rozwiązywania nazw — Google i OpenDNS.

@@ -7,7 +7,7 @@ tags: [PL, system, openssh]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-16 23:50:43 +0100
+  date_modified: 2020-02-18 21:56:52 +0100
 ---
 
 Klient SSH udostępnia **dodatkowe sekwencje sterujące** za pomocą których można wykonywać przydatne akcje. Normalne znaki przekazywane są przez zestawioną sesję SSH więc żadne z nich nie będą działać w przypadku wykonania specjalnych czynności.
