@@ -123,8 +123,8 @@ NGINX wykorzystuje niestandardową pętlę zdarzeń, która została zaprojektow
 
   > Po uruchomieniu serwera NGINX tworzony jest początkowy zestaw gniazd. Procesy robocze stale akceptują, czytają i zapisują dane w gniazdach podczas przetwarzania żądań i odpowiedzi HTTP.
 
-Jak widzisz, wszystko opiera się na multipleksowaniu zdarzeń i wykorzystaniu takich mechanizmów jak `epoll()`, `kqueue()` lub `select()`. W ramach każdego pracownika NGINX może obsłużyć wiele tysięcy równoczesnych połączeń i żądań na sekundę.
+Jak widzisz, wszystko opiera się na multipleksowaniu zdarzeń i wykorzystaniu takich mechanizmów jak `epoll()` lub `kqueue()`. W ramach każdego pracownika NGINX może obsłużyć wiele tysięcy równoczesnych połączeń i żądań na sekundę.
 
-  > Zobacz prezentację [Nginx Internals](https://www.slideshare.net/joshzhu/nginx-internals) jako wiele świetnych rzeczy na temat wewnętrznych elementów NGINX.
+  > Zobacz prezentację [Nginx Internals](https://www.slideshare.net/joshzhu/nginx-internals) poruszającą wiele tematów związanych z wewnętrznymi elementami serwera NGINX.
 
 Podsumowując, NGINX nie tworzy procesu ani wątku na połączenie (jak Apache), więc użycie pamięci jest bardzo konserwatywne i niezwykle wydajne w zdecydowanej większości przypadków. NGINX jest szybszy i zużywa mniej pamięci niż Apache i działa bardzo dobrze pod naprawdę dużym obciążeniem. Jest również bardzo przyjazny dla procesora, ponieważ nie ma ciągłego tworzenia i niszczenia procesów lub wątków.
