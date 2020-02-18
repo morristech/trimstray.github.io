@@ -2,8 +2,8 @@
 layout: post
 title: Hidden directories and files
 date: 2018-01-05 00:10:52
-categories: [PL, security]
-tags: [talks]
+categories: [talks]
+tags: [PL, security]
 comments: false
 favorite: false
 seo:

@@ -2,8 +2,8 @@
 layout: post
 title: Metoda POST i przekierowania
 date: 2017-03-09 08:30:26
-categories: [PL, web, post, redirects]
-tags: [publications]
+categories: [publications]
+tags: [PL, web, post, redirects]
 comments: false
 favorite: false
 seo:

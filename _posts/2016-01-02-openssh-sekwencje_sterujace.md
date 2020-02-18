@@ -2,8 +2,8 @@
 layout: post
 title: OpenSSH - sekwencje sterujące
 date: 2016-01-02 23:01:38
-categories: [PL, system, openssh]
-tags: [publications]
+categories: [publications]
+tags: [PL, system, openssh]
 comments: false
 favorite: false
 seo:

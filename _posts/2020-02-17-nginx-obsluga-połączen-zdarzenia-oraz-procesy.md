@@ -2,8 +2,8 @@
 layout: post
 title: 'NGINX: Obsługa połączeń, zdarzenia oraz procesy'
 date: 2019-01-27 07:32:57
-categories: [PL, http, nginx, best-practices]
-tags: [publications]
+categories: [publications]
+tags: [PL, http, nginx, best-practices]
 comments: false
 favorite: false
 seo:

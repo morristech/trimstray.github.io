@@ -2,8 +2,8 @@
 layout: post
 title: 'NGINX: Kontekst upstream i połączenia KeepAlive'
 date: 2019-11-21 07:15:05
-categories: [PL, http, nginx, best-practices]
-tags: [publications]
+categories: [publications]
+tags: [PL, http, nginx, best-practices]
 comments: false
 favorite: false
 seo:

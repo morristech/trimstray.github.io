@@ -2,8 +2,8 @@
 layout: post
 title: DNS over TLS - lista serwerów
 date: 2018-12-29 16:31:02
-categories: [PL, dns, tls]
-tags: [publications]
+categories: [publications]
+tags: [PL, dns, tls]
 comments: false
 favorite: false
 seo:

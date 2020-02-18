@@ -2,8 +2,8 @@
 layout: post
 title: The Art of Command Line
 date: 2018-05-12 08:57:52
-categories: [PL, shell]
-tags: [talks]
+categories: [talks]
+tags: [PL, shell]
 comments: false
 favorite: false
 seo:

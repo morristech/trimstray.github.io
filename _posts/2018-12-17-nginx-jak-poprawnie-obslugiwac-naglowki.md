@@ -2,8 +2,8 @@
 layout: post
 title: 'NGINX: Jak poprawnie obsługiwać nagłówki?'
 date: 2018-12-17 21:04:12
-categories: [PL, http, nginx, best-practices]
-tags: [publications]
+categories: [publications]
+tags: [PL, http, nginx, best-practices]
 comments: false
 favorite: false
 seo:

@@ -2,8 +2,8 @@
 layout: post
 title: 'NGINX: Maksymalna ilość równoczesnych połączeń'
 date: 2020-02-17 12:04:25
-categories: [PL, http, nginx, best-practices]
-tags: [publications]
+categories: [publications]
+tags: [PL, http, nginx, best-practices]
 comments: false
 favorite: false
 seo:
