@@ -10,7 +10,7 @@ seo:
   date_modified: 2020-02-17 15:17:00 +0100
 ---
 
-Zastanawiałeś się kiedyś ile maksymalnie równoczesnych połączeń jest w stanie obsłużyć serwer NGINX? Oraz jaki wpływ na ich ilość mają dyrektywy `worker_processes` i `worker_connections`?
+Zastanawiałeś się kiedyś ile maksymalnie równoczesnych połączeń jest w stanie obsłużyć serwer NGINX? Oraz jaki wpływ na ich ilość mają dyrektywy `worker_processes`, `worker_connections` oraz `worker_rlimit_nofile`?
 
 Spójrz na poniższe równanie:
 
@@ -22,17 +22,21 @@ Zgodnie z tym: jeśli uruchomisz 4 procesy robocze z ustawioną wartością 4096
 
   > W tym miejscu zalecam zapoznać się ze świetnym artykułem [Understanding socket and port in TCP](https://medium.com/fantageek/understanding-socket-and-port-in-tcp-2213dc2e9b0c) w celu pełniejszego zrozumienia gniazd i portów TCP. Warto także zaznajomić się z dokumentem opisującym [maksymalną liczbę otwartych połączeń TCP](https://stackoverflow.com/questions/2332741/what-is-the-theoretical-maximum-number-of-open-tcp-connections-that-a-modern-lin), jakie może utworzyć system GNU/Linux.
 
-Jednak czy powyższe równanie w sposób definitywny określa maksymalną liczbę połączeń, jakie jest w stanie obsłużyć serwer NGINX? W wielu artykułach dostępnych w Internecie widziałem, jak niektórzy administratorzy tłumaczą sumę wartości dyrektyw `worker_processes` oraz `worker_connections` bezpośrednio na maksymalną ilość połączeń, które mogą być obsługiwane jednocześnie.
+Jednak czy powyższe równanie w sposób definitywny określa maksymalną liczbę połączeń, które może obsłużyć NGINX? W wielu artykułach dostępnych w Internecie widziałem, jak niektórzy administratorzy tłumaczą sumę wartości dyrektyw `worker_processes` oraz `worker_connections` bezpośrednio na maksymalną ilość połączeń, które mogą być obsługiwane jednocześnie.
 
 Moim zdaniem jest to błąd, ponieważ niektórzy klienci (np. przeglądarki) otwierają szereg równoległych połączeń (w celu potwierdzenia moich słów, zerknij na [to krótkie wyjaśnienie](https://stackoverflow.com/questions/985431/max-parallel-http-connections-in-a-browser)). Klienci zwykle ustanawiają od 4 do 8 połączeń TCP, aby równolegle pobierać zasoby (aby pobierać różne komponenty strony internetowej, na przykład obrazy, skrypty itp.). Takie zachowanie zwiększa efektywną przepustowość i zmniejsza opóźnienia.
 
-  > Jest to limit dla protokołu HTTP/1.1, który jak wspomniałem, wynosi 6-8 równoczesnych wywołań HTTP. Najlepszym rozwiązaniem w celu poprawy wydajności (bez aktualizacji sprzętu i użycia pamięci podręcznej między klientem a aplikacją (np. CDN, Varnish)) jest użycie protokołu w wersji HTTP/2 ([RFC 7540](https://tools.ietf.org/html/rfc7540) <sup>[IETF]</sup>) zamiast HTTP/1.1. Jak wiemy, protokół HTTP/2 multipleksuje wiele żądań w jednym połączeniu i nie ma on standardowego limitu ilości połączeń, jednak definiuje ich ilość w następujący sposób: "_It is recommended that this value (SETTINGS_MAX_CONCURRENT_STREAMS) be no smaller than 100_" (RFC 7540).
+  > Jest to limit dla protokołu HTTP/1.1, który wynosi 6-8 równoczesnych żądań HTTP. Najlepszym rozwiązaniem w celu poprawy wydajności (bez aktualizacji sprzętu i użycia pamięci podręcznej między klientem a aplikacją, tj. CDN, Varnish) jest użycie protokołu w wersji HTTP/2 ([RFC 7540](https://tools.ietf.org/html/rfc7540) <sup>[IETF]</sup>) zamiast HTTP/1.1. Jak wiemy, protokół HTTP/2 multipleksuje wiele żądań w jednym połączeniu i nie ma on standardowego limitu ilości połączeń, jednak definiuje ich ilość w następujący sposób: "_It is recommended that this value (SETTINGS_MAX_CONCURRENT_STREAMS) be no smaller than 100_" (zgodnie z RFC 7540).
 
 Ponadto należy wiedzieć, że dyrektywa `worker_connections` obejmuje **wszystkie połączenia na proces roboczy**, tj. połączenia dla gniazd nasłuchiwania czy wewnętrznej komunikacji między procesami NGINX, połączeń z serwerami proxy i dla połączeń z serwerami warsty backend'u), a nie tylko połączenia przychodzących od klientów.
 
   > Ciekawostka: Każde połączenie obsługiwane przez proces roboczy, który jest w stanie uśpienia, potrzebuje 256 bajtów pamięci.
 
-Liczba połączeń jest szczególnie ograniczona przez maksymalną liczbę otwartych plików (`RLIMIT_NOFILE` w systemach GNU/Linux). Powodem takiego zachowania jest to, że system operacyjny potrzebuje pamięci do zarządzania każdym otwartym deskryptorem pliku, a jak wiemy, pamięć jest zasobem, który można bardzo szybko wysycić. Oczywiście powyższe ograniczenie wpływa tylko na limity dla bieżącego procesu. Granice bieżącego procesu są również przekazywane procesom potomnym, ale każdy proces ma wartość niezależną od procesu głównego.
+Liczba połączeń jest szczególnie ograniczona przez maksymalną liczbę otwartych plików (`RLIMIT_NOFILE` w systemach GNU/Linux).
+
+  > O deskryptorach plików oraz uchwytach plików możesz poczytaj [tutaj](https://pl.wikipedia.org/wiki/Deskryptor_pliku) oraz [tutaj](https://stackoverflow.com/questions/2423628/whats-the-difference-between-a-file-descriptor-and-file-pointer). W tym artykule będę stosował zamiennie oba terminy.
+
+Powodem takiego zachowania jest to, że system operacyjny potrzebuje pamięci do zarządzania każdym otwartym deskryptorem pliku, a jak wiemy, pamięć jest zasobem, który można bardzo szybko wysycić. Oczywiście powyższe ograniczenie wpływa tylko na limity dla bieżącego procesu. Granice bieżącego procesu są również przekazywane procesom potomnym, ale każdy proces ma wartość niezależną od procesu głównego.
 
 Aby zmienić limit maksymalnych deskryptorów plików (które mogą być otwarte przez pojedynczy proces roboczy), możesz również edytować dyrektywę `worker_rlimit_nofile`. Dzięki temu NGINX zapewnia bardzo potężne możliwości dynamicznej konfiguracji bez ponownego uruchamiania serwera.
 
@@ -45,15 +49,9 @@ Jeśli ustawisz `RLIMIT_NOFILE` na 25 000, a `worker_rlimit_nofile` na 12 000, N
 Przykład:
 
 ```
-# Dla GNU/Linux:
+# Dla GNU/Linux (lub /usr/lib/systemd/system/nginx.service):
 grep "LimitNOFILE" /lib/systemd/system/nginx.service
 LimitNOFILE=5000
-
-# Dla FreeBSD:
-sysctl kern.maxfiles kern.maxfilesperproc kern.openfiles
-kern.maxfiles: 64305
-kern.maxfilesperproc: 57870
-kern.openfiles: 143
 
 grep "worker_rlimit_nofile" /etc/nginx/nginx.conf
 worker_rlimit_nofile 256;
