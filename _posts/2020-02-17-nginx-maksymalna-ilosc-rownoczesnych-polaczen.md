@@ -160,7 +160,9 @@ Jednak po głębszej refleksji uważam, że są one racjonalne, ponieważ pozwal
 Tak więc, przechodząc dalej, maksymalna liczba otwartych plików przez NGINX powinna wynosić:
 
 ```
-(worker_processes * worker_connections * 2) + (shared libs, log files, event pool, etc.) = max open files
+(worker_processes * worker_connections * 2) + (shared libs, log files, event pool, etc.)
+                                            =
+                                      max open files
 ```
 
 Dzięki czemu, aby obsłużyć 16 384 połączeń (4096 połączeń na każdy worker), mając na uwadze inne deskryptory plików używane przez NGINX, rozsądna wartość maksymalnej liczby deskryptorów plików w tym przypadku może wynosić 35 000. Myślę, że taka wartość jest wystarczająca.

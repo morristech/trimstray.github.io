@@ -33,6 +33,7 @@
   font-family: 'Oswald', sans-serif;
   position: relative;
   left: 8px;
+  color: crimson;
 }
 
 #archives span.lead:not(:first-child) {
@@ -148,7 +149,7 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   #archives li:nth-child(odd) {
     background-image: linear-gradient(to left,
       rgb(26, 26, 30), rgb(39, 39, 45), rgb(39, 39, 45), rgb(39, 39, 45), rgb(26, 26, 30));
