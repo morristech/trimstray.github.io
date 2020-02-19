@@ -88,15 +88,17 @@ Na każdej fazie można zarejestrować dowolną liczbę handlerów. Każda faza 
 
 Polecam przeczytać świetne wyjaśnienie dotyczące [faz przetwarzania żądań](http://scm.zoomquiet.top/data/20120312173425/index.html) i, oczywiście, oficjalny przewodnik [Development guide](http://nginx.org/en/docs/dev/development_guide.html).
 
-Wrócmy teraz do Naszego problemu i "dziwnego" zachowania dyrektywy `deny` w połączeniu z możliwą odpowiedzią do klienta. Wynika to z faktu, że przetwarzanie żądania odbywa się w fazach, a faza przepisywania (do której należy dyrektywa `return`) wykonywana jest przed fazą dostępu (gdzie działa dyrektywa `deny`).
-
-  > Nie zaleca się używania instrukcji `if`, chociaż moim zdaniem, użycie takiej konstrukcji może być nieco bardziej elastyczne (więcej informacji na ten temat).
+Wrócmy teraz do naszego problemu i "dziwnego" zachowania dyrektywy `deny` w połączeniu z wykorzystaniem dyrektywy `return` w celu natychmiastowego przesłania odpowiedzi do klienta. Wynika to z faktu, że przetwarzanie żądania odbywa się w fazach, a faza przepisywania (do której należy dyrektywa `return`) wykonywana jest przed fazą dostępu (gdzie działa dyrektywa `deny`).
 
 Niestety NGINX nie zgłasza nic niepokojącego (bo i po co) więc odpowiedzialność poprawnego budowania reguł filtrujących wraz z pozostałymi mechanizmami spada na administratora.
 
+Jednym z rozwiązań jest użycie instrukcji `if` w połączeniu z modułami `geo` lub `map`.
+
+  > Nie zaleca się używania instrukcji `if`, chociaż moim zdaniem, użycie takiej konstrukcji może być nieco bardziej elastyczne oraz bezpieczniejsze dzięku wykorzystaniu ww. modułów.
+
 Planując budowanie list kontroli dostępu, rozważ kilka opcji, z których możesz skorzystać. NGINX dostarcza moduły `ngx_http_access_module`, `ngx_http_geo_module`, `ngx_http_map_module` lub `ngx_http_auth_basic_module`, które pozwalają na nadawanie dostępów i zabezpieczanie miejsc w aplikacji.
 
-Po wprowadzeniu zmian, zawsze powinieneś przetestować swoje reguły:
+Po wprowadzeniu zmian zawsze powinieneś przetestować swoje reguły:
 
 - sprawdź wszystkie wykorzystane dyrektywy i ich występowanie/priorytety na wszystkich fazach
 - wykonaj kilka testowych request'ów w celu potwierdzenia poprawnego działania mechnizmów zezwalających lub blokujących dostęp do zasobów Twojej aplikacji
