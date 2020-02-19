@@ -22,14 +22,16 @@ html {
 }
 
 body {
-  line-height: 1.75rem;
+  /* line-height: 1.75rem; */
+  line-height: 1.5;
   background: var(--main-wrapper-bg, #fafafa);
   color: var(--text-color, #212529);
   -webkit-font-smoothing: antialiased;
   /* font-family: 'Source Sans Pro', 'Microsoft Yahei', sans-serif; */
   /* font-family: Geneva, Arial, Helvetica, sans-serif; */
   /* font-family: 'Helvetica Neue',Helvetica,Arial,'Microsoft YaHei',sans-serif; */
-  font-family: Roboto,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  /* font-family: Roboto,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; */
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;
 }
 
 /*--- sidebar layout ---*/
@@ -613,10 +615,13 @@ blockquote {
   border-width: 2px 0;
   border-style: solid;
   border-color: #eee;
-  padding: 1.5em 0 0.5em;
-  margin: 1.5em 0;
+  /* padding: 1.5em 0 0.5em;
+  margin: 1.5em 0; */
+  padding: 20px 30px 20px 30px;
+  margin: 50px auto;
   position: relative;
-  color: #797979;
+  /* color: #797979; */
+  color: #3c3c3ccc;
 }
 
 blockquote:before {
@@ -628,13 +633,14 @@ blockquote:before {
   background: #fff;
   width: 3rem;
   height: 2rem;
-  font: 6em/1.08em 'PT Sans', sans-serif;
-  color: #a94242;
+  font: 5em/1.08em 'PT Sans', sans-serif;
+  /* color: #a94242; */
+  color: wheat;
   text-align: center;
 }
 
 blockquote:after {
-  content: "\2013 \2003" attr(cite);
+  /* content: "\2013 \2003" attr(cite); */
   display: block;
   text-align: right;
   font-size: 0.875em;
