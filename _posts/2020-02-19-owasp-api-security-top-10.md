@@ -20,3 +20,4 @@ Dodatkowe zasoby:
 
 - [OWASP API Security Project](https://owasp.org/www-project-api-security/)
 - [API Security](https://apisecurity.io/)
+- [Now Is the Time to Focus on API Security](https://securityboulevard.com/2020/02/now-is-the-time-to-focus-on-api-security/)
