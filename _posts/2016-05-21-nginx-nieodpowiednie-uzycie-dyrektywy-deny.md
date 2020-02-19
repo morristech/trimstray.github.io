@@ -7,7 +7,7 @@ tags: [PL, http, nginx, best-practices]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-18 21:56:52 +0100
+  date_modified: 2020-02-19 14:42:54 +0100
 ---
 
 Dyrektywy `allow` oraz `deny` dostarczane są z modułem `ngx_http_access_module` i umożliwiają zezwolenie na dostęp lub jego ograniczenie do wybranych adresów klientów. Obie nadają się do budowania list kontroli dostępu. Moim zdaniem najlepszym sposobem budowania za ich pomocą list ACL jest zacząć od odmowy, a następnie przyznawać dostęp tylko do tych lokalizacji, które chcesz.
