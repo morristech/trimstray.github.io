@@ -7,7 +7,7 @@ tags: [PL, pentests, tools, dns, recon]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-18 21:56:52 +0100
+  date_modified: 2020-02-19 08:43:17 +0100
 ---
 
 Krótki wpis, w którym przedstawione zostaną wykorzystywane przeze mnie narzędzia pomocne przy rekonesansie jednej z kluczowych usług, jaką jest **DNS**.

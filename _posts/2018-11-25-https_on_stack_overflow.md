@@ -7,7 +7,7 @@ tags: [PL, ssl, https]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-18 21:56:52 +0100
+  date_modified: 2020-02-19 08:43:17 +0100
 ---
 
 Przykład tego, że wdrożenie TLS w działającej i dużej aplikacji to nie łatwy kawałek chleba — świetna, m.in. techniczna opowieść jak zrobiono to w <a href="https://nickcraver.com/blog/2017/05/22/https-on-stack-overflow/" target="_blank"><b>Stack Overflow</b></a> i z jakimi problemami trzeba było się zmierzyć.

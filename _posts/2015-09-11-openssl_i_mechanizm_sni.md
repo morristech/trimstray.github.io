@@ -7,7 +7,7 @@ tags: [PL, security, openssl, sni]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-18 21:56:52 +0100
+  date_modified: 2020-02-19 08:43:17 +0100
 ---
 
 Za pomocą biblioteki `openssl` można testować praktycznie **każdą** usługę opartą na protokołach SSL/TLS. Po nawiązaniu połączenia można nimi sterować, stosując komendy/wiadomości specyficzne dla każdego protokołu warstwy aplikacji. W tym poście przedstawię koncepcję mechanizmu **SNI** oraz w jaki sposób nawiązywać połączenia z wykorzystaniem tego rozszerzenia lub bez niego.

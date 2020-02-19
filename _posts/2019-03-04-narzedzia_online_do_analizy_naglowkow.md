@@ -7,7 +7,7 @@ tags: [PL, http, headers, tools]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-18 21:56:52 +0100
+  date_modified: 2020-02-19 08:43:17 +0100
 ---
 
 Krótka lista dwóch świetnych narzędzi za pomocą których przetestujemy nagłówki odpowiedzi protokołów http/https.

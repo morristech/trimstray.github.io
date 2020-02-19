@@ -1,13 +1,13 @@
 ---
 layout: post
-title: 'OWASP API Security Top 10'
+title: OWASP API Security Top 10
 date: 2020-02-19 08:26:52
 categories: [talks]
 tags: [PL, security, owasp, cheatsheet, api]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-18 21:56:52 +0100
+  date_modified: 2020-02-19 09:26:54 +0100
 ---
 
 Interfejsy API są obecnie jedną z kluczowych części każdej web-aplikacji i niejednokrotnie pozwalają na ujawnienie logiki oraz zaimplementowanych mechanizmów. Stanowią także istotny element podczas testowania każdej aplikacji.
