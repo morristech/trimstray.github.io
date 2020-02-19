@@ -3,7 +3,7 @@ layout: post
 title: OpenSSL i mechanizm SNI
 date: 2015-09-11 07:51:13
 categories: [publications]
-tags: [PL, security, openssl]
+tags: [PL, security, openssl, sni]
 comments: false
 favorite: false
 seo:

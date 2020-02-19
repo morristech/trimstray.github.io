@@ -3,7 +3,7 @@ layout: post
 title: HTTPS on Stack Overflow
 date: 2018-11-25 11:21:26
 categories: [talks]
-tags: [PL, ssl]
+tags: [PL, ssl, https]
 comments: false
 favorite: false
 seo:
