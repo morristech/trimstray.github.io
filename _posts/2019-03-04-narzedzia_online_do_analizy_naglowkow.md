@@ -10,7 +10,7 @@ seo:
   date_modified: 2020-02-19 08:43:17 +0100
 ---
 
-Krótka lista dwóch świetnych narzędzi za pomocą których przetestujemy nagłówki odpowiedzi protokołów http/https.
+Krótka lista dwóch świetnych narzędzi za pomocą których przetestujemy nagłówki odpowiedzi protokołów HTTP/HTTPS.
 
 Nagłówki są jedną z ważniejszych warstw zabezpieczeń naszej aplikacji. W wielu przypadkach są one bardzo łatwe do wdrożenia i ustawienie większości z nich odbywa się bezkosztowo dla serwisu, który upubliczniamy.
 
