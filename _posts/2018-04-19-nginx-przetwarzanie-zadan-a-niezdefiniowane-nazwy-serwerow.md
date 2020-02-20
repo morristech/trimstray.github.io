@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'NGINX: Przetwarzanie żądań przy użyciu niezdefiniowanych nazw serwerów'
+title: 'NGINX: Przetwarzanie żądań a niezdefiniowane nazwy serwerów'
 date: 2018-04-19 12:42:51
 categories: [publications]
 tags: [PL, http, nginx, best-practices]
@@ -10,13 +10,9 @@ seo:
   date_modified: 2020-02-18 22:13:20 +0100
 ---
 
-Zastosowanie tej reguły chroni przed błędami konfiguracji, np. przekazywanie ruchu do niepoprawnych backendów, omijając filtry takie jak ACL lub WAF. Problem można łatwo rozwiązać, tworząc domyślny "fałszywy" vhost, który przechwytuje wszystkie żądania z nierozpoznanymi nagłówkami hosta.
+Jak wiemy, nagłówek `Host` informuje serwer, którego hosta wirtualnego ma użyć (jeśli jest skonfigurowany). Możesz mieć tego samego wirtualnego hosta, używając kilku aliasów (domeny i symbole wieloznaczne). Nagłówek ten można również modyfikować, co może prowadzić do omijania filtrów lub przekazywania żądań do nieodpowiednich backend'ów. Ze względów bezpieczeństwa dobrą praktyką jest odrzucanie żądań bez hosta lub z hostami nieskonfigurowanymi po stronie serwera HTTP.
 
-Jak wiemy, nagłówek `Host` informuje serwer, którego hosta wirtualnego ma użyć (jeśli jest skonfigurowany). Możesz nawet mieć tego samego wirtualnego hosta, używając kilku aliasów (= domeny i symbole wieloznaczne). Nagłówek ten można również modyfikować, dlatego ze względów bezpieczeństwa i czystości dobrą praktyką jest odrzucanie żądań bez hosta lub z hostami nieskonfigurowanymi w żadnym vhoście. Zgodnie z tym NGINX powinien zapobiegać przetwarzaniu żądań z nieokreślonymi nazwami serwerów (także na adres IP).
-
-Rozwiązaniem problemu jest ustawienie dyrektywy `listen` z parametrem `default_server`. Jeśli żadna z dyrektyw `listen` nie ma parametru `default_server`, wówczas pierwszy serwer z parą **adres:port** będzie domyślnym serwerem dla tej pary (oznacza to, że NGINX zawsze ma domyślny serwer).
-
-Jeśli ktoś zgłosi żądanie przy użyciu adresu IP zamiast nazwy serwera, pole nagłówka żądania `Host` będzie zawierało adres IP i żądanie może zostać przetworzone przy użyciu adresu IP jako nazwy serwera.
+Zgodnie z tym NGINX powinien zapobiegać przetwarzaniu żądań (także na adres IP) z nieokreślonymi nazwami serwerów. Rozwiązaniem problemu jest ustawienie dyrektywy `listen` z jawnym wskazaniem parametru `default_server`. Jeśli żadna z dyrektyw `listen` nie ma parametru `default_server`, wówczas pierwszy serwer z parą **adres:port** będzie domyślnym serwerem dla tej pary (oznacza to, że NGINX zawsze ma domyślny serwer).
 
 W rzeczywistości `default_server` nie potrzebuje instrukcji `server_name`, ponieważ pasuje do wszystkiego, do czego inne bloki serwera nie pasują jawnie.
 

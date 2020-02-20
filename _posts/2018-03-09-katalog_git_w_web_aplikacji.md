@@ -38,7 +38,7 @@ Przykład:
   |--  The vendor Directory
 ```
 
-Swego czasu idealnym przykładem aplikacji (nie wiem, czy do tej pory tak jest), z której poziomu wszystko działało z jednego miejsca był Wordpress — łatwo w takiej sytuacji o pomyłkę, która może mieć katastrofalne skutki.
+Swego czasu idealnym przykładem aplikacji (nie wiem, czy do tej pory tak jest), z poziomu której wszystko działało z jednego miejsca był Wordpress — łatwo w takiej sytuacji o pomyłkę, która może mieć katastrofalne skutki.
 
 Do dalszej analizy oraz szerszego spojrzenia na ten temat polecam świetny artykuł: [Hidden directories and files as a source of sensitive information about web application](https://medium.com/@_bl4de/hidden-directories-and-files-as-a-source-of-sensitive-information-about-web-application-84e5c534e5ad).
 

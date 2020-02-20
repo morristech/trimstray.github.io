@@ -19,7 +19,7 @@ Oto niektóre z dostępnych opcji:
 - `~.` - kończy wszystkie nawiązane sesje/połączenia
 - `~B` - wysyła sygnał _BREAK_ do zdalnego systemu
 - `~C` - otwiera prosty interpreter (`ssh>`)
-- `~V/v` - przechodzi między poziomem widoczności komunikatów lub inaczej mówiąc zwiększa/zmniejsza ich poziom widoczności (verbose mode)
+- `~V/v` - przechodzi między poziomem widoczności komunikatów lub inaczej mówiąc zwiększa/zmniejsza poziom widoczności (verbose mode)
 - `~^Z` - wstrzymuje (zawiesza) klienta ssh
 - `~#` - wyświetla nawiązane połączenia
 - `~&` - kończy sesję (przydatne, jeżeli wykonujemy restart systemu i chcemy natychmiast zakończyć sesję podczas restartu)

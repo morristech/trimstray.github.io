@@ -10,9 +10,20 @@ seo:
   date_modified: 2020-02-19 14:48:15 +0100
 ---
 
-Dyrektywy `allow` oraz `deny` dostarczane są z modułem `ngx_http_access_module` i umożliwiają zezwolenie na dostęp lub jego ograniczenie do wybranych adresów klientów. Obie nadają się do budowania list kontroli dostępu. Moim zdaniem najlepszym sposobem budowania za ich pomocą list ACL jest zacząć od odmowy, a następnie przyznawać dostęp tylko do tych lokalizacji, które chcesz.
+Dyrektywy `allow` oraz `deny` dostarczane są z modułem `ngx_http_access_module` i umożliwiają zezwolenie na dostęp lub jego ograniczenie do wybranych adresów klientów. Obie nadają się do budowania list kontroli dostępu. Moim zdaniem najlepszym sposobem budowania list ACL jest zacząć od odmowy, a następnie przyznawać dostęp adresom IP tylko do wybranych lokalizacji:
 
-  > Pamiętaj, że dyrektywa `deny` zawsze zwróci kod błędu 403.
+```nginx
+location /login {
+
+  allow 192.168.252.10;
+  allow 192.168.252.11;
+  allow 192.168.252.12;
+  deny all;
+
+}
+```
+
+  > Pamiętaj, że dyrektywa `deny` zawsze zwróci kod błędu _403 Forbidden_, odnoszący się do klienta uzyskującego dostęp, który nie jest upoważniony do wykonania tego żądania.
 
 Czy stosowanie obu dyrektyw może rodzić jakieś negatywne konsekwencje? Zdecydowanie tak: obie dyrektywy mogą działać nieoczekiwanie! Spójrz na następujący przykład:
 
@@ -88,7 +99,7 @@ Na każdej fazie można zarejestrować dowolną liczbę handlerów. Każda faza 
 
 Polecam przeczytać świetne wyjaśnienie dotyczące [faz przetwarzania żądań](http://scm.zoomquiet.top/data/20120312173425/index.html) i, oczywiście, oficjalny przewodnik [Development guide](http://nginx.org/en/docs/dev/development_guide.html).
 
-Wróćmy teraz do naszego problemu i "dziwnego" zachowania dyrektywy `deny` w połączeniu z wykorzystaniem dyrektywy `return` w celu natychmiastowego przesłania odpowiedzi do klienta. Jak już wspomniałem, zynika to z faktu, że przetwarzanie żądania odbywa się w fazach, a faza przepisywania (do której należy dyrektywa `return`) wykonywana jest przed fazą dostępu (gdzie działa dyrektywa `deny`).
+Wróćmy teraz do naszego problemu i "dziwnego" zachowania dyrektywy `deny` w połączeniu z wykorzystaniem dyrektywy `return` w celu natychmiastowego przesłania odpowiedzi do klienta. Jak już wspomniałem, wynika to z faktu, że przetwarzanie żądania odbywa się w fazach, a faza przepisywania (do której należy dyrektywa `return`) wykonywana jest przed fazą dostępu (w której działa dyrektywa `deny`).
 
 Niestety NGINX nie zgłasza nic niepokojącego (bo i po co) więc odpowiedzialność poprawnego budowania reguł filtrujących wraz z pozostałymi mechanizmami spada na administratora.
 
@@ -101,7 +112,7 @@ Planując budowanie list kontroli dostępu, rozważ kilka opcji, z których moż
 Zawsze powinieneś przetestować swoje reguły przed ich ostatecznym wdrożeniem:
 
 - sprawdź wszystkie wykorzystane dyrektywy i ich występowanie/priorytety na wszystkich fazach
-- wykonaj kilka testowych request'ów w celu potwierdzenia poprawnego działania mechnizmów zezwalających lub blokujących dostęp do zasobów Twojej aplikacji
+- wykonaj kilka testowych request'ów w celu potwierdzenia poprawnego działania mechanizmów zezwalających lub blokujących dostęp do zasobów Twojej aplikacji
 - wykonaj kilka testowych request'ów w celu sprawdzenia i weryfikacji kodów odpowiedzi HTTP dla wszystkich chronionych zasobów
 - mniej znaczy więcej; należy zminimalizować dostęp każdego użytkownika do krytycznych zasobów
 - dodaj tylko naprawdę wymagane adresy IP i sprawdź ich właściciela w bazie danych whois

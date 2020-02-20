@@ -91,7 +91,7 @@ Zerknij na ten prosty diagram:
 
 <img src="/assets/img/posts/blocking_non-blocking.jpg" align="center" title="blocking_non-blocking.jpg preview">
 
-Opisuje on dwie metody wywołań. Pierwsza (a) związana z blokowaniem wywołań systemowych, które są wykonywane aż do momentu ich zakończenia (w ten sposób działa np. Apache). Druga (b) związana z nieblokującym wejściem/wyjściem, która umożliwia zarządzanie przez jeden wątek wieloma żądaniami I/O naraz i precyzyjną kontrolę nad rozpoczęciem i zakończeniem żądania wejścia/wyjścia.
+Opisuje on dwie metody wywołań. Pierwsza (a) związana z blokowaniem wywołań systemowych, które są wykonywane aż do momentu ich zakończenia. Druga (b) związana z nieblokującym wejściem/wyjściem, która umożliwia zarządzanie przez jeden wątek wieloma żądaniami I/O naraz i precyzyjną kontrolę nad rozpoczęciem i zakończeniem żądania wejścia/wyjścia.
 
 Spójrz, co mówi na ten temat oficjalna dokumentacja:
 
@@ -123,7 +123,7 @@ NGINX wykorzystuje niestandardową pętlę zdarzeń, która została zaprojektow
 
   > Po uruchomieniu serwera NGINX tworzony jest początkowy zestaw gniazd. Procesy robocze stale akceptują, czytają i zapisują dane w gniazdach podczas przetwarzania żądań i odpowiedzi HTTP.
 
-Jak widzisz, wszystko opiera się na multipleksowaniu zdarzeń i wykorzystaniu takich mechanizmów jak `epoll()` lub `kqueue()`. W ramach każdego pracownika NGINX może obsłużyć wiele tysięcy równoczesnych połączeń i żądań na sekundę.
+Jak widzisz, wszystko opiera się na multipleksowaniu zdarzeń i wykorzystaniu takich mechanizmów jak `epoll()` lub `kqueue()`. W ramach każdego procesu roboczego, NGINX może obsłużyć wiele tysięcy równoczesnych połączeń i żądań na sekundę.
 
   > Zobacz prezentację [Nginx Internals](https://www.slideshare.net/joshzhu/nginx-internals) poruszającą wiele tematów związanych z wewnętrznymi elementami serwera NGINX.
 

@@ -23,11 +23,11 @@ Zobacz co się dzieje, gdy proces roboczy wchodzi w stan „wychodzenia”. Wyko
 - zamykane jest gniazdo nasłuchiwania (`listen`)
 - zamykane są bezczynne połączenia
 
-Następnie, jeśli został ustawiony licznik czasu wyłączania, po upływie tego czasi wszystkie połączenia zostaną zamknięte.
+Następnie, jeśli został ustawiony licznik czasu wyłączania, po upływie tego czasu wszystkie połączenia zostaną zamknięte.
 
 Domyślnie NGINX musi czekać i przetwarzać dodatkowe dane od klienta przed całkowitym zamknięciem połączenia, ale tylko jeśli klient może wysyłać więcej danych.
 
-Czasami możesz zobaczyć poniższe ostrzeżenie: `nginx: worker process is shutting down` w pliku dziennika. Problem pojawia się podczas ponownego ładowania konfiguracji gdzie NGINX zwykle całkiem efektywnie zamyka istniejące procesy robocze, jednak czasami zamknięcie tych procesów może zająć bardzo dużo czasu. Każde przeładowanie konfiguracji może utworzyć procesy zombie, trwale pochłaniając całą pamięć systemu. W takim przypadku rozwiązaniem może być jawne zdefiniowanie czasu ich zamknięcia.
+Czasami możesz zobaczyć poniższe ostrzeżenie: `nginx: worker process is shutting down` w pliku dziennika. Problem pojawia się podczas ponownego ładowania konfiguracji gdzie NGINX zwykle całkiem efektywnie zamyka istniejące procesy robocze, jednak czasami zamknięcie tych procesów może zająć bardzo dużo czasu. Każde przeładowanie konfiguracji może utworzyć procesy zombie, trwale pochłaniając dostępną pamięć systemu. W takim przypadku rozwiązaniem może być jawne zdefiniowanie czasu ich zamknięcia.
 
 W celu ustawienia tego parametru:
 

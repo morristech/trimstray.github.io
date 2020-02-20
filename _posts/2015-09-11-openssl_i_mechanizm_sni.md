@@ -51,20 +51,17 @@ Dzięki rozszerzeniu **SNI** serwer może bezpiecznie "trzymać" wiele certyfika
 
 ## SNI a Subject Alternative Name (SAN)
 
-**SAN** (ang. _Subject Alternative Name_) jest częścią specyfikacji X509, w której certyfikat zawiera pole z listą nazw alternatywnych (np. dodatkowych domen), które są tak samo ważne jak standardowe pole `CN`, które notabene jest ignorowane przez większość klientów, jeżeli wskazano pole `SAN`.
+**SAN** (ang. _Subject Alternative Name_) jest częścią specyfikacji X509, w której certyfikat zawiera pole z listą nazw alternatywnych (np. dodatkowych domen). Są one tak samo ważne jak standardowe pole `CN`, które notabene jest ignorowane przez większość klientów, jeżeli wskazano pole `SAN`.
 
 Rozszerzenie to wykorzystuje się głównie, aby rozwiązać problem stosowania jednego certyfikatu dla jednej domeny, co jest oczywiście bardzo niepraktyczne i zwiększa znacząco koszty utrzymania. Dzięki temu serwer nie musi przedstawiać innego certyfikatu dla każdej domeny, tylko za pomocą jednego certyfikatu, w którym zawarte jest jedno pole `CN` (dla domeny głównej) oraz rozszerzenie `SAN` (w którym określamy domenę główną oraz dodatkowe domeny) umożliwia przechowywanie wielu domen w jednym certyfikacie.
 
 Oto przykład:
 
 ```bash
-ssl: on, version(TLSv1.2), cipher(ECDHE-RSA-AES128-GCM-SHA256), temp_key(ECDH,P-256,256bits)
-public-key(2048 bit), signature(sha256WithRSAEncryption)
-date: Mar 18 00:00:00 2017 GMT / Mar 25 12:00:00 2020 GMT (37 days to expired)
 issuer: DigiCert SHA2 Secure Server CA (DigiCert Inc)
 owner: Lucas Garron
-cn: *.badssl.com
-san: *.badssl.com badssl.com
+cn: *.badssl.com  <= POLE CN
+san: *.badssl.com badssl.com  <= POLE SAN
 sni: not match
 validity: match
 chain of trust:

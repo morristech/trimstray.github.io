@@ -10,7 +10,7 @@ seo:
   date_modified: 2020-02-19 09:26:54 +0100
 ---
 
-Interfejsy API są obecnie jedną z kluczowych części każdej web-aplikacji i niejednokrotnie pozwalają na ujawnienie logiki oraz zaimplementowanych mechanizmów. Stanowią także istotny element podczas testowania każdej aplikacji.
+Interfejsy API są obecnie jedną z kluczowych części i niejednokrotnie pozwalają na ujawnienie logiki oraz zaimplementowanych mechanizmów każdej web-aplikacji. Stanowią także istotny element podczas testowania każdej aplikacji.
 
 <a href="https://apisecurity.io/encyclopedia/content/owasp-api-security-top-10-cheat-sheet-tabloid.pdf" target="_blank"><b>OWASP API Security Top 10</b></a> jest projektem mającym pomóc organizacjom, architektom oraz zespołom odpowiedzialnym za bezpieczeństwo aplikacji w zwiększeniu świadomości ryzyk związanych z błędnymi implementacjami interfejsów API w nowoczesnych aplikacjach internetowych.
 
