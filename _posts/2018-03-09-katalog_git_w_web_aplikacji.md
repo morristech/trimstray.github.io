@@ -7,7 +7,7 @@ tags: [PL, security, nginx, varnish, git]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-18 21:56:52 +0100
+  date_modified: 2020-02-20 19:32:56 +0100
 ---
 
 Jednym z często popełnianych błędów, który stwarza ogromny problem i narusza polityki bezpieczeństwa aplikacji, jest udostępnianie katalogu `.git` w zasobach publicznych.
