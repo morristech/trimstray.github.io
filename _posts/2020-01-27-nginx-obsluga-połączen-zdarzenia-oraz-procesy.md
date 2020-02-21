@@ -48,7 +48,7 @@ Zobacz także test (z wykorzystaniem biblioteki [libevent](http://libevent.org/)
 
 <img src="/assets/img/posts/libevent-benchmark.jpg" align="center" title="libevent-benchmark.jpg preview">
 
-Jest to jedna z odpowiedzi, dlaczego warto uruchamiać produkcyjnie serwer NGINX na systemach BSD. Polecam obejrzeć [Why did Netflix use NGINX and FreeBSD to build their own CDN?](https://www.youtube.com/watch?v=KP_bKvXkoC4) a także zapoznać się ze [świetnym artykułem](https://devinteske.com/wp/freebsd-nginx-performance/) opisującym wydajność serwera NGINX w systemie FreeBSD.
+Jest to jedna z odpowiedzi, dlaczego warto uruchamiać produkcyjnie serwer NGINX na systemach BSD. Polecam obejrzeć [Why did Netflix use NGINX and FreeBSD to build their own CDN?](https://www.youtube.com/watch?v=KP_bKvXkoC4), a także zapoznać się z [świetnym artykułem](https://devinteske.com/wp/freebsd-nginx-performance/) opisującym wydajność serwera NGINX w systemie FreeBSD.
 
 Jedynym skutkiem ubocznym wykorzystania metod `epoll` lub `kqueue` jest otwarte gniazdo i bufor z następną porcją danych. Jednak w porównianiu z dwoma pierwszymi metodami, można obsłużyć dużo więcej równoczesnych połączeń przede wszystkim ze względu na radykalnie niższy koszt samego procesu nawiązywania połączenia.
 
