@@ -83,7 +83,7 @@ Co więcej, zaleca się wykonanie dodatkowych czynności:
 
 NGINX wykorzystuje architekturę sterowaną zdarzeniami, która w dużym stopniu opiera się na nieblokującym wejściu/wyjściu. Jedną z zalet operacji nieblokujących/asynchronicznych jest to, że można zmaksymalizować wykorzystanie pojedynczego procesora, a także pamięci, ponieważ wątek może kontynuować pracę równolegle. Efektem jest to, że nawet wraz ze wzrostem obciążenia, nadal możliwe jest wydajnie zarządzanie pamięcią i procesorem.
 
-  > Istnieje świetne i do tego krótkie [podsumowanie](https://stackoverflow.com/questions/8546273/is-non-blocking-i-o-really-faster-than-multi-threaded-blocking-i-o-how) opisujące nieblokujące I/O. Polecam również [asynchronous vs non-blocking](https://stackoverflow.com/a/2625565).
+  > Istnieje świetne i do tego krótkie [podsumowanie](https://stackoverflow.com/questions/8546273/is-non-blocking-i-o-really-faster-than-multi-threaded-blocking-i-o-how) opisujące nieblokujące I/O. Polecam również: [asynchronous vs non-blocking](https://stackoverflow.com/a/2625565).
 
 Standardowe operacje wejścia/wyjścia, np. `read()` i `write()` powodują zablokowanie wątku wykonującego daną operację do czasu jej zakończenia. Musimy wiedzieć, że operacje wejścia i wyjścia (I/O) mogą być bardzo powolne w porównaniu do przetwarzania danych. Bardziej wydajną metodą jest asynchroniczne wejście/wyjście (ang. _asynchronous I/O_), które pozwala na zarządzanie żądaniami wejścia/wyjścia w oderwaniu od wątków wykonywania. Podczas pracy, proces jest powiadamiany o zakończeniu operacji I/O a nie czeka, aż operacja się zakończy.
 

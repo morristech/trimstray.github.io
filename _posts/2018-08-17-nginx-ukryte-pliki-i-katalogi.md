@@ -12,9 +12,9 @@ seo:
 
 Ukryte pliki i katalogi nigdy nie powinny być publicznie dostępne — czasami krytyczne dane są publikowane podczas wdrażania aplikacji. Jeśli używasz systemu kontroli wersji, zdecydowanie powinieneś zabronić dostępu (dając mniej informacji atakującym) do krytycznych ukrytych plików/katalogów, takich jak `.git` lub `.svn`, aby zapobiec np. ujawnieniu kodu źródłowego twojej aplikacji.
 
-Wrażliwe zasoby zawierają elementy, z których atakujący mogą skorzystać w celu pełnego odtworzenia kodu źródłowego, znalezienia błędów w aplikacji, luk w zabezpieczeniach czy zapisanych haseł (tak, to też się niestety zdarza...).
+Wrażliwe zasoby zawierają elementy, z których atakujący mogą skorzystać w celu częściowego lub co gorsza pełnego odtworzenia kodu źródłowego, znalezienia błędów w aplikacji, luk w zabezpieczeniach czy zapisanych haseł (tak, to też się niestety zdarza...).
 
-Jeśli chodzi o metodę odmowy to moim zdaniem kod 403 (lub nawet 404, jak sugeruje [RFC 2616 - 403 Forbidden](https://tools.ietf.org/html/rfc2616#section-10.4.4) <sup>[IETF]</sup> dla celów nieujawniania informacji) jest mniej podatny na błędy, jeśli wiesz, że zasób nie powinien być w żadnym wypadku dostępny za pośrednictwem http).
+Jeśli chodzi o metodę odmowy to moim zdaniem kod 403 (lub nawet 404, jak sugeruje [RFC 2616 - 403 Forbidden](https://tools.ietf.org/html/rfc2616#section-10.4.4) <sup>[IETF]</sup> dla celów nieujawniania informacji) jest mniej podatny na błędy, jeśli wiesz, że zasób nie powinien być w żadnym wypadku dostępny za pośrednictwem HTTP).
 
 Dodatkowa uwaga:
 

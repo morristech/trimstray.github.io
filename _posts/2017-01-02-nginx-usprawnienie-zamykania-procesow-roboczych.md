@@ -10,7 +10,7 @@ seo:
   date_modified: 2020-02-20 19:32:56 +0100
 ---
 
-Mechanizm ten powinien się przydać, jeśli chcesz ulepszyć proces zamykania procesów serwera NGINX. Dyrektywa `worker_shutdown_timeout` określa limit czasu, który będzie używany podczas płynnego zamykania procesów roboczych. Po upływie tego czasu, NGINX spróbuje zamknąć wszystkie aktualnie otwarte połączenia, aby ułatwić zamknięcie worker'ów.
+Mechanizm ten powinien się przydać, jeśli chcesz poprawić czas zamykania procesów roboczych serwera NGINX. Dyrektywa `worker_shutdown_timeout` określa limit czasu, który będzie używany podczas płynnego zamykania procesów roboczych. Po upływie tego czasu, NGINX spróbuje zamknąć wszystkie aktualnie otwarte połączenia, aby ułatwić zamknięcie worker'ów.
 
 Maxim Dounin wyjaśnia to w ten oto sposób:
 
@@ -27,7 +27,7 @@ Następnie, jeśli został ustawiony licznik czasu wyłączania, po upływie teg
 
 Domyślnie NGINX musi czekać i przetwarzać dodatkowe dane od klienta przed całkowitym zamknięciem połączenia, ale tylko jeśli klient może wysyłać więcej danych.
 
-Czasami możesz zobaczyć poniższe ostrzeżenie: `nginx: worker process is shutting down` w pliku dziennika. Problem pojawia się podczas ponownego ładowania konfiguracji gdzie NGINX zwykle całkiem efektywnie zamyka istniejące procesy robocze, jednak czasami zamknięcie tych procesów może zająć bardzo dużo czasu. Każde przeładowanie konfiguracji może utworzyć procesy zombie, trwale pochłaniając dostępną pamięć systemu. W takim przypadku rozwiązaniem może być jawne zdefiniowanie czasu ich zamknięcia.
+Czasami możesz zobaczyć ostrzeżenie: `nginx: worker process is shutting down` w pliku dziennika. Problem pojawia się podczas ponownego ładowania konfiguracji gdzie NGINX zwykle całkiem efektywnie zamyka istniejące procesy robocze. Jednak czasami zamknięcie tych procesów może zająć bardzo dużo czasu, a każde przeładowanie konfiguracji może spowodować ciągłe działanie "starych" worker'ów, które mogą trwale pochłaniać dostępną pamięć systemu. W takim przypadku rozwiązaniem może być jawne zdefiniowanie czasu ich zamknięcia.
 
 W celu ustawienia tego parametru:
 
@@ -35,6 +35,6 @@ W celu ustawienia tego parametru:
 worker_shutdown_timeout 60s;
 ```
 
-Moim zdaniem, wartość tej dyrektywy powinna być dostosowana do limitów czasu połączenia oraz czasu przetwarzania żądania przez serwer. 60 sekund to wartość z naprawdę solidnym zapasem (zdecydowanie żaden request nie powinien trwać dłużej).
+Moim zdaniem, wartość tej dyrektywy powinna być dostosowana do limitów czasu połączenia oraz czasu przetwarzania żądania przez serwer. 60 sekund to wartość z naprawdę bardzo solidnym zapasem (zdecydowanie żaden request nie powinien trwać dłużej).
 
-Z mojego doświadczenia wynika, że ​​jeśli masz wiele workerów w stanie zamknięcia, być może powinieneś w pierwszej kolejności spojrzeć na dodatkowe moduły, które mogą powodować problemy z zawieszaniem się procesów roboczych.
+Z mojego doświadczenia wynika, że ​​jeśli masz wiele workerów w stanie zamknięcia, być może powinieneś w pierwszej kolejności spojrzeć na dodatkowe moduły, które mogą powodować problemy z powolnym zamykaniem procesów roboczych.

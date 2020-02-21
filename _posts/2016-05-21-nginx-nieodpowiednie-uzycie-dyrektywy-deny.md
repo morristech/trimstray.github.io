@@ -25,7 +25,7 @@ location /login {
 
   > Pamiętaj, że dyrektywa `deny` zawsze zwróci kod błędu _403 Forbidden_, odnoszący się do klienta uzyskującego dostęp, który nie jest upoważniony do wykonania tego żądania.
 
-Czy stosowanie obu dyrektyw może rodzić jakieś negatywne konsekwencje? Zdecydowanie tak: obie dyrektywy mogą działać nieoczekiwanie! Spójrz na następujący przykład:
+Czy stosowanie powyższych dyrektyw może rodzić jakieś negatywne konsekwencje? Zdecydowanie tak: obie dyrektywy mogą działać wbrew oczekiwaniom łącząc jest z mechanizmem przepisywania dostarczanym przez serwer NGINX. Spójrz na poniższy przykład:
 
 ```nginx
 server {
@@ -55,14 +55,14 @@ content-type: text/plain
 it's all okay
 ```
 
-Widzisz, że dostaliśmy odpowiedź o treści "it's all okay" z kodem 200. Dlaczego, skoro jawnie zablokowaliśmy dostęp do całego `/test` za pomocą dyrektywy `deny`?
+Widzisz, że dostaliśmy odpowiedź o treści "_it's all okay_" z kodem 200. Dlaczego, skoro jawnie zablokowaliśmy dostęp do całego `/test` za pomocą dyrektywy `deny`?
 
-Jest to logiczne i prawidłowe zachowanie i ma związek z całym mechanizmem przetwarzania żądań przez serwer NGINX. Każdy request, jak już dotrze do NGINX'a, zostaje przetwarzany w tzw. fazach. Jest ich dokładnie 11:
+Jest to logiczne i prawidłowe zachowanie i ma związek z całym mechanizmem przetwarzania żądań. Każdy request, jak już dotrze do NGINX'a, zostaje przetwarzany w tzw. fazach. Jest ich dokładnie 11:
 
 - `NGX_HTTP_POST_READ_PHASE` - pierwsza faza, w której czytany jest nagłówek żądania
   - przykładowe moduły: `ngx_http_realip_module`
 
-- `NGX_HTTP_SERVER_REWRITE_PHASE` - implementacja dyrektyw przepisywania zdefiniowanych w bloku serwera; w tej fazie m.in. zmieniany jest identyfikator URI żądania za pomocą wyrażeń regularnych PCRE
+- `NGX_HTTP_SERVER_REWRITE_PHASE` - implementacja dyrektyw przepisywania zdefiniowanych w bloku serwera; w tej fazie m.in. zmieniany jest identyfikator URI żądania za pomocą wyrażeń regularnych (PCRE)
   - przykładowe moduły: `ngx_http_rewrite_module`
 
 - `NGX_HTTP_FIND_CONFIG_PHASE` - zamieniana jest lokalizacja zgodnie z URI (wyszukiwanie lokalizacji)
@@ -73,13 +73,13 @@ Jest to logiczne i prawidłowe zachowanie i ma związek z całym mechanizmem prz
 - `NGX_HTTP_POST_REWRITE_PHASE` - przetwarzanie końcowe URI (żądanie zostaje przekierowane do nowej lokalizacji)
   - przykładowe moduły: `ngx_http_rewrite_module`
 
-- `NGX_HTTP_PREACCESS_PHASE` - wstępne przetwarzanie uwierzytelnienia; sprawdzane są m.in. limity żądań oraz limit połączeń (ograniczenie dostępu)
+- `NGX_HTTP_PREACCESS_PHASE` - wstępne przetwarzanie uwierzytelnienia; sprawdzane są m.in. limity żądań oraz limity połączeń (ograniczenie dostępu)
   - przykładowe moduły: `ngx_http_limit_req_module`, `ngx_http_limit_conn_module`, `ngx_http_realip_module`
 
 - `NGX_HTTP_ACCESS_PHASE` - weryfikacja klienta (proces uwierzytelnienia, ograniczenie dostępu)
   - przykładowe moduły: `ngx_http_access_module`, `ngx_http_auth_basic_module`
 
-- `NGX_HTTP_POST_ACCESS_PHASE` - faza przetwarzania końcowego związanego z ograniczaniem dostępu
+- `NGX_HTTP_POST_ACCESS_PHASE` - faza przetwarzania końcowego związana z ograniczaniem dostępu
   - przykładowe moduły: `ngx_http_access_module`, `ngx_http_auth_basic_module`
 
 - `NGX_HTTP_PRECONTENT_PHASE` - generowanie treści (odpowiedzi)
@@ -88,22 +88,54 @@ Jest to logiczne i prawidłowe zachowanie i ma związek z całym mechanizmem prz
 - `NGX_HTTP_CONTENT_PHASE` - przetwarzanie treści (odpowiedzi)
   - przykładowe moduły: `ngx_http_index_module`, `ngx_http_autoindex_module`, `ngx_http_gzip_module`
 
-- `NGX_HTTP_LOG_PHASE` - przetwarzanie logowania, tj. zapisywanie do pliku z logami
+- `NGX_HTTP_LOG_PHASE` - mechanizm logowania, tj. zapisywanie informacji do pliku z logami
   - przykładowe moduły: `ngx_http_log_module`
 
-Przygotowałem również prosty schemat, który pomoże ci zrozumieć, jakie moduły są używane w każdej z faz:
+Przygotowałem również prostą grafikę, która pomoże ci zrozumieć, jakie moduły są używane na każdym etapie:
 
 <img src="/assets/img/posts/nginx_phases.png" align="center" title="nginx_phases.png preview">
 
-Na każdej fazie można zarejestrować dowolną liczbę handlerów. Każda faza ma listę powiązanych z nią procedur obsługi.
+Na każdej fazie można zarejestrować dowolną liczbę handlerów. Dodatkowo każda faza ma listę powiązanych z nią procedur obsługi.
 
-Polecam przeczytać świetne wyjaśnienie dotyczące [faz przetwarzania żądań](http://scm.zoomquiet.top/data/20120312173425/index.html) i, oczywiście, oficjalny przewodnik [Development guide](http://nginx.org/en/docs/dev/development_guide.html).
+  > Polecam zapoznać się ze świetnym wyjaśnieniem dotyczącym [faz przetwarzania żądań](http://scm.zoomquiet.top/data/20120312173425/index.html). Dodatkowo, w tym [oficjalnym przewodniku](http://nginx.org/en/docs/dev/development_guide.html) także dość dokładnie opisano cały proces przejścia żądania przez każdą z faz.
 
-Wróćmy teraz do naszego problemu i "dziwnego" zachowania dyrektywy `deny` w połączeniu z wykorzystaniem dyrektywy `return` w celu natychmiastowego przesłania odpowiedzi do klienta. Jak już wspomniałem, wynika to z faktu, że przetwarzanie żądania odbywa się w fazach, a faza przepisywania (do której należy dyrektywa `return`) wykonywana jest przed fazą dostępu (w której działa dyrektywa `deny`).
+Wróćmy teraz do naszego problemu i "dziwnego" zachowania dyrektywy `deny` w połączeniu z wykorzystaniem dyrektywy `return` - co w konsekwencji prowadzi do natychmiastowego przesłania odpowiedzi do klienta a nie zablokowania dostępu do danego zasobu.
 
-Niestety NGINX nie zgłasza nic niepokojącego (bo i po co) więc odpowiedzialność poprawnego budowania reguł filtrujących wraz z pozostałymi mechanizmami spada na administratora.
+Jak już wspomniałem, wynika to z faktu, że przetwarzanie żądania odbywa się w fazach, a faza przepisywania (do której należy dyrektywa `return`) wykonywana jest przed fazą dostępu (w której działa dyrektywa `deny`).
 
-Jednym z rozwiązań jest użycie instrukcji `if` w połączeniu z modułami `geo` lub `map`.
+Niestety NGINX nie zgłasza nic niepokojącego (bo i po co) podczas przeładowania, więc odpowiedzialność poprawnego budowania reguł filtrujących wraz z pozostałymi mechanizmami spada na administratora.
+
+Jednym z rozwiązań jest użycie instrukcji `if` w połączeniu z modułami `geo` lub `map`. Na przykład:
+
+```nginx
+  server_name example.com;
+
+  location / {
+
+    if ($whitelist.acl) {
+
+      set $pass 1;
+
+    }
+
+    if ($pass = 1) {
+
+      return 200 "it's all okay";
+      # lub:
+      proxy_pass http://bk_web01;
+
+      more_set_headers 'Content-Type: text/plain';
+
+    }
+
+    if ($pass != 1) {
+
+      return 403;
+
+    }
+
+  }
+  ```
 
   > Nie zaleca się używania instrukcji `if`, chociaż moim zdaniem, użycie takiej konstrukcji może być nieco bardziej elastyczne oraz bezpieczniejsze dzięki wykorzystaniu ww. modułów.
 
@@ -111,9 +143,9 @@ Planując budowanie list kontroli dostępu, rozważ kilka opcji, z których moż
 
 Zawsze powinieneś przetestować swoje reguły przed ich ostatecznym wdrożeniem:
 
-- sprawdź wszystkie wykorzystane dyrektywy i ich występowanie/priorytety na wszystkich fazach
-- wykonaj kilka testowych request'ów w celu potwierdzenia poprawnego działania mechanizmów zezwalających lub blokujących dostęp do zasobów Twojej aplikacji
-- wykonaj kilka testowych request'ów w celu sprawdzenia i weryfikacji kodów odpowiedzi HTTP dla wszystkich chronionych zasobów
-- mniej znaczy więcej; należy zminimalizować dostęp każdego użytkownika do krytycznych zasobów
-- dodaj tylko naprawdę wymagane adresy IP i sprawdź ich właściciela w bazie danych whois
-- regularnie poddawaj weryfikacji swoje reguły kontroli dostępu, aby upewnić się, że są aktualne
+- sprawdź, na jakich fazach działają wykorzystywane dyrektywy
+- wykonaj kilka testowych request'ów w celu potwierdzenia poprawnego działania mechanizmów zezwalających lub blokujących dostęp do chronionych zasobów Twojej aplikacji
+- wykonaj kilka testowych request'ów w celu sprawdzenia i weryfikacji kodów odpowiedzi HTTP dla chronionych zasobów Twojej aplikacji
+- należy zminimalizować dostęp każdego użytkownika do krytycznych zasobów tylko do wymaganych adresów IP
+- przed dodaniem adresu IP klienta zweryfikuj czy jest on faktycznym właścicielem adresu w bazie danych whois
+- regularnie poddawaj weryfikacji swoje reguły kontroli dostępu, aby upewnić się, że są aktualne i nie mają słabych punktów

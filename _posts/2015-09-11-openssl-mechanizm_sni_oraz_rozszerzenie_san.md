@@ -18,9 +18,9 @@ Za pomocą biblioteki `openssl` można testować praktycznie **każdą** usług�
 
 Ponieważ liczba dostępnych adresów IPv4 stale maleje, pozostałe mogą być alokowane bardziej efektywnie. W większości przypadków można uruchomić aplikację z obsługą protokołu SSL/TLS bez konieczności zakupu dodatkowego adresu IP.
 
-Zgodnie z [RFC 6066 - Server Name Indication](https://tools.ietf.org/html/rfc6066#page-6) rozszerzenie to pozwala klientowi na wskazanie nazwy hosta, z którym klient stara się nawiązać połączenie na początku procesu uzgadniania sesji SSL/TLS. Jak zostało powiedziane wyżej — pozwala to serwerowi na przedstawienie wielu certyfikatów na tym samym adresie IP i numerze portu, a tym samym umożliwia korzystanie z tego samego adresu IP przez wiele witryn wykorzystujących protokół HTTPS.
+Zgodnie z [RFC 6066 - Server Name Indication](https://tools.ietf.org/html/rfc6066#page-6) rozszerzenie to pozwala klientowi na wskazanie nazwy hosta, z którym stara się nawiązać połączenie na początku procesu uzgadniania sesji SSL/TLS. Jak zostało powiedziane wyżej — pozwala to serwerowi na przedstawienie wielu certyfikatów na tym samym gnieździe (adresie IP i numerze portu), dzięki czemu możliwe jest korzystanie z tego samego adresu IP przez wiele witryn wykorzystujących protokół HTTPS.
 
-  > Żądana nazwa hosta (domeny), którą ustala klient podczas połączenia, nie jest szyfrowana. Dzięki temu podsłuchując ruch można zobaczyć, z którą witryną nawiązywane będzie połączenie.
+  > Żądana nazwa hosta (domeny), którą ustala klient podczas połączenia, nie jest szyfrowana. W związku z tym, podsłuchując ruch można zobaczyć, z którą witryną nawiązywane będzie połączenie.
 
 ## Proces nawiązywania połączenia
 
@@ -34,14 +34,18 @@ Jeżeli domena zostanie znaleziona, połączenie odbywa się w normalny sposób 
 
 Gdy klient (np. przeglądarka) nawiązuje połączenie, ustawia specjalny nagłówek HTTP (nagłówek `Host`) określający, do której witryny klient próbuje uzyskać dostęp.
 
-Serwer dopasowuje podaną zawartość nagłówka do domeny i odpowiada klientowi np. wyświetlając odpowiednią zawartość lub kierując ruch dalej i w konsekwencji także serwując odpowiednią treść. Podanej techniki nie można zastosować do protokołu HTTPS ponieważ nagłówek ten jest wysyłany dopiero po zakończeniu uzgadniania sesji TLS.
+Serwer dopasowuje podaną zawartość nagłówka do domeny w swojej konfiguracji i odpowiada klientowi np. wyświetlając odpowiednią zawartość lub kierując ruch dalej i w konsekwencji także serwując odpowiednią treść.
+
+Podanej techniki nie można zastosować do protokołu HTTPS ponieważ nagłówek ten jest wysyłany dopiero po zakończeniu uzgadniania sesji TLS.
 
 Tym samym powstaje następujący problem:
 
 - serwer potrzebuje nagłówków HTTP w celu określenia, która witryna (domena) powinna być dostarczona do klienta
 - nie może jednak uzyskać tych nagłówków bez wcześniejszego uzgodnienia sesji TLS, ponieważ wcześniej wymagane jest dostarczenie samych certyfikatów
 
-Dlatego do tej pory (przed wprowadzeniem rozszerzenia SNI) jedynym sposobem dostarczania różnych certyfikatów było hostowanie jednej domeny na jednym adresie IP. Na podstawie adresu IP (do którego doszło żądanie o zaserwowanie treści) oraz przypisanej do niego domeny serwer wybierał odpowiedni certyfikat. Pierwszym rozwiązaniem tego problemu w przypadku ruchu HTTPS jest przejście na protokół IPv6.
+Dlatego do tej pory (przed wprowadzeniem rozszerzenia **SNI**) jedynym sposobem dostarczania różnych certyfikatów było hostowanie jednej domeny na jednym adresie IP. Na podstawie adresu IP (do którego doszło żądanie o zaserwowanie treści) oraz przypisanej do niego domeny serwer wybierał odpowiedni certyfikat.
+
+Pierwszym rozwiązaniem tego problemu w przypadku ruchu HTTPS jest przejście na protokół IPv6.
 
   > Nie stanowi to oczywiście problemu w przypadku protokołu HTTP, ponieważ jak tylko połączenie TCP zostanie otwarte, klient wskaże, do której strony internetowej próbuje dotrzeć w żądaniu.
 

@@ -10,7 +10,7 @@ seo:
   date_modified: 2020-02-18 21:56:52 +0100
 ---
 
-Oryginalny model HTTP (w tym HTTP/1.0) definiuje połączenia krótkotrwałe jako standardową metodę komunikacji. Każde żądanie HTTP jest realizowane we własnym połączeniu; oznacza to, że uzgadnianie TCP następuje przed każdym żądaniem. Klient tworzy nowe połączenie TCP dla każdej sesji (a połączenie zostaje zerwane po zakończeniu sesji).
+Oryginalny model HTTP (w tym HTTP/1.0) definiuje połączenia krótkotrwałe jako standardową metodę komunikacji. Każde żądanie HTTP jest realizowane we własnym połączeniu; oznacza to, że uzgadnianie TCP następuje przed każdym żądaniem. Klient tworzy nowe połączenie TCP dla każdej sesji a i kończy je po zakończeniu sesji.
 
 Ideą mechanizmu `Keep-Alive` jest zmniejszenie opóźnień poprzez redukcję połączeń TCP dzięki utrzymywaniu otwartych połączeń między klientem a serwerem (także dla komunikacji proxy-backend, o czym zaraz wspomnę) po zakończenu połączenia HTTP. Połączenie HTTP `Keep-Alive` lub połączenie trwałe to pomysł użycia jednego połączenia TCP do wysyłania i odbierania wielu żądań/odpowiedzi HTTP (`Keep-Alive` działa między żądaniami), w przeciwieństwie do otwierania nowego połączenia dla każdej pary żądań/odpowiedzi.
 
@@ -18,7 +18,7 @@ Korzystając z mechanizmu `Keep-Alive`, przeglądarka nie musi nawiązywać wiel
 
 <img src="/assets/img/posts/closed_vs_keepalive.png" align="center" title="closed_vs_keepalive">
 
-Z włączonym podtrzymywaniem HTTP w serwerach upstream NGINX zmniejsza opóźnienia, a tym samym poprawia wydajność i zmniejsza prawdopodobieństwo, że zabraknie portów efemerycznych. NGINX może teraz ponownie wykorzystywać swoje istniejące połączenia (utrzymywanie aktywności) na jednym etapie przesyłania danych.
+Z włączonym podtrzymywaniem HTTP w serwerach upstream NGINX pozwala znacznie zmniejszyć opóźnienia, a tym samym poprawia wydajność. Dodatkowo zmniejsza prawdopodobieństwo, że zabraknie portów efemerycznych. Po włączeniu tego mechanizmu, NGINX może ponownie wykorzystywać swoje istniejące połączenia (utrzymywanie aktywności) na jednym etapie przesyłania danych.
 
 Ta pamięć podręczna połączeń jest przydatna w sytuacjach, gdy NGINX musi stale utrzymywać pewną liczbę otwartych połączeń z serwerem z warstwy backendu.
 

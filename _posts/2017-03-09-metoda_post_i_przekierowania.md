@@ -12,7 +12,7 @@ seo:
 
 Niedawno jednym z problemów jaki miałem okazję rozwiązać, było umożliwienie przekazania całej zawartości ładunku HTTP kierowanego pod dany adres za pomocą metody **POST**, z którego miało nastąpić przekierowanie pod inny adres.
 
-Nie dało się tego wykonać za pomocą standardowych przekierowań, tj. **301** i **302**. Rozwiązaniem było wykorzystanie przekierowania o kodzie **307** lub **308** tylko dla metody `POST`.
+Nie dało się tego wykonać za pomocą standardowych przekierowań, tj. **301** i **302**. Rozwiązaniem było wykorzystanie przekierowania o kodzie **307** lub **308** tylko dla metody `POST`, dzięki czemu pierwotna metoda nie była zamieniana na metodę `GET` w związku z "przejściem" pod inne miejsce docelowe.
 
 # Opis wybranych przekierowań
 
