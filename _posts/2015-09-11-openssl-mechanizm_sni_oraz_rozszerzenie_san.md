@@ -16,38 +16,38 @@ Za pomocą biblioteki `openssl` można testować praktycznie **każdą** usług�
 
 **SNI** (ang. _Server Name Indication_) jest rozszerzeniem protokołu TLS, które umożliwia serwerom używanie wielu certyfikatów na jednym adresie IP.
 
-Ponieważ liczba dostępnych adresów IP stale maleje, pozostałe mogą być alokowane bardziej efektywnie. W większości przypadków można uruchomić aplikację z obsługą protokołu SSL/TLS bez konieczności zakupu dodatkowego adresu IP.
+Ponieważ liczba dostępnych adresów IPv4 stale maleje, pozostałe mogą być alokowane bardziej efektywnie. W większości przypadków można uruchomić aplikację z obsługą protokołu SSL/TLS bez konieczności zakupu dodatkowego adresu IP.
 
 Zgodnie z [RFC 6066 - Server Name Indication](https://tools.ietf.org/html/rfc6066#page-6) rozszerzenie to pozwala klientowi na wskazanie nazwy hosta, z którym klient stara się nawiązać połączenie na początku procesu uzgadniania sesji SSL/TLS. Jak zostało powiedziane wyżej — pozwala to serwerowi na przedstawienie wielu certyfikatów na tym samym adresie IP i numerze portu, a tym samym umożliwia korzystanie z tego samego adresu IP przez wiele witryn wykorzystujących protokół HTTPS.
 
-  > Żądana nazwa hosta (domeny), którą ustala klient podczas połączenia, nie jest szyfrowana. Dzięki temu podsłuchując można zobaczyć, z którą witryną nawiązywane będzie połączenie.
+  > Żądana nazwa hosta (domeny), którą ustala klient podczas połączenia, nie jest szyfrowana. Dzięki temu podsłuchując ruch można zobaczyć, z którą witryną nawiązywane będzie połączenie.
 
 ## Proces nawiązywania połączenia
 
-Podczas nawiązywania połączenia TLS klient wysyła żądanie z prośbą o certyfikat serwera. Gdy serwer wysyła certyfikat, klient sprawdza go i porównuje nazwę z nazwami zawartymi w certyfikacie (pola **CN** oraz **SAN**).
+Podczas nawiązywania połączenia TLS klient wysyła żądanie z prośbą o certyfikat serwera. Gdy serwer odsyła certyfikat do klienta, ten sprawdza go i porównuje nazwę z nazwami zawartymi w certyfikacie (pola **CN** oraz **SAN**).
 
 Jeżeli domena zostanie znaleziona, połączenie odbywa się w normalny sposób (standardowa sesja SSL/TLS). Jeżeli domena nie zostanie znaleziona, oprogramowanie klienta powinno wyświetlić ostrzeżenie zaś połączenie powinno zostać przerwane.
 
-  > Niedopasowanie nazw może oznaczać próbę ataku typu **MITM**. Niektóre z aplikacji (np. przeglądarki internetowe) pozwalają na ominięcie ostrzeżenia w celu kontynuowania połączenia — przerzucają tym samym odpowiedzialność na użytkownika, który często jest nieświadomy czyhających zagrożeń.
+  > Niedopasowanie nazw może oznaczać próbę ataku typu **MITM**. Niektóre z aplikacji (np. przeglądarki internetowe) pozwalają na ominięcie ostrzeżenia w celu kontynuowania połączenia — przerzucając tym samym odpowiedzialność na użytkownika, który często jest nieświadomy czyhających zagrożeń.
 
 ## Szczegóły połączenia
 
 Gdy klient (np. przeglądarka) nawiązuje połączenie, ustawia specjalny nagłówek HTTP (nagłówek `Host`) określający, do której witryny klient próbuje uzyskać dostęp.
 
-Serwer dopasowuje podaną zawartość nagłówka do domeny i odpowiada klientowi np. wyświetlając odpowiednią zawartość lub kierując ruch dalej. Podanej techniki nie można zastosować do protokołu HTTPS ponieważ nagłówek ten jest wysyłany dopiero po zakończeniu uzgadniania sesji TLS.
+Serwer dopasowuje podaną zawartość nagłówka do domeny i odpowiada klientowi np. wyświetlając odpowiednią zawartość lub kierując ruch dalej i w konsekwencji także serwując odpowiednią treść. Podanej techniki nie można zastosować do protokołu HTTPS ponieważ nagłówek ten jest wysyłany dopiero po zakończeniu uzgadniania sesji TLS.
 
 Tym samym powstaje następujący problem:
 
 - serwer potrzebuje nagłówków HTTP w celu określenia, która witryna (domena) powinna być dostarczona do klienta
 - nie może jednak uzyskać tych nagłówków bez wcześniejszego uzgodnienia sesji TLS, ponieważ wcześniej wymagane jest dostarczenie samych certyfikatów
 
-Dlatego do tej pory (przed wprowadzeniem rozszerzenia SNI) jedynym sposobem dostarczania różnych certyfikatów było hostowanie jednej domeny na jednym adresie IP. Na podstawie adresu IP (dla którego doszło żądanie o zaserwowanie treści) oraz przypisanej do niego domeny serwer wybierał odpowiedni certyfikat. Pierwszym rozwiązaniem tego problemu w przypadku ruchu HTTPS jest przejście na protokół IPv6.
+Dlatego do tej pory (przed wprowadzeniem rozszerzenia SNI) jedynym sposobem dostarczania różnych certyfikatów było hostowanie jednej domeny na jednym adresie IP. Na podstawie adresu IP (do którego doszło żądanie o zaserwowanie treści) oraz przypisanej do niego domeny serwer wybierał odpowiedni certyfikat. Pierwszym rozwiązaniem tego problemu w przypadku ruchu HTTPS jest przejście na protokół IPv6.
 
-  > Nie stanowi to oczywiście problemu w przypadku protokołu HTTP, ponieważ jak tylko połączenie TCP zostanie otwarte, klient wskaże, do której strony internetowej próbuje dotrzeć w żądaniu HTTP.
+  > Nie stanowi to oczywiście problemu w przypadku protokołu HTTP, ponieważ jak tylko połączenie TCP zostanie otwarte, klient wskaże, do której strony internetowej próbuje dotrzeć w żądaniu.
 
-Rozwiązaniem tymczasowym jest właśnie wykorzystanie mechanizmu **SNI**, który wstawia żądaną nazwę hosta (domeny, adresu internetowego) w ramach uzgadniania ruchu TLS — przeglądarka wysyła tą nazwę w komunikacie `Client Hello` pozwalając serwerowi określenie najbardziej odpowiedniego certyfikatu.
+Rozwiązaniem tymczasowym jest właśnie wykorzystanie mechanizmu **SNI**, który wstawia żądaną nazwę hosta (domeny, adresu internetowego) w ramach uzgadniania ruchu TLS — przeglądarka wysyła tę nazwę w komunikacie `Client Hello` pozwalając serwerowi na określenie najbardziej odpowiedniego certyfikatu.
 
-**SNI** dodaje nazwę domeny do procesu uzgadniania TLS, dzięki czemu klient dotrze do właściwej domeny i otrzyma prawidłowy certyfikat SSL, dzięki czemu będzie możliwe normalne kontynuowanie reszty uzgadniania TLS oraz przejście poziom wyżej, do wymiany danych na poziomie protokołu HTTP z pełnym i bezpiecznym wykorzystaniem TLS.
+**SNI** dodaje nazwę domeny do procesu uzgadniania TLS, dzięki czemu klient dotrze do właściwej domeny i otrzyma prawidłowy certyfikat SSL, tym samym będzie możliwe normalne kontynuowanie sesji TLS oraz przejście poziom wyżej, do wymiany danych na poziomie protokołu HTTP z pełnym i bezpiecznym wykorzystaniem TLS.
 
 Spójrz na poniższy obrazek:
 
@@ -82,16 +82,16 @@ chain of trust:
 verification: ok
 ```
 
-Jak już powiedziałem na wstępie, `SNI` to rozszerzenie protokołu TLS, które jest swego rodzaju odpowiednikiem nagłówka `Host` protokołu HTTP. Pozwala serwerowi wybrać odpowiedni certyfikat, który ma zostać przedstawiony klientowi, bez ograniczenia korzystania z oddzielnych adresów IP po stronie serwera (upraszcza to posiadanie wielu certyfikatów).
-
 ## SNI a klient
 
-Poprawne działanie rozszerzenia **SNI** zależy od:
+Jak już powiedziałem na wstępie, `SNI` to rozszerzenie protokołu TLS, które jest swego rodzaju odpowiednikiem nagłówka `Host` protokołu HTTP. Pozwala serwerowi wybrać odpowiedni certyfikat, który ma zostać przedstawiony klientowi, bez ograniczenia korzystania z oddzielnych adresów IP po stronie serwera (upraszcza to posiadanie wielu certyfikatów).
+
+Poprawne działanie tego rozszerzenia zależy od:
 
 - poprawnej obsługi po stronie serwera (w większości przypadków każdy serwer obsługuje ten mechanizm poprawnie)
 - poprawnej obsługi po stronie klienta (w większości oprogramowania funkcja ta jest zaimplementowana)
 
-Zdecydowana większość przeglądarek i systemów operacyjnych obsługuje **SNI**. W przypadku nieaktualnych klientów, którzy nie wspierają tego rozszerzenia, użytkownik prawdopodobnie nie będzie mógł uzyskać dostępu do niektórych witryn, a przeglądarka zwróci komunikat "Połączenie nie jest prywatne".
+Zdecydowana większość przeglądarek i systemów operacyjnych obsługuje **SNI**. W przypadku nieaktualnych klientów, którzy nie wspierają tego rozszerzenia, użytkownik prawdopodobnie nie będzie mógł uzyskać dostępu do niektórych witryn, a przeglądarka zwróci komunikat "_Połączenie nie jest prywatne_".
 
 # Testowanie połączenia
 
