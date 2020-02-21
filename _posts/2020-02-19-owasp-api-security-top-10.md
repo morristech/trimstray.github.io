@@ -7,7 +7,7 @@ tags: [PL, security, owasp, cheatsheet, api]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-20 19:32:56 +0100
+  date_modified: 2020-02-22 00:42:36 +0100
 ---
 
 Interfejsy API są obecnie jedną z kluczowych części każdej aplikacji webowej i niejednokrotnie pozwalają na ujawnienie logiki oraz zaimplementowanych mechanizmów. Stanowią także istotny element podczas procesu przeprowadzania testów bezpieczeństwa.
