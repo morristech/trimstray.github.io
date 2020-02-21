@@ -1,6 +1,6 @@
 ---
 layout: post
-title: OpenSSL: mechanizm SNI oraz rozszerzenie SAN
+title: 'OpenSSL: mechanizm SNI oraz rozszerzenie SAN'
 date: 2015-09-11 07:51:13
 categories: [publications]
 tags: [PL, security, openssl, sni]
