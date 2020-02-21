@@ -7,7 +7,7 @@ tags: [PL, web, post, redirects]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-18 21:56:52 +0100
+  date_modified: 2020-02-21 16:30:58 +0100
 ---
 
 Niedawno jednym z problemów jaki miałem okazję rozwiązać, było umożliwienie przekazania całej zawartości ładunku HTTP kierowanego pod dany adres za pomocą metody **POST**, z którego miało nastąpić przekierowanie pod inny adres.

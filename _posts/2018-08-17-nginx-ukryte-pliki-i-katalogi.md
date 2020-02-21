@@ -7,7 +7,7 @@ tags: [PL, http, nginx, best-practices]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-18 22:13:20 +0100
+  date_modified: 2020-02-21 16:30:58 +0100
 ---
 
 Ukryte pliki i katalogi nigdy nie powinny być publicznie dostępne — czasami krytyczne dane są publikowane podczas wdrażania aplikacji. Jeśli używasz systemu kontroli wersji, zdecydowanie powinieneś zabronić dostępu (dając mniej informacji atakującym) do krytycznych ukrytych plików/katalogów, takich jak `.git` lub `.svn`, aby zapobiec np. ujawnieniu kodu źródłowego twojej aplikacji.

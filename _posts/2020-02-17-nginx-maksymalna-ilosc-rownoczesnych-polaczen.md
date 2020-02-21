@@ -7,7 +7,7 @@ tags: [PL, http, nginx, best-practices]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-19 10:47:20 +0100
+  date_modified: 2020-02-21 16:30:58 +0100
 ---
 
 Zastanawiałeś się kiedyś ile maksymalnie równoczesnych połączeń jest w stanie obsłużyć serwer NGINX? Oraz jaki wpływ na ich ilość mają dyrektywy `worker_processes`, `worker_connections` i `worker_rlimit_nofile`?

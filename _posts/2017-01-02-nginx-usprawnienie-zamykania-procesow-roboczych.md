@@ -7,7 +7,7 @@ tags: [PL, http, nginx, best-practices]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-20 19:32:56 +0100
+  date_modified: 2020-02-21 16:30:58 +0100
 ---
 
 Mechanizm ten powinien się przydać, jeśli chcesz poprawić czas zamykania procesów roboczych serwera NGINX. Dyrektywa `worker_shutdown_timeout` określa limit czasu, który będzie używany podczas płynnego zamykania procesów roboczych. Po upływie tego czasu, NGINX spróbuje zamknąć wszystkie aktualnie otwarte połączenia, aby ułatwić zamknięcie worker'ów.

@@ -7,7 +7,7 @@ tags: [PL, http, nginx, best-practices]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-18 22:13:20 +0100
+  date_modified: 2020-02-21 16:30:58 +0100
 ---
 
 Jak wiemy, nagłówek `Host` informuje serwer, którego wirtualnego hosta ma użyć. Nagłówek ten można również modyfikować, co może pozwolić na ominięcie filtrów lub przekazanie żądań do nieodpowiednich backend'ów. Ze względów bezpieczeństwa dobrą praktyką jest odrzucanie żądań bez hosta lub z hostami nieskonfigurowanymi po stronie serwera HTTP.

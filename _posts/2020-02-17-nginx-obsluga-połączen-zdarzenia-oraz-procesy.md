@@ -7,7 +7,7 @@ tags: [PL, http, nginx, best-practices]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-20 19:32:56 +0100
+  date_modified: 2020-02-21 16:30:58 +0100
 ---
 
 NGINX obsługuje różne metody przetwarzania połączeń, które zależą od używanej platformy/systemu. Zwykle nie ma potrzeby jawnego podawania metody przetwarzania żądań, ponieważ NGINX domyślnie zastosuje optymalną metodę dostępną w systemie, w którym jest uruchomiony.
