@@ -20,7 +20,7 @@ Zasadniczo istnieją cztery typy multipleksowania zdarzeń:
 A także najbardziej wydajne implementacje nieblokującego wejścia/wyjścia:
 
 - `epoll` - zalecane, jeśli używasz GNU/Linux; jest to wydajna metoda przetwarzania połączeń dostępna w systemie Linux od wersji 2.6
-- `kqueue` - zalecane, jeśli używasz BSD (technicznie przewyższa `epoll`); jest to wydajna metoda przetwarzania połączeń dostępna w FreeBSD 4.1+, OpenBSD 2.9+ i NetBSD 2.0+.
+- `kqueue` - zalecane, jeśli używasz BSD (technicznie przewyższa `epoll`); jest to wydajna metoda przetwarzania połączeń dostępna w FreeBSD 4.1+, OpenBSD 2.9+ i NetBSD 2.0+
 
 Metodę `select` można włączyć lub wyłączyć za pomocą parametru konfiguracyjnego `--with-select_module` lub `--without-select_module`. Podobnie `poll` można włączyć lub wyłączyć za pomocą parametru konfiguracyjnego `--with-poll_module` lub `--without-poll_module`.
 
