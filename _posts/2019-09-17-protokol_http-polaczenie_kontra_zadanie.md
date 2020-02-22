@@ -7,7 +7,7 @@ tags: [PL, http, connections, requests]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-22 09:50:08 +0100
+  date_modified: 2020-02-22 10:43:23 +0100
 ---
 
 Jak zdefiniować połączenie a jak żądanie? Czym jest pierwsze a czym drugie? Może tym samym?
