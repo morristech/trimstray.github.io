@@ -2,10 +2,12 @@
 layout: post
 title: "Konfiguracja serwera Unbound"
 date: 2017-11-29 01:20:52
-categories: [PL, dns]
-tags: publications
+categories: [publications]
+tags: [PL, dns, unbound, dnssec]
 comments: false
-favorite: true
+favorite: false
+seo:
+  date_modified: 2020-02-19 08:43:17 +010
 ---
 
 **Unbound** jest bardzo bezpiecznym, lekkim i łatwo konfigurowalnym serwerem DNS z funkcją buforowania zapytań. Pozwala na stosowanie zabezpieczenia uwierzytelniania danych (DNSSEC) oraz szyfrowania.
@@ -53,7 +55,7 @@ pkg_add -i unbound
 
 > Główny katalog konfiguracyjny: `/etc/unbound`.
 
-Konfiguracja serwera odbywa się z poziomu pliku `/etc/unbound/unbound.conf`. Plik ten zawiera bardzo dużo opcji - omówię niektóre z nich w dalszej części.
+Konfiguracja serwera odbywa się z poziomu pliku `/etc/unbound/unbound.conf`. Plik ten zawiera bardzo dużo opcji - w dalszej części omówię tylko niektóre z nich.
 
 Konfigurację serwera można podzielić na dwie sekcje:
 
@@ -77,9 +79,7 @@ unbound -c /etc/unbound/unbound.conf
 
 ## Klucze oraz certyfikaty
 
-Wszystko co potrzebne generowane jest automatycznie przy starcie usługi.
-
-Przykładowa zawartość katalogu `/etc/unbound`:
+Wszystko co potrzebne generowane jest automatycznie przy starcie usługi. Przykładowa zawartość katalogu `/etc/unbound`:
 
 ```bash
 .
@@ -122,9 +122,9 @@ Opcje sieciowe pozwalają na ustawienie na jakim interfejsie oraz porcie nasłuc
 
 Jeżeli serwer unbound ma działać w parze np. z serwerem **bind** można ustawić parametr `interface` na **127.0.0.1** zaś ten drugi wystawić na interfejsie zewnętrznym.
 
-  > Jeżeli masz zamiar wykorzystać protokół TLS do połączenia z autorytatywnymi serwerami DNS pamiętaj o ustawieniu opcji **do-tcp: yes**. Nie jest zalecane mieszanie obu opcji, np. włączenie nasłuchiwania dla protokołu TCP i jednocześnie włączenie/wyłączenie nasłuchiwania dla protokołu UDP. Jeżeli chcesz użyć konkretnego protokołu użyj tylko jednego z nich w zależności od typu konfiguracji serwera unbound.
+  > Jeżeli masz zamiar wykorzystać protokół TLS do połączenia z autorytatywnymi serwerami DNS pamiętaj o ustawieniu opcji **do-tcp: yes**. Nie jest zalecane mieszanie obu opcji, np. włączenie nasłuchiwania dla protokołu TCP i jednocześnie włączenie/wyłączenie nasłuchiwania dla protokołu UDP. Jeżeli chcesz użyć konkretnego protokołu użyj tylko jednego z nich w zależności od typu konfiguracji serwera.
 
-Jedną z ciekawszych opcji jest `outgoing-interfa`, która określa interfejs do wysyłania zapytań do autorytatywnych serwerów i odbierania od nich odpowiedzi.
+Jedną z ciekawszych opcji jest `outgoing-interface`, która określa interfejs do wysyłania zapytań do autorytatywnych serwerów i odbierania od nich odpowiedzi.
 
 ```bash
 interface: 127.0.0.1
@@ -145,9 +145,9 @@ do-udp: yes
 
 Unbound dostarcza kilka ciekawych mechanizmów zabezpieczających, które można ustawić. Są to m.in. listy kontroli dostępu (IP) czy izolowane środowisko (chroot).
 
-Listy kontroli mówią kto może komunikować się z serwerem. Oczywiście należy zastanowić się aby nie ustawić za szerokich klas adresowych.
+Listy kontroli mówią, kto może komunikować się z serwerem. Oczywiście należy pamiętać aby nie ustawić za szerokich klas adresowych.
 
-  > Jeżeli chcesz zablokować komunikację pamiętaj, że klient dostanie mimo wszystko w odpowiedzi **REFUSED** na wysłane przez siebie zapytanie.
+  > Jeżeli chcesz zablokować komunikację, pamiętaj, że klient dostanie mimo wszystko w odpowiedzi **REFUSED** na wysłane przez siebie zapytanie.
 
 W mojej konfiguracji wykorzystuję izolowane środowisko dla tego demona dlatego muszę przekazać do niego plik konfiguracyjny w postaci pełnej ścieżki oraz utworzyć w katalogu roboczym katalogi `var/log/unbound` oraz `var/run/unbound`.
 
@@ -181,9 +181,7 @@ val-log-level: 1
 
 ### Optymalizacja i wydajność
 
-Dostępnych jest także sporo opcji mogących poprawić wydajność samego serwera.
-
-Pierwsze dwie z nich określają obsługę wątków. Opcja `num-threads` powinna mieć wartość nie większą niż ilości dostępnych rdzeni i oznacza ilość wątków przeznaczoną do obsługi klientów.
+Dostępnych jest także sporo opcji mogących poprawić wydajność samego serwera. Pierwsze dwie z nich określają obsługę wątków. Opcja `num-threads` powinna mieć wartość nie większą niż ilości dostępnych rdzeni i oznacza ilość wątków przeznaczoną do obsługi klientów.
 
 Druga z opcji określa ilość zapytań, które każdy wątek będzie obsługiwał równocześnie. Jeżeli pojawi się więcej zapytań wymagających obsługi, które nie mogą zostać obsłużone, zostaną odrzucone.
 
@@ -196,7 +194,7 @@ num-threads: 2
 num-queries-per-thread: 1024
 ```
 
-Poniższe opcje w większości są opcjami domyślnymi dostarczonymi wraz z serwerem podczas instalacji. Według dokumentacji konfiguracja taka powinna zapewnić wydajną i pełną obsługę na poziomie 30-40MB pamięci operacyjnej w przypadku intensywnego użytkowania serwera DNS.
+Poniższe opcje w większości są opcjami domyślnymi dostarczonymi wraz z serwerem podczas instalacji. Według dokumentacji konfiguracja taka powinna zapewnić wydajną i pełną obsługę na poziomie 30-40MB pamięci operacyjnej w przypadku intensywnego użytkowania serwera.
 
 ```bash
 outgoing-num-tcp: 10
@@ -267,9 +265,7 @@ rrset-roundrobin: yes
 
 ### Pamięć podręczna
 
-Poniższe opcje odnoszą się do rekordów trzymanych w pamięci podręcznej.
-
-Dwie ostatnie określają czy elementy pamięci podręcznej mają być aktualizowane przed ich wygaśnięciem w celu zachowania ich aktualnego stanu. Włączenie tych opcji powoduje ok. 10% wzrost ruchu oraz większe obciążenie maszyny.
+Poniższe opcje odnoszą się do rekordów trzymanych w pamięci podręcznej. Dwie ostatnie określają czy elementy pamięci podręcznej mają być aktualizowane przed ich wygaśnięciem w celu zachowania ich aktualnego stanu. Włączenie tych opcji powoduje ok. 10% wzrost ruchu oraz większe obciążenie maszyny.
 
 ```bash
 cache-min-ttl: 0
@@ -288,9 +284,7 @@ Parametr `verbosity` określa poziom szczegółowości logowanych informacji. Do
 verbosity: 1
 ```
 
-Niżej znajdują się opcje odpowiedzialne za statystyki.
-
-Pierwsza z nich określa liczbę sekund między zapisem statystyk do pliku z dziennikiem dla każdego wątku. Druga pozwala na wyzerowanie bądź nie liczników statystyk podczas uruchomienia serwera. Ostatnia określa rozszerzone statystyki.
+Niżej znajdują się opcje odpowiedzialne za statystyki. Pierwsza z nich określa liczbę sekund między zapisem statystyk do pliku z dziennikiem dla każdego wątku. Druga pozwala na wyzerowanie bądź nie liczników statystyk podczas uruchomienia serwera. Ostatnia określa rozszerzone statystyki.
 
 ```bash
 statistics-interval: 0
@@ -298,7 +292,7 @@ statistics-cumulative: no
 extended-statistics: no
 ```
 
-Ostatnie trzy opcje z tego rozdziału określają plik z logiem (musiałem utworzyć ręcznie) oraz czy ma zostać wykorzystywany `syslogd` do ich zapisywania. Można ustawić także znaczniki czasu w formacie UTC.
+Ostatnie trzy opcje z tego rozdziału określają plik z logiem (należy utworzyć ręcznie) oraz czy ma zostać wykorzystywany `syslogd` do ich zapisywania. Można ustawić także znaczniki czasu w formacie UTC.
 
 ```bash
 logfile: "/var/log/unbound/unbound.log"
@@ -341,9 +335,7 @@ control-cert-file: "/etc/unbound/unbound_control.pem"
 
 ## Sekcja forward-zone
 
-Sekcja ta opisuje parametry związane z zapytaniami do serwerów oznaczonych jako `forward-host`.
-
-Pierwszy wpis określa publiczne serwery DNS z którymi komunikację można przeprowadzić na procie 53:
+Sekcja ta opisuje parametry związane z zapytaniami do serwerów oznaczonych jako `forward-host`. Pierwszy wpis określa publiczne serwery DNS, z którymi komunikację można przeprowadzić na standardowym porcie 53:
 
 ```bash
 forward-zone:
