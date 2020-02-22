@@ -22,7 +22,7 @@ Spójrz na poniższy zrzut (dodatkowo jest to porównanie HTTP/1.1 oraz H2):
 
 Większość współczesnych przeglądarek otwiera jednocześnie kilka połączeń i jednocześnie pobiera różne pliki (obrazy, css, js), aby przyspieszyć ładowanie strony. Stąd jak widać, każde połączenie może obsługiwać wiele żądań.
 
-- Połączenia (ang. _connection_) HTTP - klient i serwer przedstawiają się; nawiązanie połączenia z serwerem wymaga uzgadniania protokołu TCP i zasadniczo polega na utworzeniu połączenia z gniazdem serwerem
+- Połączenia (ang. _connection_) HTTP - klient i serwer przedstawiają się; nawiązanie połączenia z serwerem wymaga uzgadniania protokołu TCP i zasadniczo polega na utworzeniu połączenia z gniazdem serwera
 
 - Żądanie (ang. _request_) HTTP - klient pyta serwer o dany zasób; aby złożyć żądanie HTTP, należy już ustanowić połączenie z serwerem. Jeśli nawiązano takie połączenie, można złożyć wiele żądań przy użyciu tego samego połączenia (HTTP/1.0 domyślnie jedno żądanie na połączenie, HTTP/1.1 domyślnie od 4-6 połączeń z wykorzystaniem mechanizmu podtrzymywania połączeń)
 
@@ -33,4 +33,4 @@ Zerknij na to proste porównanie:
 - 5 połączeń i pobieranie 5 plików przez każde połączenie (szybkie)
 - 25 połączeń i pobieranie 1 pliku przez każde połączenie (marnotrawstwo zasobów)
 
-Jeśli więc nadmiernie ograniczysz liczbę połączeń lub liczbę żądań, spowolnisz szybkość ładowania strony.
+Jeśli więc nadmiernie ograniczysz liczbę połączeń lub liczbę żądań, spowolnisz szybkość ładowania serwisu.
