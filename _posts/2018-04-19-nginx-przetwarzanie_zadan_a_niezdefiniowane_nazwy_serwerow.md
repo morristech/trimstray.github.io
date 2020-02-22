@@ -12,7 +12,7 @@ seo:
 
 Jak wiemy, nagłówek `Host` informuje serwer, którego wirtualnego hosta ma użyć. Nagłówek ten można również modyfikować, co może pozwolić na ominięcie filtrów lub przekazanie żądań do nieodpowiednich backend'ów. Ze względów bezpieczeństwa dobrą praktyką jest odrzucanie żądań bez hosta lub z hostami nieskonfigurowanymi po stronie serwera HTTP.
 
-Zgodnie z tym NGINX powinien zapobiegać przetwarzaniu żądań (także na adres IP) z nieokreślonymi nazwami serwerów. Rozwiązaniem problemu jest ustawienie dyrektywy `listen` z jawnym wskazaniem parametru `default_server`. Jeśli żadna z dyrektyw `listen` nie ma parametru `default_server`, wówczas pierwszy blok `server {...}` z parą `listen adres:port` będzie serwerem domyślnym (oznacza to, że NGINX zawsze ma domyślny serwer).
+Zgodnie z tym, NGINX powinien zapobiegać przetwarzaniu żądań (także na adres IP) z nieokreślonymi nazwami serwerów. Rozwiązaniem problemu jest ustawienie dyrektywy `listen` z jawnym wskazaniem parametru `default_server`. Jeśli żadna z dyrektyw `listen` nie ma parametru `default_server`, wówczas pierwszy blok `server {...}` z parą `listen adres:port` będzie serwerem domyślnym (oznacza to, że NGINX zawsze ma domyślny serwer).
 
 W rzeczywistości `default_server` nie potrzebuje instrukcji `server_name`, ponieważ pasuje do wszystkiego, do czego inne bloki serwera nie pasują jawnie.
 

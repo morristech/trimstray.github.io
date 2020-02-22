@@ -10,13 +10,13 @@ seo:
   date_modified: 2020-02-21 16:30:58 +0100
 ---
 
-Nagłówki to jedna z najistotniejszych rzeczy podczas komunikacji między klientem a serwerem. NGINX dostarcza kilka sposobów ich obsługi, lecz nieodpowiednie użycie któregoś z nich może spowodować poważne problemy (w tym np. naruszenie zasada bezpieczeństwa!).
+Nagłówki to jedna z najistotniejszych rzeczy podczas komunikacji między klientem a serwerem. NGINX dostarcza kilka sposobów ich obsługi, lecz nieodpowiednie użycie któregoś z nich może spowodować poważne problemy, w tym np. naruszenie zasada bezpieczeństwa!
 
 Pamiętajmy, że dyrektywa `add_header` działa w zakresach `if`, `location`, `server` i `http`. Dyrektywy `proxy_*_` działają w zakresie `location`, `server` i `http`. Dyrektywy te są dziedziczone z poprzedniego poziomu tylko wtedy, gdy na bieżącym poziomie nie zdefiniowano dyrektyw nagłówka `add_header` lub `proxy_*_`.
 
-Jeśli używasz ich w wielu kontekstach, używane są tylko najniższe wystąpienia. Jeśli więc określisz je w kontekście serwera i lokalizacji (nawet jeśli ukryjesz inny nagłówek, ustawiając tą ​​samą dyrektywę i tą samą wartość), użyty zostanie tylko jeden z nich w bloku lokalizacji. Aby zapobiec tej sytuacji, powinieneś zdefiniować wspólny fragment konfiguracji i dołączyć go tylko w miejscu, w którym chcesz obsłużyć odpowiednie nagłówki. To najbardziej przewidywalne rozwiązanie.
+Jeśli używasz ich w wielu kontekstach, **używane są tylko najniższe wystąpienia**. Jeśli więc określisz je w kontekście serwera i lokalizacji (nawet jeśli ukryjesz inny nagłówek, ustawiając tą ​​samą dyrektywę i tą samą wartość), użyty zostanie tylko jeden z nich w bloku lokalizacji. Aby zapobiec tej sytuacji, powinieneś zdefiniować wspólny fragment konfiguracji i dołączyć go tylko w miejscu, w którym chcesz obsłużyć odpowiednie nagłówki. To najbardziej przewidywalne rozwiązanie.
 
-Moim zdaniem również ciekawym rozwiązaniem jest użycie zewnętrznego pliku z globalnymi nagłówkami i dodanie go do kontekstu `http` (jednak wtedy niepotrzebnie powielasz reguły!). Następnie powinieneś również skonfigurować inny zewnętrzny plik z konfiguracją specyficzną dla serwera/domeny (ale zawsze z globalnymi nagłówkami! Musisz powtórzyć go w najniższych kontekstach) i dodać go do kontekstu serwera/lokalizacji. Jest to jednak nieco bardziej skomplikowane i w żaden sposób nie gwarantuje spójności.
+Moim zdaniem również ciekawym rozwiązaniem jest użycie zewnętrznego pliku z globalnymi nagłówkami i dodanie go do kontekstu `http` (jednak wtedy niepotrzebnie powielasz reguły). Następnie powinieneś również skonfigurować inny zewnętrzny plik z konfiguracją specyficzną dla serwera/domeny (ale zawsze z globalnymi nagłówkami! Musisz powtórzyć go w najniższych kontekstach) i dodać go do kontekstu serwera/lokalizacji. Jest to jednak nieco bardziej skomplikowane i w żaden sposób nie gwarantuje spójności.
 
 Istnieją dodatkowe rozwiązania tego problemu, takie jak użycie alternatywnego modułu ([headers-more-nginx-module](https://github.com/openresty/headers-more-nginx-module)) do zdefiniowania określonych nagłówków w blokach `server` lub `location`. Co najważniejsze, nie wpływa on na powyższe dyrektywy.
 

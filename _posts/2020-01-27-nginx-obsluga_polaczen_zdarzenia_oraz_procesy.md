@@ -64,11 +64,11 @@ NGINX oznacza połączenia w następujący sposób (następujące informacje o s
 - **Writing** - bieżąca liczba połączeń, w których NGINX zapisuje odpowiedź z powrotem do klienta (odczytuje treść żądania, przetwarza żądanie lub zapisuje odpowiedź do klienta)
 - **Waiting** - bieżąca liczba bezczynnych połączeń klienta oczekujących na żądanie, tj. połączenia nadal otwarte w oczekiwaniu na nowe żądanie lub wygaśnięcie podtrzymania aktywności (w rzeczywistości **Active connections** - (**Reading** + **Writing**))
 
-  > Połączenia oczekujące (**Waiting**) to w rzeczywistości połączenia podtrzymujące, które wykorzystują mechanizm `Keep-Alive`. Zwykle nie stanowią problemu. Jednak jeśli chcesz obniżyć ich liczbę, zmniejsz wartość dyrektywy `keepalive_timeout`. Pamiętaj jednak, że ustawienie tej wartości zbyt wysoko spowoduje marnowanie zasobów (głównie pamięci), ponieważ połączenie pozostanie otwarte, nawet jeśli nie będzie żadnego ruchu, znacząco wpływając na wydajność. Myślę, że optymalna wartość powinna być jak najbliższa średniej czasu odpowiedzi. Możesz także stopniowo zmniejszać limit czasu (75s -> 50, a potem 25 ...) i zobaczyć, jak zachowuje się serwer.
+  > Połączenia oczekujące (**Waiting**) to w rzeczywistości połączenia podtrzymujące, które wykorzystują mechanizm `Keep-Alive`. Zwykle nie stanowią problemu. Jednak jeśli chcesz obniżyć ich liczbę, zmniejsz wartość dyrektywy `keepalive_timeout`. Pamiętaj jednak, że ustawienie tej wartości zbyt wysoko spowoduje marnowanie zasobów (głównie pamięci), ponieważ połączenie pozostanie otwarte, nawet jeśli nie będzie żadnego ruchu, znacząco wpływając na wydajność. Myślę, że optymalna wartość powinna być jak najbliższa średniej czasu odpowiedzi. Możesz także stopniowo zmniejszać limit czasu (75s -> 50s, a potem 25s ...) i zobaczyć, jak zachowuje się serwer.
 
 Warto wspomnieć jeszcze o jednej rzeczy. Jeżeli chodzi o połączenia w stanie **Writing**, to ich zwiększona wartość może wskazywać na jeden z następujących problemów:
 
-- zawieszone lub ubite procesy robocze — jest to mało prawdopodobne, ponieważ spowodowałoby to również wzrost innych wartości, w szczególności połączeń w stanie **Waiting**
+- zawieszone lub z killowane procesy robocze — jest to możliwe lecz mało prawdopodobne, ponieważ spowodowałoby to również wzrost innych wartości, w szczególności połączeń w stanie **Waiting**
 - wyciek z gniazda (ang. _socket leaking_) - zwykle są spowodowane połączaniami w stanie oczekiwania na przesłanie pakietu `FIN` kończącego połączenie (gniazdo w stanie `CLOSE_WAIT`). W celu szerszej diagnozy, sprawdź co zwraca polecenie `netstat` bez filtra `grep -v CLOSE_WAIT`. Tzw. socket leak jest zgłaszany przez NGINX podczas płynnego zamykania procesu roboczego (na przykład po ponownym załadowaniu konfiguracji). Jeśli są jakieś wycieki, NGINX zapisze informację `open socket ... left in connection ...` do dziennika błędów
 
 Co więcej, zaleca się wykonanie dodatkowych czynności:
@@ -83,7 +83,7 @@ Co więcej, zaleca się wykonanie dodatkowych czynności:
 
 NGINX wykorzystuje architekturę sterowaną zdarzeniami, która w dużym stopniu opiera się na nieblokującym wejściu/wyjściu. Jedną z zalet operacji nieblokujących/asynchronicznych jest to, że można zmaksymalizować wykorzystanie pojedynczego procesora, a także pamięci, ponieważ wątek może kontynuować pracę równolegle. Efektem jest to, że nawet wraz ze wzrostem obciążenia, nadal możliwe jest wydajnie zarządzanie pamięcią i procesorem.
 
-  > Istnieje świetne i do tego krótkie [podsumowanie](https://stackoverflow.com/questions/8546273/is-non-blocking-i-o-really-faster-than-multi-threaded-blocking-i-o-how) opisujące nieblokujące I/O. Polecam również: [asynchronous vs non-blocking](https://stackoverflow.com/a/2625565).
+  > Istnieje bardzo dobre i do tego krótkie [podsumowanie](https://stackoverflow.com/questions/8546273/is-non-blocking-i-o-really-faster-than-multi-threaded-blocking-i-o-how) opisujące nieblokujące I/O. Polecam również: [asynchronous vs non-blocking](https://stackoverflow.com/a/2625565).
 
 Standardowe operacje wejścia/wyjścia, np. `read()` i `write()` powodują zablokowanie wątku wykonującego daną operację do czasu jej zakończenia. Musimy wiedzieć, że operacje wejścia i wyjścia (I/O) mogą być bardzo powolne w porównaniu do przetwarzania danych. Bardziej wydajną metodą jest asynchroniczne wejście/wyjście (ang. _asynchronous I/O_), które pozwala na zarządzanie żądaniami wejścia/wyjścia w oderwaniu od wątków wykonywania. Podczas pracy, proces jest powiadamiany o zakończeniu operacji I/O a nie czeka, aż operacja się zakończy.
 
@@ -109,11 +109,11 @@ Spójrz na porównanie obu mechanizmów:
 
 <img src="/assets/img/posts/NGINX_non-blocking.png" align="center" title="NGINX_non-blocking.png preview">
 
-Nieblokujące I/O jest jednym z powodów, dzięki któremu NGINX doskonale radzi sobie z dużą liczbą żądań.
+Nieblokujące I/O jest jednym z powodów, dzięki któremu NGINX doskonale radzi sobie z bardzo dużą liczbą żądań.
 
 ## Wiele procesów
 
-Jak już wspomniałem, NGINX używa tylko asynchronicznych operacji we/wy, co sprawia, że ​​blokowanie nie jest problemem. Tak naprawdę jedynym powodem, dla którego NGINX korzysta z wielu procesów, jest możliwość pełnego wykorzystania systemów wielordzeniowych, wieloprocesorowych i hiperwątkowości. NGINX wymaga tylko wystarczającej liczby procesów roboczych, aby w pełni skorzystać z symetrycznego przetwarzania wieloprocesorowego (SMP).
+Jak już wspomniałem, NGINX używa tylko asynchronicznych operacji we/wy, co sprawia, że ​​blokowanie nie jest problemem. Tak naprawdę jedynym powodem, dla którego NGINX powołuje wiele procesów, jest możliwość pełnego wykorzystania systemów wielordzeniowych, wieloprocesorowych i hiperwątkowości. NGINX wymaga tylko wystarczającej liczby procesów roboczych, aby w pełni skorzystać z symetrycznego przetwarzania wieloprocesorowego (SMP).
 
 Z oficjalnej dokumentacji:
 
@@ -127,4 +127,4 @@ Jak widzisz, wszystko opiera się na multipleksowaniu zdarzeń i wykorzystaniu t
 
   > Zobacz prezentację [Nginx Internals](https://www.slideshare.net/joshzhu/nginx-internals) poruszającą wiele tematów związanych z wewnętrznymi elementami serwera NGINX.
 
-Podsumowując, NGINX nie tworzy procesu ani wątku na połączenie (jak Apache), więc użycie pamięci jest bardzo konserwatywne i niezwykle wydajne w zdecydowanej większości przypadków. NGINX jest szybszy i zużywa mniej pamięci niż Apache i działa bardzo dobrze pod naprawdę dużym obciążeniem. Jest również bardzo przyjazny dla procesora, ponieważ nie ma ciągłego tworzenia i niszczenia procesów lub wątków.
+Podsumowując, NGINX nie tworzy procesu ani wątku na połączenie (jak Apache), więc użycie pamięci jest bardzo konserwatywne i niezwykle wydajne w zdecydowanej większości przypadków. NGINX jest znacznie szybszy, zużywa mniej pamięci niż Apache i działa bardzo dobrze pod naprawdę dużym obciążeniem. Jest również bardzo przyjazny dla procesora, ponieważ nie ma ciągłego tworzenia i niszczenia procesów lub wątków.

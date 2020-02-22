@@ -23,9 +23,9 @@ location /login {
 }
 ```
 
-  > Pamiętaj, że dyrektywa `deny` zawsze zwróci kod błędu _403 Forbidden_, odnoszący się do klienta uzyskującego dostęp, który nie jest upoważniony do wykonania tego żądania.
+  > Pamiętaj, że dyrektywa `deny` zawsze zwróci kod błędu _403 Forbidden_, odnoszący się do klienta uzyskującego dostęp, który nie jest upoważniony do wykonania danego żądania.
 
-Czy stosowanie powyższych dyrektyw może rodzić jakieś negatywne konsekwencje? Zdecydowanie tak: obie dyrektywy mogą działać wbrew oczekiwaniom łącząc jest z mechanizmem przepisywania dostarczanym przez serwer NGINX. Spójrz na poniższy przykład:
+Czy stosowanie powyższych dyrektyw może rodzić jakieś negatywne konsekwencje? Zdecydowanie tak: obie dyrektywy mogą działać wbrew oczekiwaniom, zwłaszcza, łącząc je z mechanizmem przepisywania dostarczanym przez serwer NGINX. Spójrz na poniższy przykład:
 
 ```nginx
 server {
@@ -55,9 +55,9 @@ content-type: text/plain
 it's all okay
 ```
 
-Widzisz, że dostaliśmy odpowiedź o treści "_it's all okay_" z kodem 200. Dlaczego, skoro jawnie zablokowaliśmy dostęp do całego `/test` za pomocą dyrektywy `deny`?
+Widzisz, że dostaliśmy odpowiedź o treści "_it's all okay_" z kodem 200. Dlaczego, skoro jawnie zablokowaliśmy dostęp do całego zasobu `/test` za pomocą dyrektywy `deny` i która jest jakby nad kontekstem `location = /test` (tj. jej zakres rozchodzi się na cały blok `server`)?
 
-Jest to logiczne i prawidłowe zachowanie i ma związek z całym mechanizmem przetwarzania żądań. Każdy request, jak już dotrze do NGINX'a, zostaje przetwarzany w tzw. fazach. Jest ich dokładnie 11:
+Jest to logiczne i prawidłowe zachowanie i ma związek z całym mechanizmem przetwarzania żądań. Każdy request, jak już dotrze do NGINX'a, zostaje przetwarzany w tzw. fazach. Tych faz jest dokładnie 11:
 
 - `NGX_HTTP_POST_READ_PHASE` - pierwsza faza, w której czytany jest nagłówek żądania
   - przykładowe moduły: `ngx_http_realip_module`
@@ -91,11 +91,11 @@ Jest to logiczne i prawidłowe zachowanie i ma związek z całym mechanizmem prz
 - `NGX_HTTP_LOG_PHASE` - mechanizm logowania, tj. zapisywanie informacji do pliku z logami
   - przykładowe moduły: `ngx_http_log_module`
 
-Przygotowałem również prostą grafikę, która pomoże ci zrozumieć, jakie moduły są używane na każdym etapie:
+Przygotowałem również prostą grafikę, która pomoże ci zrozumieć, jakie moduły oraz dyrektywy są używane na każdym etapie:
 
 <img src="/assets/img/posts/nginx_phases.png" align="center" title="nginx_phases.png preview">
 
-Na każdej fazie można zarejestrować dowolną liczbę handlerów. Dodatkowo każda faza ma listę powiązanych z nią procedur obsługi.
+Dodatkowo na każdej fazie można zarejestrować dowolną liczbę handlerów oraz każda z nich ma listę powiązanych z nią procedur obsługi.
 
   > Polecam zapoznać się ze świetnym wyjaśnieniem dotyczącym [faz przetwarzania żądań](http://scm.zoomquiet.top/data/20120312173425/index.html). Dodatkowo, w tym [oficjalnym przewodniku](http://nginx.org/en/docs/dev/development_guide.html) także dość dokładnie opisano cały proces przejścia żądania przez każdą z faz.
 
