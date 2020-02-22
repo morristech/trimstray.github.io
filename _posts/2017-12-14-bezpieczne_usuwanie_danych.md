@@ -7,7 +7,7 @@ tags: [PL, tools, security, shred, rm]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-19 08:43:17 +0100
+  date_modified: 2020-02-22 10:51:27 +0100
 ---
 
 Oprócz standardowego polecenia `rm` którego działanie opiera się raczej na **zakrywaniu usuwanych danych**, polecenia takie jak `shred`, `scrub`, `sfill` czy `dd` zamazują dane w bardzo trudny do odzyskania ich sposób.
