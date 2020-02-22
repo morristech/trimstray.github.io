@@ -22,11 +22,11 @@ Spójrz na poniższy zrzut (dodatkowo jest to porównanie HTTP/1.1 oraz H2):
 
 Większość współczesnych przeglądarek otwiera jednocześnie kilka połączeń i jednocześnie pobiera różne pliki (obrazy, css, js), aby przyspieszyć ładowanie strony. Stąd jak widać, każde połączenie może obsługiwać wiele żądań.
 
-- Połączenia (ang. _connection_) HTTP - klient i serwer przedstawiają się w celu zestawienia sesji TCP/IP; nawiązanie połączenia z serwerem wymaga uzgadniania protokołu TCP i zasadniczo polega na utworzeniu połączenia z gniazdem serwera
+- Połączenie (ang. _connection_) HTTP - klient i serwer przedstawiają się w celu zestawienia sesji TCP/IP; nawiązanie połączenia z serwerem wymaga uzgadniania protokołu TCP i zasadniczo polega na utworzeniu połączenia z gniazdem serwera
 
 - Żądanie (ang. _request_) HTTP - klient pyta serwer o dany zasób; aby złożyć żądanie HTTP, należy już ustanowić połączenie z serwerem
 
-Jeśli nawiązano połączenie, można złożyć wiele żądań przy użyciu tego samego połączenia. Dla HTTP/1.0 jest to domyślnie jedno żądanie na połączenie, dla HTTP/1.1 domyślnie od 4 do 6 połączeń z wykorzystaniem mechanizmu podtrzymywania (`Keep-Alive`) połączeń.
+Jeśli nawiązano połączenie, można złożyć wiele żądań przy użyciu tego samego połączenia. Dla HTTP/1.0 jest to domyślnie jedno żądanie na połączenie, dla HTTP/1.1 domyślnie od 4 do 6 połączeń z wykorzystaniem mechanizmu podtrzymywania połączeń (`Keep-Alive`).
 
 Zerknij na to proste porównanie:
 

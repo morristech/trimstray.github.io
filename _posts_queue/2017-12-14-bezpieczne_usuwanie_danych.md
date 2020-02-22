@@ -2,15 +2,17 @@
 layout: post
 title: "Bezpieczne usuwanie danych"
 date: 2017-12-14 15:28:42
-categories: [PL, security]
 tags: publications
+categories: [PL, tools, security, shred, rm]
 comments: false
 favorite: false
+seo:
+  date_modified: 2020-02-19 08:43:17 +0100
 ---
 
 Oprócz standardowego polecenia `rm` którego działanie opiera się raczej na **zakrywaniu usuwanych danych**, polecenia takie jak `shred`, `scrub`, `sfill` czy `dd` zamazują dane w bardzo trudny do odzyskania ich sposób.
 
-Co więcej pozwalają na usuwanie danych za pomocą specjalnych algorytmów, np. **metodą Gutmanna** czy **DoD 5220.22-M**, **nadpisywania liczbami pseudolosowymi** oraz **nadpisywania danych zerami**.
+Co więcej, pozwalają na usuwanie danych za pomocą specjalnych algorytmów, np. **metodą Gutmanna**, **DoD 5220.22-M**, **nadpisywania liczbami pseudolosowymi** czy **nadpisywania danych zerami**.
 
 # Spis treści
 
@@ -59,7 +61,7 @@ Można także wykorzystać opcję `status=progress` (dostępna w paczce **GNU co
 
 Program ten spełnia wszystkie wytyczne "bezpiecznego" usuwania danych. Warto korzystać z niego na co dzień.
 
-W pierwszej linijce `shred` nadpisuje plik o nazwie "file" losowymi danymi powtarzając tą czynność 10 razy. Po zamazaniu pliku jest on nadpisywany zerami (opcja `-z | --zero`) aby ukryć zamazywanie a na końcu usuwany (opcja `-u | --remove`). Opcja `-f | --force` pozwala m.in. na ewentualną zmianę uprawnień aby zezwolić na zapis a opcja `-v | --verbose` włącza tryb gadatliwy.
+W pierwszej linijce `shred` nadpisuje plik o nazwie `file` losowymi danymi powtarzając tą czynność 10 razy. Po zamazaniu pliku jest on nadpisywany zerami (opcja `-z | --zero`) aby ukryć sam proces zamazywania a na końcu usuwany (opcja `-u | --remove`). Opcja `-f | --force` pozwala m.in. na ewentualną zmianę uprawnień aby zezwolić na zapis a opcja `-v | --verbose` włącza tryb gadatliwy.
 
 Dodatkowo przy drugim wywołaniu polecenia określone zostało źródło pobieranych danych.
 
