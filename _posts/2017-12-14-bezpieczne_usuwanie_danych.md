@@ -10,7 +10,7 @@ seo:
   date_modified: 2020-02-22 10:51:27 +0100
 ---
 
-Oprócz standardowego polecenia `rm` którego działanie opiera się raczej na **zakrywaniu usuwanych danych**, polecenia takie jak `shred`, `scrub`, `sfill` czy `dd` zamazują dane w bardzo trudny do odzyskania ich sposób.
+Oprócz standardowego polecenia `rm`, którego działanie opiera się raczej na **zakrywaniu usuwanych danych**, polecenia takie jak `shred`, `scrub`, `sfill` czy `dd` zamazują dane w bardzo trudny do odzyskania ich sposób.
 
 Co więcej, pozwalają na usuwanie danych za pomocą specjalnych algorytmów, np. **metodą Gutmanna**, **DoD 5220.22-M**, **nadpisywania liczbami pseudolosowymi** czy **nadpisywania danych zerami**.
 
@@ -27,21 +27,21 @@ Co więcej, pozwalają na usuwanie danych za pomocą specjalnych algorytmów, np
 
 # Dlaczego nie rm?
 
-Domyślne polecenie do usuwania danych nie robi nic innego jak tylko **zwalnia i-węzeł** nie dotykając faktycznych danych na dysku. Dane takie jest dosyć łatwo odzyskać wykorzystując przeznaczone do tego celu narzędzia.
+Domyślne polecenie do usuwania danych nie robi nic innego jak tylko **zwalnia i-węzeł** nie dotykając faktycznych danych na dysku. Dane takie jest dosyć łatwo odzyskać, wykorzystując przeznaczone do tego celu narzędzia.
 
-Przedstawione w tym artykule polecenia nie tylko usuwają faktyczne dane poprzez m.in. wielokrotne nadpisywanie po "odłączeniu" i-węzła ale też powodują, że odzyskanie ich może być nie możliwie.
+Przedstawione w tym artykule polecenia nie tylko usuwają faktyczne dane poprzez m.in. wielokrotne nadpisywanie po "odłączeniu" i-węzła, ale też powodują, że odzyskanie ich może być nie możliwie.
 
 # Usuwanie danych a księgowanie
 
-Narzędzia tego typu mogą nie spełniać w pełni swojego zadania jeśli dane, która mają usunąć znajdują się na systemie plików z księgowaniem. Jest to ciekawa uwaga, ponieważ księgowanie może spowodować, że mimo usunięcia danych ich fragmenty gdzieś tam sobie jeszcze są.
+Narzędzia tego typu mogą nie spełniać w pełni swojego zadania, jeśli dane, która mają usunąć, znajdują się na systemie plików z księgowaniem. Jest to ciekawa uwaga, ponieważ księgowanie może spowodować, że mimo usunięcia danych ich fragmenty gdzieś tam sobie jeszcze są.
 
-Nie wiem czy wyłączenie kroniki na czas usuwania jest dobrym pomysłem. Jeśli wykorzystujemy tryb księgowania polegający na zapisywaniu metadanych do dziennika, `shred` jak i pozostałe narzędzia, powinien dobrze wykonać swoją pracę.
+Nie wiem czy wyłączenie kroniki na czas usuwania jest dobrym pomysłem. Jeśli wykorzystujemy tryb księgowania polegający na zapisywaniu metadanych do dziennika, `shred`, jak i pozostałe narzędzia, powinien dobrze wykonać swoją pracę.
 
 # Opis narzędzi
 
 ## Disk (Destroyer) Dump
 
-Stary i poczciwy `dd`, za pomocą którego można wykonać różne cuda w tym usunąć dane z pamięci masowej (dobrze jak proces ten odbywa się świadomie). Oto kilka przykładów:
+Stary i poczciwy `dd` za pomocą którego można wykonać różne cuda w tym usunąć dane z pamięci masowej (dobrze jak proces ten odbywa się świadomie). Oto kilka przykładów:
 
 ```bash
 dd if=/dev/{zero,random,urandom} of=/dev/sda
@@ -49,7 +49,7 @@ dd if=/dev/{zero,random,urandom} of=/dev/sda bs=1M
 dd if=/dev/{zero,random,urandom} of=/dev/sda iflag=nocache oflag=direct bs=4096
 ```
 
-Jeszcze taka mała rada w jaki sposób "podejrzeć" jego działanie:
+Jeszcze taka mała rada, w jaki sposób "podejrzeć" jego działanie:
 
 ```bash
 watch -n2 'kill -USR1 $(pgrep ^dd)'
@@ -61,7 +61,7 @@ Można także wykorzystać opcję `status=progress` (dostępna w paczce **GNU co
 
 Program ten spełnia wszystkie wytyczne "bezpiecznego" usuwania danych. Warto korzystać z niego na co dzień.
 
-W pierwszej linijce `shred` nadpisuje plik o nazwie `file` losowymi danymi powtarzając tą czynność 10 razy. Po zamazaniu pliku jest on nadpisywany zerami (opcja `-z | --zero`) aby ukryć sam proces zamazywania a na końcu usuwany (opcja `-u | --remove`). Opcja `-f | --force` pozwala m.in. na ewentualną zmianę uprawnień aby zezwolić na zapis a opcja `-v | --verbose` włącza tryb gadatliwy.
+W pierwszej linijce `shred` nadpisuje plik o nazwie `file` losowymi danymi powtarzając tą czynność 10 razy. Po zamazaniu pliku jest on nadpisywany zerami (opcja `-z | --zero`) aby ukryć sam proces zamazywania a na końcu usuwany (opcja `-u | --remove`). Opcja `-f | --force` pozwala m.in. na ewentualną zmianę uprawnień, aby zezwolić na zapis a opcja `-v | --verbose` włącza tryb gadatliwy.
 
 Dodatkowo przy drugim wywołaniu polecenia określone zostało źródło pobieranych danych.
 
@@ -86,7 +86,7 @@ scrub -p dod -r file
 
 ## Badblocks
 
-Generalnie program ten służy do sprawdzania dysków pod względem bad sectorów. Pozwala jednak na wymazanie zawartości dysku poprzez wykonanie testu odczytu-zapisu:
+Ogólnie rzecz biorąc program ten służy do sprawdzania dysków pod względem bad sectorów. Pozwala jednak na wymazanie zawartości dysku poprzez wykonanie testu odczytu-zapisu:
 
 ```bash
 # apt-get install e2fsprogs
