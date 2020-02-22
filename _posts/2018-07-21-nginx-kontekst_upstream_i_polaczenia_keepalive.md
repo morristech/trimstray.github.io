@@ -7,7 +7,7 @@ tags: [PL, http, nginx, best-practices]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-21 16:30:58 +0100
+  date_modified: 2020-02-22 09:47:41 +0100
 ---
 
 Oryginalny model HTTP (w tym HTTP/1.0) definiuje połączenia krótkotrwałe jako standardową metodę komunikacji. Każde żądanie HTTP jest realizowane we własnym połączeniu; oznacza to, że uzgadnianie TCP następuje przed każdym żądaniem. Klient tworzy nowe połączenie TCP dla każdej sesji i kończy je po jej zakończeniu.
