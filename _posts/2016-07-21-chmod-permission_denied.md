@@ -1,14 +1,16 @@
 ---
 layout: post
-title: "Chmod: Permission denied"
+title: 'Chmod: Permission denied'
 date: 2016-07-21 10:08:11
-categories: [PL, system]
-tags: publications
+categories: [publications]
+tags: [PL, system, tools, permissions]
 comments: false
 favorite: false
+seo:
+  date_modified: 2020-02-22 00:42:36 +0100
 ---
 
-Jak zmienić uprawnienia do pliku/katalogu bez dostępu do polecenia `chmod`? Co znaczy w tym przypadku brak dostępu? Dokładniej mówiąc **brak praw wykonywania**. Oczywiście zakładam, że istnieje możliwość użycia innych narzędzi systemowych za pomocą których jest możliwe przywrócenie poprawnych uprawnień.
+Jak zmienić uprawnienia do pliku/katalogu bez dostępu do polecenia `chmod`? Oczywiście zakładam, że istnieje możliwość użycia innych narzędzi systemowych, za pomocą których jest możliwe przywrócenie poprawnych uprawnień.
 
 W przypadku problemów przy próbie zmiany uprawnień pojawia się następująca informacja:
 
@@ -20,18 +22,7 @@ chmod 0700 file
 bash: /bin/chmod: Permission denied
 ```
 
-Całe szczęście `chmod` to nie jedyne narzędzie do zmiany uprawnień. Aby rozwiązać ten problem system dostarcza kilka sposobów, które omówię poniżej.
-
-# Spis treści
-
-- **[Możliwe rozwiązania](#możliwe-rozwiązania)**
-  * [Polecenie cp](#polecenie-cp)
-  * [Polecenie cat](#polecenie-cat)
-  * [Perl/Python](#perl-python)
-  * [Polecenie install](#polecenie-install)
-  * [Busybox](#busybox)
-  * [Coreutils (Debian)](#coreutils--debian-)
-  * [ACL](#acl)
+Całe szczęście `chmod` to nie jedyne narzędzie do zmiany uprawnień. Aby rozwiązać ten problem, system dostarcza kilka sposobów, które omówię poniżej.
 
 # Możliwe rozwiązania
 
@@ -47,7 +38,7 @@ cp /bin/chmod chmod.01
 
 ## Polecenie cat
 
-Drugi sposób jest podobny choć tutaj wykorzystany jest narzędzie `cat`:
+Drugi sposób jest podobny, choć tutaj wykorzystuję narzędzie `cat`:
 
 ```bash
 cp -a /bin/ls chmod.01

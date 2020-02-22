@@ -1,7 +1,7 @@
 ---
 layout: post
 title: DEF CON Media Server
-date: 2018-11-25 14:56:22
+date: 2018-12-05 14:56:22
 categories: [talks]
 tags: [PL, hacking, defcon]
 comments: false
