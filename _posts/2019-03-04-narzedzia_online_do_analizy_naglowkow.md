@@ -22,12 +22,12 @@ Narzędzie firmy Mozilla dostępne jest także w wersji [konsolowej](https://git
 
 <p align="center">
     <img src="/assets/img/posts/securityheaders.com_preview.png"
-        alt="securityheaders.com_preview.png">
+        alt="securityheaders.com preview">
 </p>
 
 - **[Observatory by Mozilla](https://observatory.mozilla.org/)**
 
 <p align="center">
     <img src="/assets/img/posts/observatory.mozilla.org_preview.png"
-        alt="observatory.mozilla.org_preview.png">
+        alt="observatory.mozilla.org preview">
 </p>

@@ -46,7 +46,7 @@ Polecam zapoznać się ze świetnymi materiałami na temat dostępnych metod prz
 
 Zobacz także test (z wykorzystaniem biblioteki [libevent](http://libevent.org/)) porównujący każdą z metod:
 
-<img src="/assets/img/posts/libevent-benchmark.jpg" align="center" title="libevent-benchmark.jpg preview">
+<img src="/assets/img/posts/libevent-benchmark.jpg" align="center" title="libevent-benchmark preview">
 
 Jest to jedna z odpowiedzi, dlaczego warto uruchamiać produkcyjnie serwer NGINX na systemach BSD. Polecam obejrzeć [Why did Netflix use NGINX and FreeBSD to build their own CDN?](https://www.youtube.com/watch?v=KP_bKvXkoC4), a także zapoznać się z [świetnym artykułem](https://devinteske.com/wp/freebsd-nginx-performance/) opisującym wydajność serwera NGINX w systemie FreeBSD.
 
@@ -89,7 +89,7 @@ Standardowe operacje wejścia/wyjścia, np. `read()` i `write()` powodują zablo
 
 Zerknij na ten prosty diagram:
 
-<img src="/assets/img/posts/blocking_non-blocking.jpg" align="center" title="blocking_non-blocking.jpg preview">
+<img src="/assets/img/posts/blocking_non-blocking.jpg" align="center" title="blocking_non-blocking preview">
 
 Opisuje on dwie metody wywołań. Pierwsza (a) związana z blokowaniem wywołań systemowych, które są wykonywane aż do momentu ich zakończenia. Druga (b) związana z nieblokującym wejściem/wyjściem, która umożliwia zarządzanie przez jeden wątek wieloma żądaniami I/O naraz i precyzyjną kontrolę nad rozpoczęciem i zakończeniem żądania wejścia/wyjścia.
 
@@ -107,7 +107,7 @@ W ten sposób operacje wejścia/wyjścia i operacje sieciowe nie stanowią wąsk
 
 Spójrz na porównanie obu mechanizmów:
 
-<img src="/assets/img/posts/NGINX_non-blocking.png" align="center" title="NGINX_non-blocking.png preview">
+<img src="/assets/img/posts/NGINX_non-blocking.png" align="center" title="NGINX_non-blocking preview">
 
 Nieblokujące I/O jest jednym z powodów, dzięki któremu NGINX doskonale radzi sobie z bardzo dużą liczbą żądań.
 

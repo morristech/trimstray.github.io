@@ -16,7 +16,7 @@ Ideą mechanizmu `Keep-Alive` jest zmniejszenie opóźnień poprzez redukcję po
 
 Korzystając z mechanizmu `Keep-Alive`, przeglądarka nie musi nawiązywać wielu połączeń (pamiętaj, że nawiązywanie połączeń jest kosztowne), ale używa już ustanowionego połączenia i kontroluje, jak długo pozostaje ono aktywne/otwarte. Dodatkowo połączenia `Keep-Alive` mogą mieć znaczący wpływ na wydajność, zmniejszając obciążenie procesora i sieci potrzebne do otwierania i zamykania połączeń.
 
-<img src="/assets/img/posts/closed_vs_keepalive.png" align="center" title="closed_vs_keepalive">
+<img src="/assets/img/posts/closed_vs_keepalive.png" align="center" title="closed_vs_keepalive preview">
 
 Z włączonym podtrzymywaniem HTTP w serwerach upstream, NGINX pozwala znacznie zmniejszyć opóźnienia, a tym samym poprawia wydajność. Dodatkowo zmniejsza prawdopodobieństwo, że zabraknie portów efemerycznych. Po włączeniu tego mechanizmu, NGINX może ponownie wykorzystywać swoje istniejące połączenia (utrzymywanie aktywności) na jednym etapie przesyłania danych.
 
