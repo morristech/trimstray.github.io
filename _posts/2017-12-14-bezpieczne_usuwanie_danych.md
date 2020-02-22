@@ -14,17 +14,6 @@ Oprócz standardowego polecenia `rm`, którego działanie opiera się raczej na 
 
 Co więcej, pozwalają na usuwanie danych za pomocą specjalnych algorytmów, np. **metodą Gutmanna**, **DoD 5220.22-M**, **nadpisywania liczbami pseudolosowymi** czy **nadpisywania danych zerami**.
 
-# Spis treści
-
-- **[Dlaczego nie rm?](#dlaczego-nie-rm)**
-- **[Usuwanie danych a księgowanie](#usuwanie-danych-a-księgowanie)**
-- **[Opis narzędzi](#opis-narzędzi)**
-  * [Disk (Destroyer) Dump](#disk-destroyer-dump)
-  * [Shred](#shred)
-  * [Scrub](#scrub)
-  * [Badblocks](#badblocks)
-  * [Secure-delete](#secure-delete)
-
 # Dlaczego nie rm?
 
 Domyślne polecenie do usuwania danych nie robi nic innego jak tylko **zwalnia i-węzeł** nie dotykając faktycznych danych na dysku. Dane takie jest dosyć łatwo odzyskać, wykorzystując przeznaczone do tego celu narzędzia.
