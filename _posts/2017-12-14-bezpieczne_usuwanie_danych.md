@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "Bezpieczne usuwanie danych"
+title: Bezpieczne usuwanie danych
 date: 2017-12-14 15:28:42
-tags: publications
-categories: [PL, tools, security, shred, rm]
+categories: [publications]
+tags: [PL, tools, security, shred, rm]
 comments: false
 favorite: false
 seo:
