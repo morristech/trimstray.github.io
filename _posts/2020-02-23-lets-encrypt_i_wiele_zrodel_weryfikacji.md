@@ -10,7 +10,7 @@ seo:
   date_modified: 2020-02-23 12:15:08 +0100
 ---
 
-Od teraz, podczas procesu weryfikacji domeny, wysyłanych będzie wiele żądań HTTP do punktu końcowego, tj. `/.well-known/acme-challenge`, co najważniejsze, **z wielu adresów IP**.
+Od teraz, podczas procesu weryfikacji domeny, wysyłanych będzie wiele żądań HTTP do punktu końcowego `/.well-known/acme-challenge`, co najważniejsze, **z wielu adresów IP**.
 
   > Co więcej, min. 3 na 4 muszą zakończyć się sukcesem, zanim certyfikat zostanie wydany!
 
