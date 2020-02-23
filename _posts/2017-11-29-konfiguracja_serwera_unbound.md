@@ -16,26 +16,6 @@ W tym artykule zaprezentuję konfigurację złożoną z publicznych serwerów DN
 
 Jeżeli chodzi o inne publiczne serwery z dobrą polityką prywatności oraz udostępniające usługę na porcie 853 polecam przejrzeć [tę listę](https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Test+Servers).
 
-# Spis treści
-
-- **[Instalacja](#instalacja)**
-- **[Konfiguracja](#konfiguracja)**
-  * [Włączenie i uruchomienie](#włączenie-i-uruchomienie)
-  * [Klucze oraz certyfikaty](#klucze-oraz-certyfikaty)
-  * [Sekcja server](#sekcja-server)
-    + [Opcje podstawowe](#opcje-podstawowe)
-    + [Konfiguracja sieci](#konfiguracja-sieci)
-    + [Bezpieczeństwo](#bezpieczeństwo)
-    + [Optymalizacja i wydajność](#optymalizacja-i-wydajność)
-    + [Pamięć podręczna](#pamięć-podręczna)
-    + [Logowanie](#logowanie)
-    + [Protokół TLS](#protokół-tls)
-  * [Sekcja remote-control](#sekcja-remote-control)
-  * [Sekcja forward-zone](#sekcja-forward-zone)
-- **[Przykłady konfiguracji](#przykłady-konfiguracji)**
-  * [Recursive caching DNS (nieszyfrowany port UDP:53)](#rrecursive-caching-dns-nieszyfrowany-port-udp53)
-  * [Recursive caching DNS over TLS (szyfrowany port TCP:853)](#recursive-caching-dns-over-tls-szyfrowany-port-tcp853)
-
 # Instalacja
 
 Instalacja w dystrybucji CentOS wygląda następująco:

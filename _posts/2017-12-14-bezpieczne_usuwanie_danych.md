@@ -26,7 +26,7 @@ Narzędzia tego typu mogą nie spełniać w pełni swojego zadania, jeśli dane,
 
 Nie wiem czy wyłączenie kroniki na czas usuwania jest dobrym pomysłem. Jeśli wykorzystujemy tryb księgowania polegający na zapisywaniu metadanych do dziennika, `shred`, jak i pozostałe narzędzia, powinien dobrze wykonać swoją pracę.
 
-# Opis narzędzi
+# Dostępne narzędzia
 
 ## Disk (Destroyer) Dump
 
