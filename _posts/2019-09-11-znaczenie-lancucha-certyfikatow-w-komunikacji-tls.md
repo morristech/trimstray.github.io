@@ -7,7 +7,7 @@ tags: [PL, ssl, tls, certificate, chain-of-trust]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-23 10:40:45 +0100
+  date_modified: 2020-02-23 11:01:19 +0100
 ---
 
 Kluczową częścią każdego procesu uwierzytelniania opartego na certyfikatach jest walidacja łańcucha certyfikatów lub inaczej łańcucha zaufania (ang. _chain of trust_).
