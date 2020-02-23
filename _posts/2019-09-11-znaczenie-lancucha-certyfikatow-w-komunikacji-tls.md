@@ -1,13 +1,13 @@
 ---
 layout: post
-title: 'Znaczenie łańcucha certyfikatów w komunikacji TLS'
+title: Znaczenie łańcucha certyfikatów w komunikacji TLS
 date: 2019-09-11 01:32:08
 categories: [publications]
 tags: [PL, ssl, tls, certificate, chain-of-trust]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-21 16:30:58 +0100
+  date_modified: 2020-02-23 09:14:19 +0100
 ---
 
 Kluczową częścią każdego procesu uwierzytelniania opartego na certyfikatach jest walidacja łańcucha certyfikatów lub inaczej łańcucha zaufania (ang. _chain of trust_).
