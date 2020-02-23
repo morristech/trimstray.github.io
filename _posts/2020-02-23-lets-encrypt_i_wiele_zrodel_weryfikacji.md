@@ -26,6 +26,6 @@ Skąd taka zmiana?
 
 I co było jej genezą? Otóż jest ona związana z... protokołem BGP oraz możliwością przejęcia lub przekierowania ruchu sieciowego wykorzystującego ścieżkę weryfikacji poprawności (np. weryfikacja DNS) podmiotu ubiegającego się o certyfikat. Zespół badawczy z Princeton wykazał możliwość przeprowadzenia takiego ataku, który został opisany w dokumencie [Bamboozling Certificate Authorities with BGP](https://www.princeton.edu/~pmittal/publications/bgp-tls-usenix18.pdf).
 
-Dodatkowo stwierdzono, że większość wdrożeń BGP nie jest bezpieczna i może upłynąć wiele czasu, zanim możliwość przechwytywania ruchu BGP'owego będzie niemożliwa. Stąd, zamiast czekać i polegać na zewnętrznych mechanizmach zabezpieczających poczyniono kroki, aby zminimalizować wykonanie ew. ataków na ten protokół.
+Dodatkowo stwierdzono, że większość wdrożeń BGP nie jest bezpieczna i może upłynąć wiele czasu, zanim możliwość przechwytywania ruchu BGP’owego będzie niemożliwa. Stąd, zamiast czekać i polegać na zewnętrznych mechanizmach zabezpieczających (np. BGPsec) poczyniono kroki, aby zminimalizować skutki ew. ataków mogących zaburzyć cały mechanizm weryfikacji.
 
 Więcej informacji znajduje się tutaj: [ACME v1/v2: Validating challenges from multiple network vantage points](https://community.letsencrypt.org/t/acme-v1-v2-validating-challenges-from-multiple-network-vantage-points/112253).
