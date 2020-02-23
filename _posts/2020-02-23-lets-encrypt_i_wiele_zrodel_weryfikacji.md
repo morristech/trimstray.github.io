@@ -7,7 +7,7 @@ tags: [PL, ssl, tls, certificates, lets-encrypt]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-23 11:47:56 +0100
+  date_modified: 2020-02-23 12:12:11 +0100
 ---
 
 Od teraz, podczas procesu weryfikacji domeny, wysyłanych będzie wiele żądań HTTP do punktu końcowego `/.well-known/acme-challenge`, co kluczowe, **z różnych adresów IP**.
