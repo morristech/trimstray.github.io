@@ -1,13 +1,13 @@
 ---
 layout: post
-title: 'Let’s Encrypt i wiele źródeł weryfikacji'
+title: Let’s Encrypt i wiele źródeł weryfikacji
 date: 2020-02-23 11:22:46
 categories: [news]
 tags: [PL, ssl, tls, certificates, lets-encrypt]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-19 08:43:17 +0100
+  date_modified: 2020-02-23 11:47:56 +0100
 ---
 
 Od teraz, podczas procesu weryfikacji domeny, wysyłanych będzie wiele żądań HTTP do punktu końcowego `/.well-known/acme-challenge`, co kluczowe, **z różnych adresów IP**.
