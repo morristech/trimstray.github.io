@@ -22,7 +22,7 @@ Jeśli system nie posiada łańcucha certyfikatów lub jeśli łańcuch jest prz
 
 # Czym jest certyfikat klucza publicznego?
 
-Certyfikat klucza publicznego to podpisana instrukcja, która służy do ustanowienia powiązania między tożsamością a kluczem publicznym. Pozwala on „udowodnić”, że jego posiadacz ma prawo dostępu do danych zasobów (udowadnia własności do klucza publicznego). Dzięki takiemu certyfikatowi, można jednoznacznie zidentyfikować pewną jednostkę oraz stwierdzić, czy jest ona rzeczywiście tą, za którą się podaje.
+Certyfikat klucza publicznego to podpisana instrukcja, która służy do ustanowienia powiązania między tożsamością a kluczem publicznym. Pozwala on „udowodnić”, że jego posiadacz ma prawo dostępu do danych zasobów (udowadnia własności do klucza publicznego). Dzięki takiemu certyfikatowi można jednoznacznie zidentyfikować pewną jednostkę oraz stwierdzić, czy jest ona rzeczywiście tą, za którą się podaje.
 
 Certyfikat klucza publicznego zawiera cztery istotne informacje:
 
@@ -55,7 +55,7 @@ I rzeczywiście, jeśli klient nie ma jeszcze certyfikatu głównego, wówczas o
 
 Co więcej, obecność kotwicy zaufania na ścieżce certyfikacji może mieć negatywny wpływ na wydajność podczas nawiązywania połączeń za pomocą protokołu SSL/TLS, ponieważ certyfikat główny jest „pobierany” przy każdym uzgadnianiu. Jego brak, zmniejsza również zużycie pamięci po stronie serwera dla parametrów sesji TLS.
 
-Zgodnie z zaleceniami, łańcuch certyfikatów powinien zawierać tylko klucz publiczny certyfikatu końcowego i klucze publiczne wszelkich pośrednich urzędów certyfikacji. Przeglądarki będą ufać tylko tym certyfikatom, które przekształcają się w certyfikaty główne, które są już w magazynie zaufanych certyfikatów. Zignorują tym samym certyfikat główny wysłany w łańcuchu certyfikatów (w przeciwnym razie każdy mógłby wysłać dowolny certyfikat główny).
+Zgodnie z zaleceniami, łańcuch certyfikatów powinien zawierać tylko klucz publiczny certyfikatu końcowego i klucze publiczne wszelkich pośrednich urzędów certyfikacji. Przeglądarki będą ufać tylko tym certyfikatom, które przekształcają się w certyfikaty główne, które są już w magazynie zaufanych certyfikatów, ignorując tym samym certyfikat główny wysłany w łańcuchu certyfikatów (w przeciwnym razie każdy mógłby wysłać dowolny certyfikat główny).
 
 ## Jaki jest cel stosowania certyfikatów pośrednich?
 
@@ -156,7 +156,7 @@ Możemy zbudować łańcuch ręcznie. Pamiętaj, że pierwszy musi być certyfik
 $ cat example.com.crt inter_ca.crt > certs/example.com/example.com-chain.crt
 ```
 
-Dawno temu napisałem proste [narzędzie](https://github.com/trimstray/mkchain), które wykonuje całą pracę za Nas:
+Dawno temu napisałem proste [narzędzie](https://github.com/trimstray/mkchain), które wykonuje całą pracę:
 
 ```bash
 # Jeśli masz wszystkie certyfikaty:
