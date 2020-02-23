@@ -47,7 +47,9 @@ Podczas odwiedzania witryny HTTPS przeglądarka sprawdza, czy łańcuch zaufania
 
 ## Dlaczego łańcuch certyfikatów nie powinien zawierać certyfikatu głównego?
 
-Serwer zawsze wysyła łańcuch, ale nigdy nie powinien prezentować łańcuchów certyfikatów zawierających kotwicę zaufania, która jest certyfikatem głównego urzędu certyfikacji, ponieważ certyfikat główny jest bezużyteczny do celów sprawdzania poprawności. Zgodnie ze standardem TLS łańcuch może zawierać lub nie zawierać certyfikat główny; klient nie potrzebuje tego certyfikatu, ponieważ już go ma.
+Zgodnie ze standardem TLS łańcuch może zawierać lub nie zawierać certyfikat główny; klient nie potrzebuje tego certyfikatu, ponieważ już go ma.
+
+Serwer zawsze wysyła łańcuch, ale nigdy nie powinien prezentować łańcuchów certyfikatów zawierających kotwicę zaufania, która jest certyfikatem głównego urzędu certyfikacji, ponieważ certyfikat główny jest bezużyteczny do celów sprawdzania poprawności.
 
 I rzeczywiście, jeśli klient nie ma jeszcze certyfikatu głównego, wówczas otrzymanie go z serwera nie pomogłoby, ponieważ takiemu certyfikatowi można zaufać tylko wtedy, jeśli zostanie dostarczony z zaufanego źródła (tj. lokalnego magazynu certyfikatów).
 
