@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "Konfiguracja serwera Unbound"
+title: Konfiguracja serwera Unbound
 date: 2017-11-29 01:20:52
 categories: [publications]
 tags: [PL, dns, unbound, dnssec]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-19 08:43:17 +010
+  date_modified: 2020-02-23 08:41:55 +0100
 ---
 
 **Unbound** jest bardzo bezpiecznym, lekkim i łatwo konfigurowalnym serwerem DNS z funkcją buforowania zapytań. Pozwala na stosowanie zabezpieczenia uwierzytelniania danych (DNSSEC) oraz szyfrowania.
