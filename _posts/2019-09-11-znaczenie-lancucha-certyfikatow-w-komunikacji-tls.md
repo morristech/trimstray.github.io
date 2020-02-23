@@ -12,24 +12,24 @@ seo:
 
 Kluczową częścią każdego procesu uwierzytelniania opartego na certyfikatach jest walidacja łańcucha certyfikatów lub inaczej łańcucha zaufania (ang. _chain of trust_).
 
-Łańcuch zaufania to połączona ścieżka weryfikacji od certyfikatu jednostki końcowej do głównego urzędu certyfikacji (CA), który działa jako kotwica zaufania (ang. _trust anchor_). Kotwica zaufania to certyfikat urzędu certyfikacji (a ściślej publiczny klucz weryfikacyjny urzędu certyfikacji), któremu ufasz, ponieważ został Ci dostarczony w drodze pewnej wiarygodnej procedury. Jest on używany przez stronę ufającą jako punkt wyjścia do sprawdzania poprawności ścieżki weryfikacji.
+Łańcuch zaufania to połączona ścieżka certyfikacji od certyfikatu jednostki końcowej do głównego urzędu certyfikacji (CA), który działa jako kotwica zaufania (ang. _trust anchor_). Kotwica zaufania to certyfikat (a ściślej publiczny klucz weryfikacyjny urzędu certyfikacji), któremu ufasz, ponieważ został Ci dostarczony w drodze pewnej wiarygodnej procedury. Jest on używany przez stronę ufającą jako punkt wyjścia do sprawdzania poprawności łańcucha.
 
-  > W [RFC 5280](https://tools.ietf.org/html/rfc5280) łańcuch certyfikatów lub łańcuch zaufania jest zdefiniowany jako „ścieżka certyfikacji”.
+  > W [RFC 5280](https://tools.ietf.org/html/rfc5280) łańcuch certyfikatów lub łańcuch zaufania jest zdefiniowany jako _certification path_ (tzw. ścieżka certyfikacji).
 
 Jeśli system nie posiada łańcucha certyfikatów lub jeśli łańcuch jest przerwany (np. brakuje certyfikatów pośrednich), klient nie może sprawdzić, czy certyfikat jest ważny. W związku z tym certyfikat końcowy traci wszelką użyteczność wraz z tzw. wskaźnikiem zaufania (ang. _metric of trust_).
 
 # Czym jest certyfikat klucza publicznego?
 
-Certyfikat klucza publicznego to podpisana instrukcja, która służy do ustanowienia powiązania między tożsamością a kluczem publicznym. Pozwala on „udowodnić” systemom informatycznym lub serwisom internetowym, że jego posiadacz ma prawo dostępu do danych zasobów.
+Certyfikat klucza publicznego to podpisana instrukcja, która służy do ustanowienia powiązania między tożsamością a kluczem publicznym. Pozwala on „udowodnić” systemom informatycznym lub serwisom internetowym, że jego posiadacz ma prawo dostępu do danych zasobów (udowadnia własności do klucza publicznego). Dzięki takiemu certyfikatowi, można jednoznacznie zidentyfikować pewną jednostkę oraz stwierdzić, czy jest ona rzeczywiście tą, za którą się podaje.
 
-Certyfikat ten zawiera cztery istotne informacje:
+Certyfikat klucza publicznego zawiera cztery istotne informacje:
 
 - klucz publiczny podmiotu,
 - opis tożsamości podmiotu,
 - podpis cyfrowy złożony przez zaufaną trzecią stronę na dwóch powyższych strukturach
 - zdefiniowany czas życia, określony w treści certyfikatu
 
-Podmiot, który poręczy za to powiązanie i podpisze certyfikat, jest wystawcą certyfikatu, a tożsamość, której klucz publiczny jest potwierdzony, jest przedmiotem certyfikatu. W celu powiązania tożsamości i klucza publicznego wykorzystywany jest właśnie łańcuch certyfikatów.
+Podmiot, który poręczy za to powiązanie i podpisze certyfikat, jest wystawcą certyfikatu, a tożsamość, za pomocą której klucz publiczny jest potwierdzony, jest przedmiotem certyfikatu. W celu powiązania tożsamości i klucza publicznego wykorzystywany jest właśnie łańcuch certyfikatów.
 
 Certyfikat serwera wraz z łańcuchem nie jest przeznaczony dla serwera. Serwer nie ma zastosowania do własnego certyfikatu. Certyfikaty są zawsze dla innych podmiotów (tutaj klientów). Serwer używa klucza prywatnego (który odpowiada kluczowi publicznemu w certyfikacie). W szczególności, serwer nie musi ufać własnemu certyfikatowi ani żadnemu urzędowi certyfikacji, który go wydał.
 
