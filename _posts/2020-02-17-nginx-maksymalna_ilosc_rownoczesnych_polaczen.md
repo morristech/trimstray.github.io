@@ -40,7 +40,7 @@ Powodem takiego zachowania jest to, że system operacyjny potrzebuje pamięci do
 
 Aby zmienić limit maksymalnych deskryptorów plików (które mogą być otwarte przez pojedynczy proces roboczy), możesz również edytować dyrektywę `worker_rlimit_nofile`. Dzięki temu NGINX zapewnia bardzo potężne możliwości dynamicznej konfiguracji bez ponownego uruchamiania serwera.
 
-  > Maksymalna ilość otwartych deskryptorów plików nie jest jedynym ograniczeniem liczby połączeń — pamiętaj także o parametrach sieci jądra (stosu TCP/IP), maksymalnej liczbie procesów a także przepustowości sieci i wydajności samej maszyny, na której działa NGINX.
+  > Maksymalna ilość otwartych deskryptorów plików nie jest jedynym ograniczeniem liczby połączeń — pamiętaj także o parametrach jądra dotyczących sieci (stosu TCP/IP), maksymalnej liczbie procesów a także przepustowości sieci i wydajności samej maszyny, na której działa NGINX.
 
 Jeżeli chodzi o jasne wskazanie maksymalnej ilości otwartych deskryptorów plików, oficjalna dokumentacja jest tutaj bardzo niejednoznaczna. Mówi ona jedynie, że `worker_rlimit_nofile` jest ograniczeniem maksymalnej liczby otwartych plików dla procesów roboczych. Uważam, że jest to związane z jednym procesem roboczym, a nie ze wszystkimi.
 
@@ -81,7 +81,7 @@ Podsumowując, ile maksymalnie deskryptorów plików może otworzyć NGINX?
 
 Spójrz na poniższe przykłady:
 
-1) Jeden uchwyt do połączenia z klientem i jeden uchwyt do obsługi plików, w tym wypadku dla pliku statycznego serwowanego przez NGINX:
+1) Jeden uchwyt do połączenia z klientem i jeden uchwyt do obsługi plików, w tym wypadku dla pliku statycznego serwowanego bezpośrednio przez NGINX:
 
 ```
   # 1 połączenie, 2 uchwyty plików
@@ -191,4 +191,4 @@ nginx: master process         = LimitNOFILE (35,000)
 - dla wszystkich worker'ów maksymalna liczba deskryptorów plików wynosi 140 000 (`LimitNOFILE` na worker)
 - dla każdego procesu roboczego początkowa/bieżąca liczba deskryptorów plików wynosi 10 000 (`worker_rlimit_nofile`)
 
-W celu dodatkowego zgłębienia wiedzy polecam [Optimizing Nginx for High Traffic Loads](https://blog.martinfjordvald.com/2011/04/optimizing-nginx-for-high-traffic-loads/).
+W celu dodatkowego zgłębienia wiedzy polecam [Optimizing Nginx for High Traffic Loads](https://blog.martinfjordvald.com/optimizing-nginx-for-high-traffic-loads/).

@@ -10,19 +10,19 @@ seo:
   date_modified: 2020-02-21 16:30:58 +0100
 ---
 
-Kluczową częścią każdego procesu uwierzytelniania opartego na certyfikatach jest walidacja łańcucha certyfikatów, lub inaczej łańcucha zaufania (ang. _chain of trust_).
+Kluczową częścią każdego procesu uwierzytelniania opartego na certyfikatach jest walidacja łańcucha certyfikatów lub inaczej łańcucha zaufania (ang. _chain of trust_).
 
 Łańcuch zaufania to połączona ścieżka weryfikacji od certyfikatu jednostki końcowej do głównego urzędu certyfikacji (CA), który działa jako kotwica zaufania (ang. _trust anchor_). Kotwica zaufania to certyfikat urzędu certyfikacji (a ściślej publiczny klucz weryfikacyjny urzędu certyfikacji), któremu ufasz, ponieważ został Ci dostarczony w drodze pewnej wiarygodnej procedury. Jest on używany przez stronę ufającą jako punkt wyjścia do sprawdzania poprawności ścieżki weryfikacji.
 
   > W [RFC 5280](https://tools.ietf.org/html/rfc5280) łańcuch certyfikatów lub łańcuch zaufania jest zdefiniowany jako „ścieżka certyfikacji”.
 
-Jeśli system nie posiada łańcucha certyfikatów, lub jeśli łańcuch jest przerwany (np. brakuje certyfikatów pośrednich), klient nie może sprawdzić, czy certyfikat jest ważny. W związku z tym, certyfikat końcowy traci wszelką użyteczność wraz z tzw. wskaźnikiem zaufania (ang. _metric of trust_).
+Jeśli system nie posiada łańcucha certyfikatów lub jeśli łańcuch jest przerwany (np. brakuje certyfikatów pośrednich), klient nie może sprawdzić, czy certyfikat jest ważny. W związku z tym certyfikat końcowy traci wszelką użyteczność wraz z tzw. wskaźnikiem zaufania (ang. _metric of trust_).
 
 # Czym jest certyfikat klucza publicznego?
 
 Certyfikat klucza publicznego to podpisana instrukcja, która służy do ustanowienia powiązania między tożsamością a kluczem publicznym. Pozwala on „udowodnić” systemom informatycznym lub serwisom internetowym, że jego posiadacz ma prawo dostępu do danych zasobów.
 
-Certyfikat ten, zawiera cztery istotne informacje:
+Certyfikat ten zawiera cztery istotne informacje:
 
 - klucz publiczny podmiotu,
 - opis tożsamości podmiotu,
@@ -47,11 +47,11 @@ Podczas odwiedzania witryny HTTPS przeglądarka sprawdza, czy łańcuch zaufania
 
 Na wstępie stwierdziłem, że oba są tak naprawdę tym samym. I jest to oczywiście prawda, jednak chciałbym zwrócić uwagę na pewien aspekt, dzięki któremu, może istnieć pewna subtelna różnica między nimi.
 
-Łańcuch zaufania traktuję jako uporządkowaną listą certyfikatów, która zawiera certyfikat użytkownika końcowego i certyfikaty pośrednie (które reprezentują pośredni urząd certyfikacji). Dzięki temu, odbiorca ma możliwość sprawdzenie, czy nadawca i wszystkie certyfikaty pośrednie są godne zaufania.
+Łańcuch zaufania traktuję jako uporządkowaną listą certyfikatów, która zawiera certyfikat użytkownika końcowego i certyfikaty pośrednie (które reprezentują pośredni urząd certyfikacji). Dzięki temu odbiorca ma możliwość sprawdzenia, czy nadawca i wszystkie certyfikaty pośrednie są godne zaufania.
 
 ## Jaki jest cel stosowania certyfikatów pośrednich?
 
-Ciekawe pytanie, ponieważ większość dzisiejszych certyfikatów użytkowników końcowych jest wydawana przez pośrednie urzędy certyfikacji a nie przez urząd główny.
+Ciekawe pytanie, ponieważ większość dzisiejszych certyfikatów użytkowników końcowych jest wydawana przez pośrednie urzędy certyfikacji, a nie przez urząd główny.
 
 Jak to zwykle bywa, wszystko związane jest z bezpieczeństwem. Korzystanie z certyfikatów pośredniego urzędu certyfikacji jest bezpieczniejsze (dodatkowy poziom bezpieczeństwa), ponieważ w ten sposób główny urząd certyfikacji działa w trybie offline (poświęca wygodę w celu uzyskania bezpieczeństwa). Tak więc, jeśli certyfikat pośredni jest zagrożony, nie wpływa to na główny urząd certyfikacji.
 
@@ -91,7 +91,7 @@ ROOT_CERT (isCA=yes)
 
 Gdy urzędy certyfikacji podpisują certyfikaty, podpisują nie tylko klucz publiczny, ale także dodatkowe metadane. Te metadane obejmują m.in. datę wygaśnięcia certyfikatu. Najczęściej jest to zapisywane w formacie danych zdefiniowanym jako **X.509**. Co ważne, główny urząd certyfikacji stwierdza również, czy dany certyfikat może podpisywać inne „(pod) certyfikaty”, a tym samym „certyfikować” je, czy nie.
 
-Zarówno główny urząd certyfikacji, jak i pośrednie urzędy certyfikacji mają tą samą właściwość. W związku z tym mogą podpisywać inne certyfikaty. Oczywiście, tzw. _leaf certificate_ (certyfikat serwera, końcowy) nie może mieć zgody na podpisywanie innych certyfikatów.
+Zarówno główny urząd certyfikacji, jak i pośrednie urzędy certyfikacji mają tę samą właściwość. W związku z tym mogą podpisywać inne certyfikaty. Oczywiście, tzw. _leaf certificate_ (certyfikat serwera, końcowy) nie może mieć zgody na podpisywanie innych certyfikatów.
 
   > Jeśli certyfikat jest podpisany bezpośrednio przez zaufany główny urząd certyfikacji, nie ma potrzeby dodawania żadnych dodatkowych/pośrednich certyfikatów do łańcucha certyfikatów. Pamiętaj także, że główny urząd certyfikacji wydaje dla siebie certyfikat.
 
@@ -145,7 +145,7 @@ Jeżeli chcesz sprawdzić, jak zachowują się przeglądarki w przypadku napotka
 
 # Przykład złożenia cerytyfikatów w poprawny łańcuch
 
-Przyjmijmy, że dostaliśmy poniższy zestaw certyfikatów. Przed złożeniem ich w łańcuch, należy zweryfikować pola wystawcy oraz podmiotu, dla którego wystawiono certyfikat aby mieć pewność, że są to wszystkie certyfikaty za pomocą których utworzymy poprawny łańuch zaufania:
+Przyjmijmy, że dostaliśmy poniższy zestaw certyfikatów. Przed złożeniem ich w łańcuch, należy zweryfikować pola wystawcy oraz podmiotu, dla którego wystawiono certyfikat, aby mieć pewność, że są to wszystkie certyfikaty, za pomocą których utworzymy poprawny łańuch zaufania:
 
 ```bash
 $ ls
