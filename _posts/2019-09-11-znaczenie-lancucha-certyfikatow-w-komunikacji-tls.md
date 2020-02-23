@@ -12,7 +12,9 @@ seo:
 
 Kluczową częścią każdego procesu uwierzytelniania opartego na certyfikatach jest walidacja łańcucha certyfikatów lub inaczej łańcucha zaufania (ang. _chain of trust_).
 
-Łańcuch zaufania to połączona ścieżka certyfikacji od certyfikatu jednostki końcowej do głównego urzędu certyfikacji (CA), który działa jako kotwica zaufania (ang. _trust anchor_). Kotwica zaufania to certyfikat (a ściślej publiczny klucz weryfikacyjny urzędu certyfikacji), któremu ufasz, ponieważ został Ci dostarczony w drodze pewnej wiarygodnej procedury. Jest on używany przez stronę ufającą jako punkt wyjścia do sprawdzania poprawności łańcucha.
+Łańcuch zaufania to połączona ścieżka certyfikacji (uporządkowana lista certyfikatów), która zawiera certyfikat użytkownika końcowego i certyfikaty pośrednie (które reprezentują pośrednie urządy certyfikacji). W skład łańcucha certyfikatów wchodzi także certyfikat głównego urzędu certyfikacji (CA), który działa jako kotwica zaufania (ang. _trust anchor_).
+
+Kotwica zaufania to certyfikat (a ściślej publiczny klucz weryfikacyjny urzędu certyfikacji), któremu ufasz, ponieważ został Ci dostarczony w drodze pewnej wiarygodnej procedury. Jest on używany przez stronę ufającą jako punkt wyjścia do sprawdzania poprawności łańcucha.
 
   > W [RFC 5280](https://tools.ietf.org/html/rfc5280) łańcuch certyfikatów lub łańcuch zaufania jest zdefiniowany jako _certification path_ (tzw. ścieżka certyfikacji).
 
@@ -20,7 +22,7 @@ Jeśli system nie posiada łańcucha certyfikatów lub jeśli łańcuch jest prz
 
 # Czym jest certyfikat klucza publicznego?
 
-Certyfikat klucza publicznego to podpisana instrukcja, która służy do ustanowienia powiązania między tożsamością a kluczem publicznym. Pozwala on „udowodnić” systemom informatycznym lub serwisom internetowym, że jego posiadacz ma prawo dostępu do danych zasobów (udowadnia własności do klucza publicznego). Dzięki takiemu certyfikatowi, można jednoznacznie zidentyfikować pewną jednostkę oraz stwierdzić, czy jest ona rzeczywiście tą, za którą się podaje.
+Certyfikat klucza publicznego to podpisana instrukcja, która służy do ustanowienia powiązania między tożsamością a kluczem publicznym. Pozwala on „udowodnić”, że jego posiadacz ma prawo dostępu do danych zasobów (udowadnia własności do klucza publicznego). Dzięki takiemu certyfikatowi, można jednoznacznie zidentyfikować pewną jednostkę oraz stwierdzić, czy jest ona rzeczywiście tą, za którą się podaje.
 
 Certyfikat klucza publicznego zawiera cztery istotne informacje:
 
@@ -35,7 +37,7 @@ Certyfikat serwera wraz z łańcuchem nie jest przeznaczony dla serwera. Serwer 
 
 # Co wchodzi w skład poprawnego łańcucha certyfikatów?
 
-Łańcuch certyfikatów składa się ze wszystkich certyfikatów potrzebnych do weryfikacji podmiotu określonego w certyfikacie końcowym. W praktyce obejmuje to certyfikat serwera, certyfikaty pośrednie urzędów certyfikacji oraz certyfikat głównego urzędu certyfikacji, zaufany przez wszystkie strony w łańcuchu. Każdy pośredni urząd certyfikacji w łańcuchu posiada certyfikat wydany przez urząd certyfikacji jeden poziom nad nim w hierarchii zaufania.
+Łańcuch certyfikatów składa się ze wszystkich certyfikatów potrzebnych do weryfikacji podmiotu określonego w certyfikacie końcowym. W praktyce obejmuje to certyfikat serwera, certyfikaty pośrednie urzędów certyfikacji oraz certyfikat głównego urzędu certyfikacji — zaufany przez wszystkie strony w łańcuchu. Każdy pośredni urząd certyfikacji posiada certyfikat wydany przez urząd certyfikacji jeden poziom nad nim w hierarchii zaufania.
 
 <img src="/assets/img/posts/chain_of_trust.png" align="center" title="chain_of_trust preview">
 
@@ -43,11 +45,15 @@ Przeglądarki oraz systemy operacyjne zawierają listę zaufanych urzędów cert
 
 Podczas odwiedzania witryny HTTPS przeglądarka sprawdza, czy łańcuch zaufania prezentowany przez serwer podczas uzgadniania TLS kończy się na jednym z lokalnie zaufanych certyfikatów głównych.
 
-## Czy istnieją jakiekolwiek różnice między łańcuchem certyfikatów a łańcuchem zaufania?
+## Dlaczego łańcuch certyfikatów nie powinien zawierać certyfikatu głównego?
 
-Na wstępie stwierdziłem, że oba są tak naprawdę tym samym. I jest to oczywiście prawda, jednak chciałbym zwrócić uwagę na pewien aspekt, dzięki któremu, może istnieć pewna subtelna różnica między nimi.
+Serwer zawsze wysyła łańcuch, ale nigdy nie powinien prezentować łańcuchów certyfikatów zawierających kotwicę zaufania, która jest certyfikatem głównego urzędu certyfikacji, ponieważ certyfikat główny jest bezużyteczny do celów sprawdzania poprawności. Zgodnie ze standardem TLS łańcuch może zawierać lub nie zawierać certyfikat główny; klient nie potrzebuje tego certyfikatu, ponieważ już go ma.
 
-Łańcuch zaufania traktuję jako uporządkowaną listą certyfikatów, która zawiera certyfikat użytkownika końcowego i certyfikaty pośrednie (które reprezentują pośredni urząd certyfikacji). Dzięki temu odbiorca ma możliwość sprawdzenia, czy nadawca i wszystkie certyfikaty pośrednie są godne zaufania.
+I rzeczywiście, jeśli klient nie ma jeszcze certyfikatu głównego, wówczas otrzymanie go z serwera nie pomogłoby, ponieważ takiemu certyfikatowi można zaufać tylko wtedy, jeśli zostanie dostarczony z zaufanego źródła (tj. lokalnego magazynu certyfikatów).
+
+Co więcej, obecność kotwicy zaufania na ścieżce certyfikacji może mieć negatywny wpływ na wydajność podczas nawiązywania połączeń za pomocą protokołu SSL/TLS, ponieważ certyfikat główny jest „pobierany” przy każdym uzgadnianiu. Jego brak, zmniejsza również zużycie pamięci po stronie serwera dla parametrów sesji TLS.
+
+Zgodnie z zaleceniami, łańcuch certyfikatów powinien zawierać tylko klucz publiczny certyfikatu końcowego i klucze publiczne wszelkich pośrednich urzędów certyfikacji. Przeglądarki będą ufać tylko tym certyfikatom, które przekształcają się w certyfikaty główne, które są już w magazynie zaufanych certyfikatów. Zignorują tym samym certyfikat główny wysłany w łańcuchu certyfikatów (w przeciwnym razie każdy mógłby wysłać dowolny certyfikat główny).
 
 ## Jaki jest cel stosowania certyfikatów pośrednich?
 
@@ -64,16 +70,6 @@ W celu uzyskania dodatkowych informacji polecam dwie świetne odpowiedzi:
   > _Getting a new root certificates deployed due to compromised root is massively more difficult than replacing the certificates whose intermediates are compromised. [...] This is extremely hard to do in a short time. People don't upgrade their browser often enough. Some softwares like browsers have mechanism to quickly broadcasts revoked root certificates, and some software vendors have processes to rush release when a critical security vulnerability is found in their product, however you could be almost sure that they would not necessarily consider adding a new Root to warrant a rush update. Nor would people rush to update their software to get the new Root._ - [Lie Ryan](https://security.stackexchange.com/questions/128779/why-is-it-more-secure-to-use-intermediate-ca-certificates/128800#128800)
 
   > _The Root CA is offline for slow, awkward, but more secure servicing of requests. The use of multiple Intermediate CAs allows the "risk" of having the authority online and accessible to be divided into different sets of certificates; the eggs are spread into different baskets._ - [gowenfawr](https://security.stackexchange.com/questions/128779/why-is-it-more-secure-to-use-intermediate-ca-certificates/128791#128791)
-
-## Dlaczego łańcuch certyfikatów nie powinien zawierać certyfikatu głównego?
-
-Serwer zawsze wysyła łańcuch, ale nigdy nie powinien prezentować łańcuchów certyfikatów zawierających kotwicę zaufania, która jest certyfikatem głównego urzędu certyfikacji, ponieważ certyfikat główny jest bezużyteczny do celów sprawdzania poprawności. Zgodnie ze standardem TLS łańcuch może zawierać lub nie zawierać certyfikat główny; klient nie potrzebuje tego certyfikatu, ponieważ już go ma.
-
-I rzeczywiście, jeśli klient nie ma jeszcze certyfikatu głównego, wówczas otrzymanie go z serwera nie pomogłoby, ponieważ takiemu certyfikatowi można zaufać tylko wtedy, jeśli zostanie dostarczony z zaufanego źródła (tj. lokalnego magazynu certyfikatów).
-
-Co więcej, obecność kotwicy zaufania na ścieżce certyfikacji może mieć negatywny wpływ na wydajność podczas nawiązywania połączeń za pomocą protokołu SSL/TLS, ponieważ certyfikat główny jest „pobierany” przy każdym uzgadnianiu. Jego brak, zmniejsza również zużycie pamięci po stronie serwera dla parametrów sesji TLS.
-
-Zgodnie z zaleceniami, łańcuch certyfikatów powinien zawierać tylko klucz publiczny certyfikatu końcowego i klucze publiczne wszelkich pośrednich urzędów certyfikacji. Przeglądarki będą ufać tylko tym certyfikatom, które przekształcają się w certyfikaty główne, które są już w magazynie zaufanych certyfikatów. Zignorują tym samym certyfikat główny wysłany w łańcuchu certyfikatów (w przeciwnym razie każdy mógłby wysłać dowolny certyfikat główny).
 
 # Podpisywanie certyfikatów
 
