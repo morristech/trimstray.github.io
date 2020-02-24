@@ -28,9 +28,11 @@ Przed przejście do dalszej części, przypomnijmy sobie dwie istotne kwestia zw
 
 <img src="/assets/img/posts/cookie-comparison.png" align="center" title="cookie-comparison preview">
 
-Jeżeli chodzi o zmianę w przeglądarce Chrome. Parametr `SameSite` udostępnia trzy różne sposoby kontrolowania swojego zachowania. Można nie określać atrybutu lub można użyć atrybutów `Strict`, lub `Lax`:
+<sup>Grafika pochodzi z serwisu [Heroku Blog](https://blog.heroku.com/chrome-changes-samesite-cookie).</sup>
 
-- `Strict` - jest to bezwzględna polityka, cookie będzie wysyłany tylko w konktekście tej samej witryny co za tym idzie, nie będzie wysyłany w przypadku żadnych żądań między domenami (przeglądarka nie dołączy takiego ciasteczka automatycznie do żądania, które pochodzi z innej domeny; pamiętaj, że przeglądarka decyduje czy dołączyć ciastko bazując na pochodzeniu żądania), nawet jeśli użytkownik po prostu przejdzie do strony docelowej zwykłym linkiem, plik cookie nie zostanie wysłany (wartość ta może rodzić dziwne zachowania)
+Jeżeli chodzi o parametr `SameSite`, to udostępnia trzy różne sposoby kontrolowania swojego zachowania. Można nie określać atrybutu lub można użyć atrybutów `Strict`, lub `Lax`:
+
+- `Strict` - jest to bezwzględna polityka i może rodzić różne dziwne zachowania; cookie będzie wysyłany tylko w konktekście tej samej witryny co za tym idzie, nie będzie wysyłany w przypadku żadnych żądań między domenami (przeglądarka nie dołączy takiego ciasteczka automatycznie do żądania, które pochodzi z innej domeny; pamiętaj, że przeglądarka decyduje czy dołączyć ciastko bazując na pochodzeniu żądania), nawet jeśli użytkownik po prostu przejdzie do strony docelowej zwykłym linkiem, wtedy także plik cookie nie zostanie wysłany; jest to idealne rozwiązanie dla aplikacji, która nigdy nie musi pobierać wartości plików cookie z kontekstu zewnętrznej domeny
 
 - `Lax` - umożliwia wysłanie (udostępnianie) ciastka podczas nawigacji z zewnętrznej witryny, ale tylko w specyficznych przypadkach — w pasku adresu musi pojawić się witryna docelowa (zmiana domeny w pasku adresu), a zapytanie HTTP musi zostać zrealizowane przez jedną z bezpiecznych metod, np. `GET` (według [RFC 7231](https://tools.ietf.org/html/rfc7231#section-4.2.1) są to dodatkowo `HEAD` oraz `TRACE`); dla żądań między domenami z metodami `POST` oraz `PUT` lub podczas ładowania witryny w ramce pochodzącej z różnych źródeł, nie będą dołączane żadne ciastka
 
@@ -42,11 +44,11 @@ Atrybut ten ([Same-site Cookies - draft-west-first-party-cookies-07](https://too
 
 Wprowadzona modyfikacja zapewnia też bardzo solidną ochronę przed atakami polegającymi na fałszowaniu żądań między witrynami ([Cross-site request forgery (CSRF)](https://portswigger.net/web-security/csrf)), które defacto, nie są już w pierwszej dziesiątce OWASP Top 10.
 
-Zapoznaj się ze świetnym wyjaśnieniem [Flaga cookies SameSite – jak działa i przed czym zapewnia ochronę?](https://sekurak.pl/flaga-cookies-samesite-jak-dziala-i-przed-czym-zapewnia-ochrone/) oraz [SameSite cookies explained](https://web.dev/samesite-cookies-explained/). Oba szczegółowo wyjaśniają działanie tego parametru. Polecam także podcast [Jak działa flaga SameSite cookie?](https://podtail.com/it/podcast/kacper-szurek/jak-dzia-a-flaga-samesite-cookie/).
+Zapoznaj się ze świetnym wyjaśnieniem [Flaga cookies SameSite – jak działa i przed czym zapewnia ochronę?](https://sekurak.pl/flaga-cookies-samesite-jak-dziala-i-przed-czym-zapewnia-ochrone/), [SameSite cookies explained](https://web.dev/samesite-cookies-explained/) a także [Chrome's Changes Could Break Your App: Prepare for SameSite Cookie Updates](https://blog.heroku.com/chrome-changes-samesite-cookie). Każdy szczegółowo wyjaśnia działanie tego parametru. Polecam także podcast [Jak działa flaga SameSite cookie?](https://podtail.com/it/podcast/kacper-szurek/jak-dzia-a-flaga-samesite-cookie/).
 
-# Jakie rodzi to konsekwencje dla architektów aplikacji?
+# Jakie rodzi to konsekwencje dla aplikacji?
 
-Aktualizacja `SameSite` będzie wymagać od architektów i developerów **wyraźnego oznaczenia wszystkich plików cookie stron trzecich**, które mogą być używane. Pliki cookie bez odpowiedniego parametru nie będą działać w nowej wersji przeglądarki Chrome.
+Aktualizacja parametru `SameSite` będzie wymagać od architektów i developerów **wyraźnego oznaczenia wszystkich plików cookie stron trzecich**, które mogą być używane. Pliki cookie bez odpowiedniego parametru nie będą działać w nowej wersji przeglądarki Chrome.
 
   > W PHP 7.3 dodano obsługę flagi `SameSite` za pomocą dyrektywy `session.cookie_samesite=Lax`. W Django istnieje możliwość ustawienia tego atrybutu od wersji 2.1.x.
 
@@ -58,4 +60,18 @@ Oczywiście nadal istnieje możliwość użycia `SameSite=None` (będzie działa
 
   > Serwisy wykorzystujące protokół HTTP nie mogą ustawiać plików cookie z parametrem `Secure` od wersji Chrome 52+ oraz Firefox 52+).
 
-Jak widać, parametr `SameSite` wnosi istotny wkład w dziedzinie ochrony przed atakami, których skutkiem może być wyciek danych pomiędzy różnymi domenami. Wprowadzona implementacja po stronie przeglądarek pozwoli zminimalizować ew. pomyłki przez brak jawnej kontroli ciastek. Na koniec warto zapoznać się z artykułem [Bypass SameSite Cookies Default to Lax and get CSRF](https://medium.com/@renwa/bypass-samesite-cookies-default-to-lax-and-get-csrf-343ba09b9f2b) a także [CSRF is (really) dead](https://scotthelme.co.uk/csrf-is-really-dead/).
+Polecam repozytorium [GoogleChromeLabs/samesite-examples](https://github.com/GoogleChromeLabs/samesite-examples), które zawiera przykłady użycia atrybutu `SameSite` w różnych językach, bibliotekach i frameworkach. Dobrym pomysłem jest także zapoznanie się z [Chrome’s SameSite Cookie Update – What You Need to Do?](https://headerbidding.co/chrome-samesite-cookie-update/), który pokazuje na przykładach zalecenia oraz kroki jakie należy podjąć, w przypadku wykorzystywania zewnętrznych partnerów takich jak Facebook.
+
+Dodatkowo poniżej jest prosta ściąga, która z drugiej strony uzmysławia ew. problemy z jakimi będzie można się zmierzyć:
+
+<img src="/assets/img/posts/chrome_80_samesite_recommendations.png" align="center" title="chrome_80_samesite_recommendations preview">
+
+<sup>Grafika pochodzi z serwisu [adzerk.com](https://adzerk.com/blog/chrome-samesite/).</sup>
+
+Jak widać, parametr `SameSite` wnosi istotny wkład w dziedzinie ochrony przed atakami, których skutkiem może być wyciek danych pomiędzy różnymi domenami. Wprowadzona implementacja po stronie przeglądarek pozwoli zminimalizować ew. pomyłki przez brak jawnej kontroli ciastek.
+
+Na koniec warto przeczytać:
+
+- [CSRF is (really) dead](https://scotthelme.co.uk/csrf-is-really-dead/)
+- [Bypass SameSite Cookies Default to Lax and get CSRF](https://medium.com/@renwa/bypass-samesite-cookies-default-to-lax-and-get-csrf-343ba09b9f2b)
+- [Cross-Site Request Forgery (CSRF) Prevention Cheat Sheet](https://owasp.org/www-project-cheat-sheets/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
