@@ -30,7 +30,11 @@ Przed przejściem do dalszej części, przypomnijmy sobie dwie istotne kwestia z
 
 <sup>Grafika pochodzi z serwisu [Heroku Blog](https://blog.heroku.com/chrome-changes-samesite-cookie).</sup>
 
-Jeżeli chodzi o parametr `SameSite`, to udostępnia trzy różne sposoby kontrolowania swojego zachowania. Można nie określać atrybutu lub można użyć atrybutów `Strict`, lub `Lax`:
+Strony internetowe zazwyczaj integrują zewnętrzne usługi, widżety stron trzecich, osadzanie w serwisach społecznościowych i inne podobne funkcje. Podczas przeglądania Internetu te zewnętrzne usługi mogą przechowywać pliki cookie w przeglądarce, a następnie uzyskiwać do nich dostęp. Pewną cechą wspólną jest to, że z każdym plikiem cookie jest powiązana domena.
+
+Zapytania typu `cross-site` oznaczają, że do serwera zostało wygenerowane żądanie z innej domeny niż ta, dla której ciastko zostało utworzone. Natomiast dostęp do plików cookie w kontekście tej samej domeny (`same-site`) ma miejsce, gdy domena pliku cookie jest zgodna z domeną witryny na pasku adresu użytkownika.
+
+Jeżeli chodzi o parametr `SameSite`, to udostępnia on trzy różne sposoby kontrolowania swojego zachowania. Można nie określać atrybutu lub można użyć atrybutów `Strict`, lub `Lax`:
 
 - `Strict` - jest to bezwzględna polityka i może rodzić różne dziwne zachowania; cookie będzie wysyłany tylko w kontekście tej samej witryny, co za tym idzie, nie będzie wysyłany w przypadku żadnych żądań między domenami (przeglądarka nie dołączy takiego ciasteczka automatycznie do żądania, które pochodzi z innej domeny; pamiętaj, że przeglądarka decyduje czy dołączyć ciastko bazując na pochodzeniu żądania), nawet jeśli użytkownik po prostu przejdzie do strony docelowej zwykłym linkiem, wtedy także plik cookie nie zostanie wysłany; jest to idealne rozwiązanie dla aplikacji, która nigdy nie musi pobierać wartości plików cookie z kontekstu zewnętrznej domeny
 
