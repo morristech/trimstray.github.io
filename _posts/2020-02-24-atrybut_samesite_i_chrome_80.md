@@ -18,13 +18,13 @@ Polecam także zapoznać się z dokumentem [Deprecations and removals in Chrome 
 
 # Cookie i parametr SameSite
 
-Jedną ze zmian, która mnie osobiście bardzo zainteresowała jako administratora, jest zmiana podejścia do plików cookie, które jak wiemy, służą głównie do identyfikacji użytkowników oraz śledzenia ich poczynań w Internecie. Zmiana ta może mieć (i za pewne będzie miała) bardzo duży wpływ na działania aplikacji oraz ich integracji z serwisami/aplikacjami firm trzecich.
+Jedną ze zmian, która mnie osobiście bardzo zainteresowała jako administratora, jest zmiana podejścia do plików cookie, które jak wiemy, służą głównie do identyfikacji użytkowników oraz śledzenia ich poczynań w Internecie. Zmiana ta może mieć (i zapewne będzie miała) bardzo duży wpływ na działania aplikacji oraz ich integracji z serwisami/aplikacjami firm trzecich.
 
 Zmiana związana jest z atrybutem `SameSite` i została opisana już wcześniej przez IETF w dokumencie [Incrementally Better Cookies - draft-west-cookie-incrementalism-00](https://tools.ietf.org/html/draft-west-cookie-incrementalism-00). W maju 2019 roku Google ogłosiło, że ciastka, które nie zawierają `SameSite=None` lub `SameSite=Secure` nie będą dostępne dla stron trzecich. Teraz oficjalnie Chrome jako pierwszy implementuje zachowania opisane w drafcie właśnie od wersji 80.
 
   > W nowej wersji przeglądarki Chrome, jeżeli nie określono atrybutu `SameSite`, cookie będą domyślnie traktowane jako posiadające atrybut `SameSite=Lax`. Przeglądarki Mozilla Firefox oraz Microsoft Edge także zapewniają wprowadzenie tej zmiany.
 
-Przed przejściem do dalszej części, przypomnijmy sobie dwie istotne kwestia związane z ciastkami. Istnieją dwa rodzaje plików cookie — własne (`same-site`) i zewnętrzne (`cross-site`). Oba typy mogą zawierać te same informacje; są one jednak dostępne i tworzone inaczej:
+Przed przejściem do dalszej części, przypomnijmy sobie dwie istotne kwestia związane z ciastkami. Istnieją dwa rodzaje plików cookie — własne (ang. `same-site`) i zewnętrzne (ang. `cross-site`). Oba typy mogą zawierać te same informacje; są one jednak dostępne i tworzone inaczej:
 
 <img src="/assets/img/posts/cookie-comparison.png" align="center" title="cookie-comparison preview">
 
@@ -48,9 +48,9 @@ Zapoznaj się ze świetnym wyjaśnieniem [Flaga cookies SameSite – jak działa
 
 # Jakie rodzi to konsekwencje dla aplikacji?
 
-Aktualizacja parametru `SameSite` może wymagać od architektów i developerów wprowadzenia zmian w aplikacji. Jednym z zaleceń jest sprawdzenie wykorzystywanych zapytań między serwisami, które wymagają przesłania cookie. Jeżeli aplikacja nie korzysta z żądań pochodzących z różnych zewnętrznych serwisów, nadal należy podjąć pewne działania (wyeliminować wykorzystanie protokołu HTTP a także sprawdzić wszelkie niestandardowe integracje oparte na ciastkach).
+Aktualizacja parametru `SameSite` może wymagać od architektów i developerów wprowadzenia zmian w aplikacji. Jednym z zaleceń jest sprawdzenie wykorzystywanych zapytań między serwisami, które wymagają przesłania cookie. Jeżeli aplikacja nie korzysta z żądań pochodzących z różnych zewnętrznych serwisów, nadal należy podjąć pewne działania (wyeliminować wykorzystanie protokołu HTTP, a także sprawdzić wszelkie niestandardowe integracje oparte na ciastkach).
 
-Jednym z najlepszych dokumentów opisujących ew. problemy jest [Upcoming Browser Behavior Changes: What Developers Need to Know](https://auth0.com/blog/browser-behavior-changes-what-developers-need-to-know/).
+Jednym z najlepszych dokumentów opisujących ew. problemy i rozwiązania jest [Upcoming Browser Behavior Changes: What Developers Need to Know](https://auth0.com/blog/browser-behavior-changes-what-developers-need-to-know/).
 
   > W PHP 7.3 dodano obsługę flagi `SameSite` za pomocą dyrektywy `session.cookie_samesite=Lax`. W Django istnieje możliwość ustawienia tego atrybutu od wersji 2.1.x.
 
