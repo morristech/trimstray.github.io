@@ -14,11 +14,11 @@ Na początku tego miesiąca (4 lutego 2020r.) Google wydało [nową wersję prze
 
 Co więcej, nowa wersja eliminuje kilka wysoko ocenianych luk w systemie CVSS, np. [CVE-2020-6383](https://borncity.com/win/2020/02/22/sicherheitsupdate-edge-80-0-361-57-21-feb-2020/), które mogą zostać wykorzystane przez atakującego w celu przejęcia kontroli nad systemem użytkownika. Podatności były na tyle poważne, że nawet Amerykańska Agencja ds. Ochrony Infrastruktury i Cyberbezpieczeństwa (CISA) wydała [powiadomienie/zalecenie](https://www.us-cert.gov/ncas/current-activity/2020/02/21/google-releases-security-updates-chrome), które „zachęca” użytkowników i administratorów do aktualizacji przeglądarki Google Chrome do najnowszej wersji.
 
-Polecam także zapoznać się z dokumentem [Deprecations and removals in Chrome 80](https://developers.google.com/web/updates/2019/12/chrome-80-deps-rems) oraz [Google Chrome: better cookie protections and controls announced](https://www.ghacks.net/2019/05/08/google-chrome-better-cookie-protections-and-controls-announced/), w których dokładniej opisano niektóre zmiany.
+Polecam także zapoznać się z dokumentem [Deprecations and removals in Chrome 80](https://developers.google.com/web/updates/2019/12/chrome-80-deps-rems), w którym dokładniej opisano niektóre zmiany.
 
 # Cookie i parametr SameSite
 
-Jedną ze zmian, która mnie bardzo zainteresowała jako administratora, jest zmiana podejścia do plików cookie, które jak wiemy, służą głównie do identyfikacji użytkowników oraz śledzenia ich poczynań w Internecie. Zmiana ta może mieć (i zapewne będzie miała) bardzo duży wpływ na działania aplikacji oraz ich integracji z serwisami/aplikacjami firm trzecich.
+Jedną ze zmian, która jest szczególnie interesująca, jest zmiana podejścia do plików cookie, które jak wiemy, służą głównie do identyfikacji użytkowników oraz śledzenia ich poczynań w Internecie. Zmiana ta może mieć (i zapewne będzie miała) bardzo duży wpływ na działanie aplikacji oraz ich integracji z serwisami/aplikacjami firm trzecich.
 
 Od teraz, będzie trzeba podjąć pewne kroki m.in. w celu implementacji odpowiednich ustawnień ciastek, ponieważ jeżeli tego nie zrobimy, zrobi to za nas przeglądarka. Jest to podejście trochę zero jedynkowe, które zmusi architektów do podjęcia konkretnych decyzji, jednak bardzo potrzebne, zważywszy jak to wyglądało z nagłówkiem CSP i strachem przed jego stosowaniem.
 
@@ -30,7 +30,7 @@ Przed przejściem do dalszej części, przypomnijmy sobie dwie istotne kwestia z
 
 <img src="/assets/img/posts/cookie-comparison.png" align="center" title="cookie-comparison preview">
 
-<sup>Grafika pochodzi z serwisu [Heroku Blog](https://blog.heroku.com/chrome-changes-samesite-cookie).</sup>
+<sup><i>Grafika pochodzi z serwisu [Heroku Blog](https://blog.heroku.com/chrome-changes-samesite-cookie).</i></sup>
 
 Strony internetowe zazwyczaj integrują zewnętrzne usługi, widżety stron trzecich, osadzanie w serwisach społecznościowych i inne podobne funkcje. Podczas przeglądania Internetu te zewnętrzne usługi mogą przechowywać pliki cookie w przeglądarce, a następnie uzyskiwać do nich dostęp. Pewną cechą wspólną jest to, że z każdym plikiem cookie jest powiązana domena.
 
@@ -38,15 +38,15 @@ Zapytania typu `cross-site` oznaczają, że do serwera zostało wygenerowane ż�
 
 Jeżeli chodzi o parametr `SameSite`, to udostępnia on trzy różne sposoby kontrolowania swojego zachowania. Można nie określać atrybutu lub można użyć atrybutów `Strict`, lub `Lax`:
 
-- `Strict` - jest to bezwzględna polityka i może rodzić różne dziwne zachowania; cookie będzie wysyłany tylko w kontekście tej samej witryny, co za tym idzie, nie będzie wysyłany w przypadku żadnych żądań między domenami (przeglądarka nie dołączy takiego ciasteczka automatycznie do żądania, które pochodzi z innej domeny; pamiętaj, że przeglądarka decyduje czy dołączyć ciastko bazując na pochodzeniu żądania), nawet jeśli użytkownik po prostu przejdzie do strony docelowej zwykłym linkiem, wtedy także plik cookie nie zostanie wysłany; jest to idealne rozwiązanie dla aplikacji, która nigdy nie musi pobierać wartości plików cookie z kontekstu zewnętrznej domeny
+- `Strict` - jest to bezwzględna polityka, która może spowodować dziwne zachowania; cookie będzie wysyłany tylko w kontekście tej samej witryny, co za tym idzie, nie będzie wysyłany w przypadku żadnych żądań między domenami (przeglądarka nie dołączy takiego ciasteczka automatycznie do żądania, które pochodzi z innej domeny; pamiętaj, że przeglądarka decyduje czy dołączyć ciastko bazując na pochodzeniu żądania), nawet jeśli użytkownik po prostu przejdzie do strony docelowej zwykłym linkiem, wtedy także plik cookie nie zostanie wysłany; jest to idealne rozwiązanie dla aplikacji, która nigdy nie musi pobierać wartości plików cookie z kontekstu zewnętrznej domeny
 
-- `Lax` - umożliwia wysłanie (udostępnianie) ciastka podczas nawigacji z zewnętrznej witryny, ale tylko w specyficznych przypadkach — w pasku adresu musi pojawić się witryna docelowa (zmiana domeny w pasku adresu), a zapytanie HTTP musi zostać zrealizowane przez jedną z bezpiecznych metod, np. `GET` (według [RFC 7231](https://tools.ietf.org/html/rfc7231#section-4.2.1) są to dodatkowo `HEAD` oraz `TRACE`); dla żądań między domenami z metodami `POST` oraz `PUT` lub podczas ładowania witryny w ramce pochodzącej z różnych źródeł, nie będą dołączane żadne ciastka
+- `Lax` - umożliwia wysłanie (udostępnianie) ciastka podczas nawigacji z zewnętrznej witryny, ale tylko w specyficznych przypadkach — w pasku adresu musi pojawić się witryna docelowa (zmiana domeny w pasku adresu), a zapytanie HTTP musi zostać zrealizowane przez jedną z bezpiecznych metod, np. `GET` (według [RFC 7231](https://tools.ietf.org/html/rfc7231#section-4.2.1) są to dodatkowo `HEAD` oraz `TRACE`); ciastka nie będą dołączane dla żądań między domenami z metodami `POST` oraz `PUT` lub podczas ładowania witryny w ramce pochodzącej z różnych źródeł
 
 W tej chwili w starszych wersjach Chrome domyślną wartością parametru `SameSite` jest `None`, który umożliwia zewnętrznym ciastkom śledzić użytkowników na różnych stronach. Od lutego 2020 roku wartość tego parametru zmieniona jest na `Lax`, co w skrócie oznacza, że cookie będą ustawiane tylko wtedy, gdy domena w adresie URI odpowiada domenie, z którego pochodzi ciastko.
 
 Atrybut `SameSite` pozwala zadeklarować, czy twoje ciastko powinno być ograniczone do kontekstu pierwszej lub tej samej witryny. Tym samym zapewnia, że dane ciasteczko może być wysyłane wyłącznie z żądaniami zainicjowanymi z domeny, dla której zostało zarejestrowane, a nie z zewnętrznych domen.
 
-  > Na podstawie danych zebranych przez serwis [Can I use](https://caniuse.com/#feat=same-site-cookie-attribute), plik cookie z atrybutem `SameSite` ma już globalną obsługę 86,58% przeglądarek.
+  > Na podstawie danych zebranych przez serwis [Can I use](https://caniuse.com/#feat=same-site-cookie-attribute), cookie z atrybutem `SameSite` ma już globalną obsługę 86,58% przeglądarek.
 
 Wprowadzona modyfikacja zapewnia też bardzo solidną ochronę przed atakami polegającymi na fałszowaniu żądań między witrynami ([Cross-site request forgery (CSRF)](https://portswigger.net/web-security/csrf)), które de facto, nie są już w pierwszej dziesiątce OWASP Top 10.
 
@@ -54,9 +54,10 @@ W celu pogłębienia swojej wiedzy zapoznaj się ze świetnymi wyjaśnieniami:
 
 - [Flaga cookies SameSite – jak działa i przed czym zapewnia ochronę?](https://sekurak.pl/flaga-cookies-samesite-jak-dziala-i-przed-czym-zapewnia-ochrone/)
 - [SameSite cookies explained](https://web.dev/samesite-cookies-explained/)
+- [Google Chrome: better cookie protections and controls announced](https://www.ghacks.net/2019/05/08/google-chrome-better-cookie-protections-and-controls-announced/)
 - [Chrome's Changes Could Break Your App: Prepare for SameSite Cookie Updates](https://blog.heroku.com/chrome-changes-samesite-cookie).
 
-Każdy szczegółowo wyjaśnia działanie tego parametru. Polecam także podcast [Jak działa flaga SameSite cookie?](https://podtail.com/it/podcast/kacper-szurek/jak-dzia-a-flaga-samesite-cookie/).
+Każde z nich szczegółowo wyjaśnia działanie tego parametru. Polecam także podcast [Jak działa flaga SameSite cookie?](https://podtail.com/it/podcast/kacper-szurek/jak-dzia-a-flaga-samesite-cookie/).
 
 # Zmiana a konsekwencje dla aplikacji
 
@@ -68,7 +69,7 @@ Jednym z najlepszych dokumentów opisujących ew. problemy i rozwiązania jest [
 
 Dobrym pomysłem jest także zapoznanie się z [Chrome’s SameSite Cookie Update – What You Need to Do?](https://headerbidding.co/chrome-samesite-cookie-update/), który pokazuje na przykładach zalecenia oraz kroki, jakie należy podjąć, w przypadku wykorzystywania zewnętrznych partnerów takich jak Facebook. Dodatkowo polecam repozytorium [GoogleChromeLabs/samesite-examples](https://github.com/GoogleChromeLabs/samesite-examples), które zawiera przykłady użycia atrybutu `SameSite` w różnych językach, bibliotekach i frameworkach.
 
-Zmiana ta bardzo mocno ograniczy możliwość śledzenia użytkowników przez serwisy zewnętrzne, możliwość wykonania ataku CSRF, a także ewentualnych wycieków danych.
+Zmiana ta bardzo mocno ograniczy możliwość śledzenia użytkowników przez serwisy zewnętrzne, wykonania ataku CSRF, a także ewentualnych wycieków danych.
 
   > Dodatkowe zalecenia dla architektów web-aplikacji opisane zostały w [SameSite cookie recipes](https://web.dev/samesite-cookie-recipes/) oraz na oficjalnym blogu Chromium — [Developers: Get Ready for New SameSite=None; Secure Cookie Settings](https://blog.chromium.org/2019/10/developers-get-ready-for-new.html).
 
@@ -80,7 +81,7 @@ Zerknij na poniższą ściągę, która z drugiej strony uzmysławia ew. problem
 
 <img src="/assets/img/posts/chrome_80_samesite_recommendations.png" align="center" title="chrome_80_samesite_recommendations preview">
 
-<sup>Grafika pochodzi z serwisu [adzerk.com](https://adzerk.com/blog/chrome-samesite/).</sup>
+<sup><i>Grafika pochodzi z serwisu [adzerk.com](https://adzerk.com/blog/chrome-samesite/).</i></sup>
 
 Jak widać, parametr `SameSite` wnosi istotny wkład w dziedzinie ochrony przed atakami, których skutkiem może być wyciek danych pomiędzy różnymi domenami. Wprowadzona implementacja po stronie przeglądarek pozwoli zminimalizować ew. pomyłki przez brak jawnej kontroli ciastek.
 
