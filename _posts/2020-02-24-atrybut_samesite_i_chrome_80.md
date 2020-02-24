@@ -71,7 +71,7 @@ Każde z nich szczegółowo wyjaśnia działanie tego parametru. Polecam także 
 
 # Zmiana a konsekwencje dla aplikacji
 
-Aktualizacja parametru `SameSite` może wymagać od architektów i developerów wprowadzenia zmian w aplikacji. Jednym z zaleceń jest sprawdzenie wykorzystywanych zapytań między serwisami, które wymagają przesłania cookie. Jeżeli aplikacja nie korzysta z żądań pochodzących z różnych zewnętrznych serwisów, nadal należy podjąć pewne działania, tj. wyeliminować wykorzystanie protokołu HTTP, a także sprawdzić wszelkie niestandardowe integracje oparte na ciastkach.
+Aktualizacja parametru `SameSite` do wartości `Lax` prawdopodobnie może zepsuć wiele rzeczy i będzie wymagać od architektów i developerów wprowadzenia pewnych zmian w aplikacji. Jednym z zaleceń jest sprawdzenie wykorzystywanych zapytań między serwisami, które wymagają przesłania cookie. Jeżeli aplikacja nie korzysta z żądań pochodzących z różnych zewnętrznych serwisów, nadal należy podjąć pewne działania, tj. wyeliminować wykorzystanie protokołu HTTP, a także sprawdzić wszelkie niestandardowe integracje oparte na ciastkach.
 
 Jednym z najlepszych dokumentów opisujących ew. problemy i rozwiązania jest [Upcoming Browser Behavior Changes: What Developers Need to Know](https://auth0.com/blog/browser-behavior-changes-what-developers-need-to-know/).
 
