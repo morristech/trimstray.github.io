@@ -26,7 +26,17 @@ Zmiana związana jest z atrybutem [SameSite](https://tools.ietf.org/html/draft-w
 
   > W nowej wersji przeglądarki Chrome, jeżeli nie określono atrybutu `SameSite`, cookie będą domyślnie traktowane jako posiadające atrybut `SameSite=Lax`. Przeglądarki Mozilla Firefox oraz Microsoft Edge także zapewniają wprowadzenie tej zmiany.
 
-Przed przejściem do dalszej części, przypomnijmy sobie dwie istotne kwestia związane z ciastkami. Istnieją dwa rodzaje plików cookie — własne (ang. `same-site`) i zewnętrzne (ang. `cross-site`). Oba typy mogą zawierać te same informacje; są one jednak dostępne i tworzone inaczej:
+Przed przejściem do dalszej części, przypomnijmy sobie kilka istotnych kwestii związanych z ciastkami. Pierwsza jest taka, że ciastka lubią zmieniać swoje miejsce i nie mają żadnych skrupułów w kwestii tego, dokąd idą, oczywiście z wyjątkiem podstawowych ograniczeń związanych z miejscem, z którego pochodzą. Oto trzy przykłady potwierdzające przemieszczanie się ciastek:
+
+- jeśli witryna ustawia plik cookie, następnie klikniesz link do innej strony w tej samej witrynie, czy plik cookie zostanie automatycznie wysłany z żądaniem? Tak.
+
+- jeśli atakujący wyśle link do tej samej witryny w spreparowanej wiadomości, a Ty w niego klikniesz, czy plik cookie zostanie wysłany? Tak.
+
+- jeśli atakujący przekieruje Cię na złośliwą stronę, a po jej odwiedzeniu Twoja przeglądarka wyśle żądanie do oryginalnej strony internetowej, na której ustawiony jest plik cookie - czy plik cookie zostanie wysłany wraz z żądaniem? Tak.
+
+Pochodzenie jest tutaj słowem kluczowym, ponieważ cookies nie dbają o to, w jaki sposób ani z jakiego źródła żądanie zostało zainicjowane, zależy im tylko na tym, czy są ważne dla żądanego zasobu.
+
+Musimy też wiedzieć, że zasadniczo istnieją dwa rodzaje plików cookie — własne (ang. `same-site`) i zewnętrzne (ang. `cross-site`). Oba typy mogą zawierać te same informacje; są one jednak dostępne i tworzone inaczej:
 
 <img src="/assets/img/posts/cookie-comparison.png" align="center" title="cookie-comparison preview">
 
