@@ -7,7 +7,7 @@ tags: [PL, http, security, pentesting, cookie, samesite, chrome]
 comments: false
 favorite: false
 seo:
-  date_modified: 2020-02-23 12:30:23 +0100
+  date_modified: 2020-02-24 12:07:51 +0100
 ---
 
 Na początku tego miesiąca (4 lutego 2020r.) Google wydało [nową wersję przeglądarki Chrome](https://developers.google.com/web/updates/2020/02/nic80), w której doszło do wielu ciekawych zmian. Jest ich ponad 50, a większość ma przyspieszyć, jak i zwiększyć bezpieczeństwo samej przeglądarki.
