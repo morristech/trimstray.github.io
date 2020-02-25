@@ -68,6 +68,11 @@ Spakowanie każdego rekordu TLS do dedykowanego pakietu powoduje dodatkowe obci�
 
 Myślę, że optymalną wartością jest wartość 1400 bajtów (lub bardzo zbliżona). 1400 bajtów (tak naprawdę powinno być nawet nieco niższe zgodnie z równaniem) jest zalecanym ustawieniem dla ruchu interaktywnego, w którym chcesz uniknąć niepotrzebnych opóźnień spowodowanych utratą/fluktuacją fragmentów rekordu TLS.
 
+Spójrzmy także na poniższą rekomendację (autorzy: Leif Hedstrom, Thomas Jackson, Brian Geffon):
+
+- mniejszy rozmiar rekordu TLS; MTU/MSS (1500) - TCP (20 bytes) - IP (40 bytes): 1500 - 40 - 20 = 1440 bytes
+- większy rozmiar rekordu TLS; maksymalny rozmiar wynosi 16,383 (2^14 - 1)
+
 Przykład:
 
 ```nginx
