@@ -97,7 +97,7 @@ li:hover {
 }
 
 .entries-list .entry-title a:hover {
-  color: unset;
+  color: #006268;
 }
 
 /* the fallback color from https://raw.githubusercontent.com/jwarby/pygments-css/master/github.css */
@@ -164,13 +164,13 @@ li:hover {
 .highlight .vi { color: var(--highlight-vi, #008080) } /* Name.Variable.Instance */
 .highlight .il { color: var(--highlight-il, #009999) } /* Literal.Number.Integer.Long */
 
-
 /*-- Codes Snippet --*/
 
 div.highlight,
 figure.highlight,
 .highlighter-rouge {
-  background: var(--highlight-pre-bg, #f7f7f7)
+  background: var(--highlight-pre-bg, #f7f7f7);
+  color: darkslategray;
 }
 
 .highlight {
@@ -242,7 +242,8 @@ td.rouge-code {
 /* code snippet radius */
 .highlighter-rouge,
 .highlight {
-  border-radius: 5px;
+  /* border-radius: 5px; */
+  border-radius: 0px;
 }
 
 /* Hide line numbers for defualt, console, and terminal code snippets */
