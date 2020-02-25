@@ -91,3 +91,11 @@ li:hover {
   position:relative;
   z-index:2000;
 }
+
+.entry a {
+  color: #fa80729e;
+}
+
+.entries-list .entry-title a:hover {
+  color: salmon;
+}
