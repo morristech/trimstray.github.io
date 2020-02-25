@@ -1,5 +1,5 @@
 ---
-title: Posts
+title:
 layout: posts
 permalink: /
 entries_layout: list
