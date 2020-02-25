@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Atrybut SameSite i Chrome 80
+title: Cookies, atrybut SameSite i Chrome 80
 date: 2020-02-24 07:31:05
 categories: [news]
 tags: [PL, http, security, pentesting, cookie, samesite, chrome]
@@ -16,7 +16,7 @@ Co więcej, nowa wersja eliminuje kilka wysoko ocenianych luk w systemie CVSS, n
 
 Polecam także zapoznać się z dokumentem [Deprecations and removals in Chrome 80](https://developers.google.com/web/updates/2019/12/chrome-80-deps-rems), w którym dokładniej opisano niektóre zmiany.
 
-# Cookie i parametr SameSite
+# Cookie i flaga SameSite
 
 Jedną ze zmian, która jest szczególnie interesująca, jest zmiana podejścia do plików cookie, które jak wiemy, służą głównie do identyfikacji użytkowników oraz śledzenia ich poczynań w Internecie. Zmiana ta może mieć (i zapewne będzie miała) bardzo duży wpływ na działanie aplikacji oraz ich integracji z serwisami/aplikacjami firm trzecich.
 
