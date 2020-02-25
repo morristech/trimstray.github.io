@@ -28,11 +28,11 @@ Zmiana związana jest z atrybutem [SameSite](https://tools.ietf.org/html/draft-w
 
 Przed przejściem do dalszej części, przypomnijmy sobie kilka istotnych kwestii związanych z ciastkami. Pierwsza jest taka, że ciastka lubią zmieniać swoje miejsce i nie mają żadnych skrupułów w kwestii tego, dokąd idą, oczywiście z wyjątkiem podstawowych ograniczeń związanych z miejscem, z którego pochodzą. Oto trzy przykłady potwierdzające przemieszczanie się ciastek:
 
-- jeśli witryna ustawia plik cookie, następnie klikniesz link do innej strony w tej samej witrynie, czy plik cookie zostanie automatycznie wysłany z żądaniem? Tak.
+- jeśli witryna ustawia plik cookie, następnie klikniesz link do innej strony w tej samej witrynie, to plik cookie zostanie automatycznie wysłany z żądaniem
 
-- jeśli atakujący wyśle link do tej samej witryny w spreparowanej wiadomości, a Ty w niego klikniesz, czy plik cookie zostanie wysłany? Tak.
+- jeśli atakujący wyśle link do tej samej witryny w spreparowanej wiadomości, następnie w niego klikniesz, to plik cookie zostanie wysłany
 
-- jeśli atakujący przekieruje Cię na złośliwą stronę, a po jej odwiedzeniu Twoja przeglądarka wyśle żądanie do oryginalnej strony internetowej, na której ustawiony jest plik cookie - czy plik cookie zostanie wysłany wraz z żądaniem? Tak.
+- jeśli atakujący przekieruje Cię na złośliwą stronę, a po jej odwiedzeniu Twoja przeglądarka wyśle żądanie do oryginalnej strony internetowej, na której ustawiony jest plik cookie, to plik cookie zostanie także wysłany wraz z żądaniem
 
 Pochodzenie jest tutaj słowem kluczowym, ponieważ cookies nie dbają o to, w jaki sposób ani z jakiego źródła żądanie zostało zainicjowane, zależy im tylko na tym, czy są ważne dla żądanego zasobu.
 
