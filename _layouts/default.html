@@ -10,13 +10,12 @@
 
   <body class="layout--{{ page.layout | default: layout.layout }}{% if page.classes or layout.classes %}{{ page.classes | default: layout.classes | join: ' ' | prepend: ' ' }}{% endif %} {{ page.title | slugify }}">
 
-    {% include menu.html %}
-
     {% include skip-links.html %}
 
     <div class="canvas">
       <div class="wrapper">
         {% include masthead.html %}
+        {% include menu.html %}
         <div class="initial-content">
           {{ content }}
         </div>
