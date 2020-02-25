@@ -12,11 +12,11 @@ seo:
 
 Nie, nie jest możliwa obsługa takiej domeny. Przeanalizujmy ten problem na przykładzie domeny `example.com` oraz certyfikatu wildcard wystawionego tylko dla `*.example.com`.
 
-Symbol wieloznaczny w nazwie odzwierciedla tylko jedną etykietę i można pozostawić go tylko od lewej strony. W takim przypadku (domyślnie), symbol wieloznaczny jest ważny tylko dla `*.example.com`, `sub.example.com` ale już nie dla `www.subdomain.example.com` ani `example.com`. Zgodnie z tym, `*.*.example.com` lub `www.*.example.com` także nie będą chronione certyfikatem wildcard wystawionym dla `*.example.com`.
+Symbol wieloznaczny w nazwie odzwierciedla tylko jedną etykietę i można pozostawić go tylko od lewej strony. W takim przypadku (domyślnie), symbol wieloznaczny jest ważny tylko dla `sub.example.com` ale już nie dla `www.subdomain.example.com` ani `example.com`. Zgodnie z tym, `*.*.example.com` lub `www.*.example.com` także nie będą chronione certyfikatem wildcard wystawionym dla `*.example.com`.
 
   > Aby zabezpieczyć samą nazwę domeny i hosty w domenie, musisz uzyskać certyfikat z nazwami w rozszerzeniu SAN.
 
-Z technicznego punktu widzenia certyfikaty typu wildcard wydawane są na podstawie „nieznanych potomków” poddomeny. Większość certyfikatów wieloznacznych wydawanych jest dla domen 3-częściowych (`*.example.com`), ale bardzo często można je zobaczyć w przypadku domen 4-częściowych (np. `*.example.co.uk`).
+Z technicznego punktu widzenia certyfikaty typu wildcard wydawane są na podstawie „nieznanych potomków” poddomeny. Większość certyfikatów wieloznacznych wydawanych jest dla domen 3-częściowych (`*.example.com`), ale można je spotkać w przypadku domen 4-częściowych (np. `*.example.co.uk`).
 
 Dokładna odpowiedź na zadane pytanie znajduje się w [RFC 2818 - Server Identity](https://tools.ietf.org/html/rfc2818#section-3.1) <sup>[IETF]</sup>:
 
@@ -26,9 +26,9 @@ Co więcej, [RFC 2459 - Server Identity Check](https://tools.ietf.org/html/rfc25
 
   > _A "`*`" wildcard character MAY be used as **the left-most name component** in the certificate.  For example, `*.example.com` would match `a.example.com`, `foo.example.com`, etc. but **would not match** `example.com`._
 
-Jak widzisz, standardy mówią, że `*` powinien pasować do minimum jednego znaku bez kropek. Dlatego domena główna musi być alternatywną nazwą, aby mogła być chroniona.
+Jak widzisz, standardy mówią, że `*` powinien pasować do minimum jednego znaku bez kropek. Dlatego domena główna musi być alternatywną nazwą, aby mogła być chroniona tym samym certyfikatem.
 
-W przypadku certyfikatu `*.example.com`:
+W przypadku certyfikatu dla `*.example.com`:
 
 - `a.example.com` będzie obsługiwany
 - `www.example.com` będzie obsługiwany
