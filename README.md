@@ -2,4 +2,4 @@
 
 My simple website.
 
-- theme: cotes2020/jekyll-theme-chirpy, © 2017-2019 Cotes Chung
+- theme: mmistakes/jekyll-theme-basically-basic
