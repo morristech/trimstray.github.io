@@ -10,7 +10,9 @@ seo:
   date_modified: 2020-02-23 09:14:19 +0100
 ---
 
-Nie, nie jest możliwa obsługa takiej domeny. Przeanalizujmy ten problem na przykładzie domeny `example.com` oraz certyfikatu wildcard wystawionego tylko dla `*.example.com`. Symbol wieloznaczny w nazwie odzwierciedla tylko jedną etykietę i można pozostawić go tylko od lewej strony. W takim przypadku (domyślnie), symbol wieloznaczny jest ważny tylko dla `*.example.com`, `sub.example.com` ale już nie dla `www.subdomain.example.com` ani `example.com`. Zgodnie z tym, `*.*.example.com` lub `www.*.example.com` także nie będą chronione certyfikatem wildcard wystawionym dla `*.example.com`.
+Nie, nie jest możliwa obsługa takiej domeny. Przeanalizujmy ten problem na przykładzie domeny `example.com` oraz certyfikatu wildcard wystawionego tylko dla `*.example.com`.
+
+Symbol wieloznaczny w nazwie odzwierciedla tylko jedną etykietę i można pozostawić go tylko od lewej strony. W takim przypadku (domyślnie), symbol wieloznaczny jest ważny tylko dla `*.example.com`, `sub.example.com` ale już nie dla `www.subdomain.example.com` ani `example.com`. Zgodnie z tym, `*.*.example.com` lub `www.*.example.com` także nie będą chronione certyfikatem wildcard wystawionym dla `*.example.com`.
 
   > Aby zabezpieczyć samą nazwę domeny i hosty w domenie, musisz uzyskać certyfikat z nazwami w rozszerzeniu SAN.
 
