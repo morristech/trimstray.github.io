@@ -11,11 +11,26 @@
 
 html, body {
   font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;
-  width: 900px;
+  width: 1000px;
   margin: 0 auto
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;
   margin-top: 60px;
 }
+
+#nav, .nav, #nav .nav li { margin:0px; padding:0px; }
+#nav li {float:left; display:inline; cursor:pointer; list-style:none; padding:0px 10px 0px 10px; border:1px #000 solid; position:relative;}
+#nav li ul.first {left:-1px; top:100%;}
+
+li, li a {color:#000; text-decoration:none;}
+#nav .nav li { width:100%; text-indent:10px; line-height:30px; margin-right:10px; border-top:1px #000 solid; border-bottom:1px #000 solid;
+border-left:none; border-right:none; background:#fff;}
+#nav li a {display:block; width:inherit; height:inherit;}
+
+ul.nav { display:none; }
+#nav li:hover > a, #nav li:hover { color:#fff; background:#000; }
+li:hover > .nav { display:block; position:absolute; width:200px; top:-2px; left:50%; z-index:1000; border:1px #000 solid; }
+li:hover { position:relative; z-index:2000; }

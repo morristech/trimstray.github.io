@@ -1,5 +1,5 @@
 ---
-title: Post Archive
+title: Posts
 layout: posts
 permalink: /
 entries_layout: list
