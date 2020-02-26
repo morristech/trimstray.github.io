@@ -10,9 +10,9 @@ seo:
   date_modified: 2020-02-21 16:30:58 +0100
 ---
 
-Mechanizm ten powinien się przydać, jeśli chcesz poprawić czas zamykania procesów roboczych serwera NGINX. Dyrektywa `worker_shutdown_timeout` określa limit czasu, który będzie używany podczas płynnego zamykania procesów roboczych. Po upływie tego czasu, NGINX spróbuje zamknąć wszystkie aktualnie otwarte połączenia, aby ułatwić zamknięcie worker'ów.
+Mechanizm ten powinien się przydać, jeśli chcesz poprawić czas zamykania procesów roboczych serwera NGINX. Dyrektywa `worker_shutdown_timeout` określa limit czasu, który będzie używany podczas płynnego zamykania procesów roboczych.
 
-Maxim Dounin wyjaśnia to w ten oto sposób:
+Po upływie tego czasu, NGINX spróbuje zamknąć wszystkie aktualnie otwarte połączenia, aby ułatwić zamknięcie worker'ów. Maxim Dounin wyjaśnia to w ten oto sposób:
 
   > The `worker_shutdown_timeout` directive is not expected to delay shutdown if there are no active connections. It was introduced to limit possible time spent in shutdown, that is, to ensure fast enough shutdown even if there are active connections.
 

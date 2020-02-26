@@ -10,4 +10,4 @@ seo:
   date_modified: 2020-02-18 21:56:52 +0100
 ---
 
-Ogromna dawka wiedzy na bardzo ciekawy, krytyczny w kontekście bezpieczeństwa oraz często zapomniany przez programistów/administratorów temat, jakim są <a href="https://github.com/bl4de/research/tree/master/hidden_directories_leaks" target="_blank"><b>ukryte katalogi i pliki</b></a> będące cennym źródłem poufnych informacji o aplikacji internetowej.
+Ogromna dawka wiedzy na bardzo ciekawy, krytyczny w kontekście bezpieczeństwa oraz często zapomniany przez programistów lub administratorów temat, jakim są [ukryte katalogi i pliki](https://github.com/bl4de/research/tree/master/hidden_directories_leaks) będące cennym źródłem poufnych informacji o aplikacji internetowej.

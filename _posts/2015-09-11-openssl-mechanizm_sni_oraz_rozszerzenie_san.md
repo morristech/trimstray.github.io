@@ -10,7 +10,9 @@ seo:
   date_modified: 2020-02-22 09:47:41 +0100
 ---
 
-Za pomocą biblioteki `openssl` można testować praktycznie **każdą** usługę opartą na protokołach SSL/TLS. Po nawiązaniu połączenia można nimi sterować, stosując komendy/wiadomości specyficzne dla każdego protokołu warstwy aplikacji. W tym poście przedstawię, czym jest mechanizm **SNI** a także do czego potrzebne jest rozszerzenie **SAN**. Dodatkowo zaprezentuję, w jaki sposób nawiązywać połączenia z wykorzystaniem tego pierwszego.
+Za pomocą biblioteki `openssl` można testować praktycznie **każdą** usługę opartą na protokołach SSL/TLS. Po nawiązaniu połączenia można nimi sterować, stosując komendy/wiadomości specyficzne dla każdego protokołu warstwy aplikacji.
+
+W tym poście przedstawię, czym jest mechanizm **SNI** a także do czego potrzebne jest rozszerzenie **SAN**. Dodatkowo zaprezentuję, w jaki sposób nawiązywać połączenia z wykorzystaniem tego pierwszego.
 
 # Czym jest rozszerzenie SNI?
 
