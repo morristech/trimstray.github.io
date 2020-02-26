@@ -175,6 +175,10 @@ figure.highlight,
   color: darkslategray;
 }
 
+div.highlighter-rouge > pre, div.highlighter-rouge pre.highlight, figure.highlight > pre, figure.highlight pre.highlight {
+  padding: 2px;
+}
+
 .highlight {
   overflow: auto;
 }
@@ -213,9 +217,18 @@ figure.highlight,
 .highlight table td pre {
   overflow: visible;  /* Fixed iOS safari overflow-x */
   word-break: normal; /* Fixed iOS safari linenos code break */
+  margin-left: 10px;
 }
+
 .highlight table {
   width: 0;
+}
+
+code.highlighter-rouge {
+  padding: 2px 4px;
+  margin: 0 .3rem;
+  border-radius: 4px;
+  font-size: 18px;
 }
 
 ::-webkit-scrollbar {
