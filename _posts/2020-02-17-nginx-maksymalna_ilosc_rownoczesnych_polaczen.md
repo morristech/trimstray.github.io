@@ -84,7 +84,7 @@ Spójrz na poniższe przykłady:
 1) Jeden uchwyt do połączenia z klientem i jeden uchwyt do obsługi plików, w tym wypadku dla pliku statycznego serwowanego bezpośrednio przez NGINX:
 
 ```
-  # 1 połączenie, 2 uchwyty plików
+# 1 połączenie, 2 uchwyty plików
 
                      +-----------------+
 +----------+         |                 |
