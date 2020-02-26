@@ -28,6 +28,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family={% for font in site.data.theme.google_fonts %}{{ font.name | replace: ' ', '+' }}{% if font.weights %}:{% endif %}{{ font.weights | remove: ' ' }}{% if forloop.last != true %}|{% endif %}{% endfor %}">
   {% endif %}
 
+  <!-- Theme used for syntax highlighting of code -->
+  <link rel="stylesheet" href="/assets/stylesheets/a11y-dark.css">
+
   {% if site.plugins contains 'jekyll-feed' or site.gems contains 'jekyll-feed'%}
     {% comment %}
       Add Atom feed link if jekyll-feed plugin is enabled

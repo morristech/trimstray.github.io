@@ -281,3 +281,26 @@ div.language-terminal.highlighter-rouge td.rouge-code {
     border: 1px solid #e9ecef;
   }
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar:horizontal {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+  background: rgba(0, 0, 0, 0.4);
+  background-color: darkslategray;
+}

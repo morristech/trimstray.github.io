@@ -110,36 +110,7 @@ W większości przypadków sam certyfikat serwera jest niewystarczający; do zbu
 
 Niepoprawny łańcuch certyfikatów skutecznie unieważnia certyfikat serwera i powoduje wyświetlanie ostrzeżeń w przeglądarce. W praktyce problem ten jest czasami trudny do zdiagnozowania, ponieważ niektóre przeglądarki mogą odtwarzać niekompletne łańcuchy, a niektóre nie. Wszystkie przeglądarki mają tendencję do buforowania i ponownego wykorzystywania certyfikatów pośrednich.
 
-Jeżeli chcesz sprawdzić, jak zachowują się przeglądarki w przypadku napotkania niekompletnego łańcucha certyfikatów, zerknij na [incomplete-chain.badssl.com](https://incomplete-chain.badssl.com/). Przykład:
-
-```
-     htrace.sh v1.1.7  (openssl 1.1.1d : ok)
-
-
-    URI: https://incomplete-chain.badssl.com/
-
-         » request-method: GET
-         » user-agent:     Mozilla/5.0 (Windows NT 6.1; rv:63.0) Gecko/20100101 Firefox/63.0
-
-    req  time_total   time_connect    local_socket           via              remote_socket         geo   proto   ver   code     next_hop
-    ---  ----------   ------------    ------------           ---              -------------         ---   -----   ---   ----     --------
- •   1   0.843349     0.843349        xxx.xxx.xxx.xxx:59398  xxx.xxx.xxx.xxx  104.154.89.105:443    US    https   1.1   200
-         ssl: on, version(TLSv1.2), cipher(ECDHE-RSA-AES128-GCM-SHA256), temp_key(ECDH,P-256,256bits)
-         public-key(2048 bit), signature(sha256WithRSAEncryption)
-         date: Mar 18 00:00:00 2017 GMT / Mar 25 12:00:00 2020 GMT (31 days to expired)
-         issuer: DigiCert SHA2 Secure Server CA (DigiCert Inc)
-         owner: Lucas Garron
-         cn: *.badssl.com
-         san: *.badssl.com badssl.com
-         sni: not match
-         validity: match
-         chain of trust:
-          └─0:*.badssl.com ★ ✓
-            ├   DigiCert SHA2 Secure Server CA
-            └─1:DigiCert SHA2 Secure Server CA ✓ ⊙
-              └ DigiCert SHA2 Secure Server CA
-         verification: 21 (unable to verify the first certificate)
-```
+Jeżeli chcesz sprawdzić, jak zachowują się przeglądarki w przypadku napotkania niekompletnego łańcucha certyfikatów, zerknij na [incomplete-chain.badssl.com](https://incomplete-chain.badssl.com/).
 
 # Przykład złożenia cerytyfikatów w poprawny łańcuch
 
