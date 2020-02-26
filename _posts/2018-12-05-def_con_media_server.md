@@ -10,4 +10,4 @@ seo:
   date_modified: 2020-02-22 11:18:19 +0100
 ---
 
-Repozytorium zawierające konkretny zestaw materiałów z konferencji <a href="https://media.defcon.org/" target="_blank"><b>DEFCON</b></a> - obowiązkowe dla każdego pentestera.
+Repozytorium zawierające konkretny zestaw materiałów z konferencji [DEFCON](https://media.defcon.org/) - obowiązkowe dla każdego pentestera.
