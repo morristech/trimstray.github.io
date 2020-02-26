@@ -15,7 +15,7 @@
 # in the templates via {{ site.myvariable }}.
 remote_theme: mmistakes/jekyll-theme-basically-basic
 lang: pl-PL
-title: u_int32_t
+title: trimstray.github.io
 email: trimstray@gmail.com
 tagline: "*NIX & SYSOPS & SECURITY"
 description: >-
