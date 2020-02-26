@@ -35,6 +35,21 @@ search_provider: # lunr (default), algolia
 
 # Build settings
 markdown: kramdown
+
+highlighter: rouge
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: 'highlight'
+    # default_lang: console
+    span:
+      line_numbers: false
+    block:
+      line_numbers: true
+      start_line: 1
+
 theme: jekyll-theme-basically-basic
 plugins: # previsously gems
   - jekyll-feed
