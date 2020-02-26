@@ -47,7 +47,7 @@ Podczas odwiedzania witryny HTTPS przeglądarka sprawdza, czy łańcuch zaufania
 
 ## Dlaczego łańcuch certyfikatów nie powinien zawierać certyfikatu głównego?
 
-Zgodnie ze standardem TLS łańcuch może zawierać lub nie zawierać certyfikat główny; klient nie potrzebuje tego certyfikatu, ponieważ już go ma.
+Zgodnie ze standardem TLS łańcuch może zawierać zawierać certyfikat główny lub nie — klient nie potrzebuje tego certyfikatu, ponieważ już go ma.
 
 Serwer zawsze wysyła łańcuch, ale nigdy nie powinien prezentować łańcuchów certyfikatów zawierających kotwicę zaufania, która jest certyfikatem głównego urzędu certyfikacji, ponieważ certyfikat główny jest bezużyteczny do celów sprawdzania poprawności.
 
@@ -106,7 +106,7 @@ Istnieje kilka możliwości przerwania łańcucha zaufania, w tym między innymi
 - pośredni certyfikat podpisany przez urząd certyfikacji nie ma oczekiwanych podstawowych ograniczeń ani innych ważnych rozszerzeń
 - certyfikat główny został przejęty lub autoryzowany dla niewłaściwej strony
 
-W większości przypadków sam certyfikat serwera jest niewystarczający; do zbudowania pełnego łańcucha zaufania potrzebne są dwa lub więcej certyfikaty. Typowy problem z konfiguracją występuje podczas wdrażania serwera z ważnym certyfikatem, ale bez wszystkich niezbędnych certyfikatów pośrednich. Aby uniknąć tej sytuacji, wystarczy użyć wszystkich certyfikatów dostarczonych przez urząd certyfikacji w tej samej kolejności lub zbudować łańcuch samodzielnie, pobierając wszystkie niezbędne certyfikaty pośrednie.
+W większości przypadków sam certyfikat serwera jest niewystarczający — do zbudowania pełnego łańcucha zaufania potrzebne są dwa lub więcej certyfikaty. Typowy problem z konfiguracją występuje podczas wdrażania serwera z ważnym certyfikatem, ale bez wszystkich niezbędnych certyfikatów pośrednich. Aby uniknąć tej sytuacji, wystarczy użyć wszystkich certyfikatów dostarczonych przez urząd certyfikacji w tej samej kolejności lub zbudować łańcuch samodzielnie, pobierając wszystkie niezbędne certyfikaty pośrednie.
 
 Niepoprawny łańcuch certyfikatów skutecznie unieważnia certyfikat serwera i powoduje wyświetlanie ostrzeżeń w przeglądarce. W praktyce problem ten jest czasami trudny do zdiagnozowania, ponieważ niektóre przeglądarki mogą odtwarzać niekompletne łańcuchy, a niektóre nie. Wszystkie przeglądarki mają tendencję do buforowania i ponownego wykorzystywania certyfikatów pośrednich.
 
