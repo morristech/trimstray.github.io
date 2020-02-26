@@ -214,72 +214,8 @@ figure.highlight,
   overflow: visible;  /* Fixed iOS safari overflow-x */
   word-break: normal; /* Fixed iOS safari linenos code break */
 }
-
-/* Override BS Inline-code style */
-.highlighter-rouge {
-  margin-bottom: 1.2em;
-}
-
-code {
-  -webkit-hyphens: none;
-  -ms-hyphens: none;
-  -moz-hyphens: none;
-  hyphens: none;
-}
-
-code.highlighter-rouge {
-  padding: 1px 4px;
-  /* margin: 0 .2rem; */
-  border-radius: 4px;
-  /* font-size: 14px; */
-  /* font-size: 85%; */
-  /* font-size: 81%; */
-  font-size: 92%;
-}
-
-td.rouge-code {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-/* code snippet radius */
-.highlighter-rouge,
-.highlight {
-  /* border-radius: 5px; */
-  border-radius: 0px;
-}
-
-/* Hide line numbers for defualt, console, and terminal code snippets */
-div[class^='highlighter-rouge'] pre.lineno,
-div.language-console.highlighter-rouge pre.lineno,
-div.language-terminal.highlighter-rouge pre.lineno {
-  display: none;
-}
-
-div[class^='highlighter-rouge'] td.rouge-code,
-div.language-console.highlighter-rouge td.rouge-code,
-div.language-terminal.highlighter-rouge td.rouge-code {
-  padding: .8rem 1rem;
-}
-
-@media (prefers-color-scheme: light) {
-  .highlight {
-    -moz-box-shadow: inset 0 0 2px #c2c6cc;
-    -webkit-box-shadow: inset 0 0 2px #c2c6cc;
-    box-shadow: inset 0 0 2px #c2c6cc;
-  }
-
-  .highlighter-rouge {
-    /* color: coral;
-    background: papayawhip; */
-    /* color: #484848; */
-    color: #3a3939e0;
-    background: rgba(27,31,35,.05);
-  }
-
-  code.highlighter-rouge {
-    border: 1px solid #e9ecef;
-  }
+.highlight table {
+  width: 0;
 }
 
 ::-webkit-scrollbar {
