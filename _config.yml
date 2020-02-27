@@ -84,6 +84,7 @@ exclude:
   - vendor/cache/
   - vendor/gems/
   - vendor/ruby/
+  - _posts_templates/
 
 # Front Matter Defaults
 defaults:

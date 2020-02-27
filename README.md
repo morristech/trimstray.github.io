@@ -2,4 +2,4 @@
 
 My simple website.
 
-- theme: mmistakes/jekyll-theme-basically-basic
+- theme: [mmistakes/jekyll-theme-basically-basic](https://github.com/mmistakes/jekyll-theme-basically-basic)
