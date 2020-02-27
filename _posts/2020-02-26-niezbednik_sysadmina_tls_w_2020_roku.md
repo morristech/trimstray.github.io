@@ -1,7 +1,7 @@
 ---
 layout: post
-title: Niezbędnik SysAdmina: TLS w 2020 roku
-date: 2020-02-26 20:29:39
+title: 'Niezbędnik SysAdmina: TLS w 2020 roku'
+date: 2020-02-27 12:29:39
 categories: [publications]
 tags: [PL, http, https, security, ssl, tls, ciphers]
 comments: false
