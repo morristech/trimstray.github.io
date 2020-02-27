@@ -1,0 +1,47 @@
+---
+layout: post
+title: 'Niezbędnik SysAdmina: TLS + NGINX'
+date: 2020-02-27 12:29:39
+categories: [publications]
+tags: [PL, http, https, security, ssl, tls, ciphers]
+comments: false
+favorite: false
+seo:
+  date_modified: 2020-02-25 08:59:14 +0100
+---
+
+Napisano wiele bardzo dobrym artykułów dotyczących TLS. W tej serii wpisów, chciałbym przedstawić najważniejsze rzeczy oraz poruszyć niektóre ciekawe tematy z punktu widzenia każdego administratora, a także przedstawić je na przykładzie konfiguracji serwera NGINX.
+
+Prezentowane konfiguracje oraz zalecenia odnoszą się do najnowszych zaleceń.
+
+# Czym jest TLS?
+
+Protokół TLS jest podstawowym protokołem zapewniającym prywatność i integralność danych między dwoma komunikującymi się aplikacjami. Jest to także najczęściej stosowany protokół bezpieczeństwa, zastępujący dziś SSL (ang. _Secure Socket Layer_), używany w przeglądarkach internetowych i innych aplikacjach wymagających bezpiecznej wymiany danych przez sieć.
+
+TLS zapewnia też, że podczas połączenia ze zdalnym punktem końcowym, jest on tym, za kogo się podaje poprzez szyfrowanie oraz weryfikację jego tożsamości.
+
+# Zasada 1: Używaj aktualnej i gotowej do produkcji wersji OpenSSL
+
+Biblioteka [OpenSSL](https://www.openssl.org/) jest najpopularniejszą implementacją protokołu SSL/TLS i została napisana w języku C. Zawiera ona podstawowe funkcje kryptograficzne oraz dostarcza szereg narzędzi administratyjnych.
+
+  > OpenSSL jest dostępny dla większości systemów w tym GNU/Linux oraz BSD.
+
+Moim zdaniem, jedyny bezpieczny sposób wykorzystania biblioteki OpenSSL opiera się na aktualnej, wciąż obsługiwanej i gotowej produkcyjnie wersji. Co więcej, polecam trzymać się najnowszych wersji (np. 1.1.1 lub 1.1.1d w tym momencie).
+
+Upewnij się więc, że twoja biblioteka OpenSSL jest zaktualizowana do najnowszej dostępnej wersji i zachęcaj swoich klientów do korzystania ze zaktualizowanego OpenSSL i współpracującego z nim oprogramowania.
+
+Dobrym pomysłem jest także śledzenie [Release Strategy Policies](https://www.openssl.org/policies/releasestrat.html) oraz oficjalnej [listy zmian](https://www.openssl.org/news/changelog.html).
+
+Oczywiście kryteria wyboru wersji biblioteki mogą się różnić i wszystko zależy także od zastosowania. Uważam, że niezależnie od zastosowań powinniśmy wybrać jedną z wersji, dla której wciąż świadczone jest wsparcie:
+
+- wersja 1.1.1 wciąż wspierana do 2023-09-11 (LTS)
+  - ostatnia: 1.1.1d (10 września 2019 r.)
+- wersja 1.1.0 wciąż wspierana do 2019-09-11
+  - ostatnia: 1.1.0k (28 maja 2018 r.)
+- wersja 1.0.2 ciąż wspierana do 2019-12-31 (LTS)
+  - ostatnia: 1.0.2s (28 maja 2018 r.)
+- wszelkie inne wersje nie są już obsługiwane
+
+  > Następną wersją będzie [OpenSSL 3.0.0](https://blog.apnic.net/2019/10/21/openssl-3-0-accelerating-forwards/).
+
+# Zasada 2: Używaj kluczy prywatnych min. 2048-bit (RSA) lub min. 256-bit for (ECC)
