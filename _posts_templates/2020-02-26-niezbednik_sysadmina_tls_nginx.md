@@ -27,7 +27,7 @@ Jedną z ważniejszych funkcji protokołu TLS jest gwarancja, że podczas połą
 
 Zalecenie: <font color="#e5282d"><b>Używaj aktualnej i gotowej do uruchomienia produkcyjnie wersji OpenSSL</b></font>
 
-Biblioteka [OpenSSL](https://www.openssl.org/) jest najpopularniejszą implementacją protokołu SSL/TLS. Zawiera ona podstawowe funkcje kryptograficzne oraz dostarcza szereg narzędzi administratyjnych.
+Biblioteka [OpenSSL](https://www.openssl.org/) jest najpopularniejszą implementacją protokołu SSL/TLS. Zawiera ona podstawowe funkcje kryptograficzne wykorzystywane przez aplikacje oraz dostarcza szereg narzędzi administratyjnych.
 
   > OpenSSL jest dostępny dla większości systemów w tym GNU/Linux oraz BSD.
 
