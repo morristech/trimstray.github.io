@@ -14,9 +14,11 @@ Kryptografia klucza publicznego, zwana także kryptografią asymetryczną zakła
 
 W tym wpisie chciałbym omówić kwestię długości klucza prywatnego oraz przedstawić czym jest i jaką pełni rolę w komunikacji.
 
-# Najważniejsze informacje
+# Czym jest klucz prywatny?
 
 Klucz prywatny jest kluczem tajnym (co do zasady powinien być traktowany jako tajny) używanym do odszyfrowywania wiadomości, które są zaszyfrowane kluczem publicznych (dostarczanym razem z certyfikatem). Jego użycie pozwala uniknąć słabości szyfrowania symetrycznego, w którym klucz tajny jest współdzielony przez obie strony komunikacji.
+
+  > Serwer NGINX udostępnia dyrektywę `ssl_certificate_key` za pomocą której ustawiamy klucz prywatny.
 
 Na podstawie znajomości klucza publicznego, nie można odtworzyć klucza prywatnego, i na odwrót. Co więcej, każda asymetryczna para kluczy jest unikatowa, dzięki czemu wiadomość zaszyfrowana przy użyciu klucza publicznego może zostać odczytana tylko przez osobę posiadającą odpowiedni klucz prywatny.
 
@@ -26,19 +28,9 @@ Jednym z najpopularniejszych algorytmów asymetrycznych jest RSA. Niestety, ze w
 
 Dzieje się tak, ponieważ bezpieczeństwo szyfrowania opiera się na trudności faktoryzacji (złożoności obliczeniowej) dużych liczb pierwszych (tzw. `p` i `q`). Alternatywą jest szyfrowania oparte na krzywych eliptycznych, które wymaga znacznie mniejszych kluczy.
 
-Po tym, jak klient otrzyma certyfikat klucza publicznego serwera, sprawdza, czy urząd certyfikacji, który podpisał certyfikat serwera znajduje się na prywatnej liście zaufanych urzędów certyfikacji w lokalnym magazynie klienta (ustalając, że teraz ufa także temu urzędowi certyfikacji).
+Klucze ECDSA (zawierające klucze publiczne ECC) są zalecane w porównaniu z RSA, ponieważ oferują ten sam lub większy (klucze oparte na krzywych eliptycznych są mniej wrażliwe i trudniejsze do złamania) poziom bezpieczeństwa. Oczywiście klucze RSA są również bardzo szybkie, zapewniając bardzo proste szyfrowanie i weryfikację oraz są łatwiejsze do wdrożenia niż ECC.
 
-<img src="/assets/img/posts/cert_priv_key_sess_key.jpg" align="center" title="cert_priv_key_sess_key preview">
-
-Następnie można bezpiecznie wysłać do serwera klucz sesji, którym każdy może teraz zarówno szyfrować, jak i deszyfrować późniejszą komunikację. Klucz ten (zwany inaczej jednorazowym) jest zwykle losowo generowanym kluczem symetrycznym używanym do szyfrowania dużego zestawu danych.
-
-Jak już wspomniałem, szyfrowanie i deszyfrowanie RSA jest powolne, zwykle jest używane jako część tzw. hybrydowych systemów. Aby zaszyfrować wiadomość, zamiast używać pary kluczy RSA do szyfrowania i deszyfrowania, generujemy unikalny klucz symetryczny (dla SSL/TLS klucz sesyjny), szyfrujemy klucz symetryczny za pomocą RSA i szyfrujemy wiadomość za pomocą klucza sesyjnego. W ten sposób RSA służy tylko do szyfrowania pojedynczego bloku kilkuset bitów.
-
-Gdy używana jest wymiana kluczy RSA, klucz jest generowany losowo przez klienta, a następnie szyfrowany przy użyciu certyfikatu serwera. Podczas korzystania z wymiany kluczy RSA serwer ma bardzo mało do powiedzenia na temat klucza sesji.
-
-Nowoczesna konfiguracja TLS zwykle zaleca Diffie Hellman, który jest bardziej odpowiednio nazywany protokołem uzgodnienia klucza, ponieważ klucz sesji jest obliczany na podstawie losowych danych wejściowych zarówno od klienta, jak i serwera.
-
-# Klucze prywatne
+# Długość klucza prywatnego - fakty i mity
 
 Rekomendacja: <font color="#e5282d"><b>Używaj kluczy prywatnych RSA min. 2048-bit lub ECC min. 256-bit</b></font>
 
@@ -50,7 +42,9 @@ Alternatywą dla RSA jest ECC. ECC (i ECDSA) jest prawdopodobnie lepszy do więk
 
 Prawda jest taka (zwłaszcza jeśli mówimy o RSA), że przemysł/społeczność są podzielone na temat rozmiaru kluczy. Sam jestem w obozie „używaj kluczy RSA 2048-bit, ponieważ 4096-bit nie daje nam prawie nic, a jednocześnie sporo kosztuje”.
 
-Eksperci ds. Bezpieczeństwa przewidują, że 2048 bitów będzie wystarczające do użytku komercyjnego do około 2030 roku (zgodnie z normą [NIST](https://www.keylength.com/en/4/)). Amerykańska Agencja Bezpieczeństwa Narodowego (NSA) wymaga, aby wszystkie ściśle tajne pliki i dokumenty były szyfrowane przy użyciu 384-bitowych kluczy ECC (7680-bitowy klucz RSA). Z drugiej strony, najnowsza wersja [FIPS-186](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-4.pdf) <sup>[pdf]</sup> mówi, że rząd federalny USA generuje (i używa) podpisy cyfrowe o długości klucza 1024, 2048 lub 3072 bitów.
+Eksperci ds. Bezpieczeństwa przewidują, że 2048 bitów będzie wystarczające do użytku komercyjnego do około 2030 roku (zgodnie z normą [NIST](https://www.keylength.com/en/4/)). Amerykańska Agencja Bezpieczeństwa Narodowego (NSA) wymaga, aby wszystkie ściśle tajne pliki i dokumenty były szyfrowane przy użyciu 384-bitowych kluczy ECC (7680-bitowy klucz RSA). Ponadto, ze względów bezpieczeństwa, [CA/Browser forum - Baseline Requirements](https://cabforum.org/wp-content/uploads/CA-Browser-Forum-BR-1.6.7.pdf) <sup>[pdf]</sup> i IST zaleca użycie 2048-bitowego klucza RSA do certyfikatów/kluczy subskrybentów.
+
+Z drugiej strony, najnowsza wersja [FIPS-186-5 (Draft)](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-5-draft.pdf) <sup>[pdf]</sup> określa zastosowanie modułu, którego długość bitu jest liczbą całkowitą równą i większą lub równą 2048 bitów (starsza wersja, tj. FIPS-186-4 z 2013 roku, mówiła, że rząd federalny USA generuje (i używa) podpisy cyfrowe o długości klucza 1024, 2048 lub 3072 bity).
 
 Co więcej, zalecenia Europejskiej Rady ds. Płatności ([EPC342-08 v8.0](https://www.europeanpaymentscouncil.eu/sites/default/files/kb/file/2019-01/EPC342-08%20v8.0%20Guidelines%20on%20cryptographic%20algorithms%20usage%20and%20key%20management.pdf) <sup>[pdf]</sup>) mówią, że należy unikać używania 1024-bitowych kluczy RSA i 160-bitowych kluczy ECC w nowych aplikacjach, z wyjątkiem krótkoterminowej ochrony niekrytycznych aplikacji. EPC zaleca stosowanie co najmniej 2048-bitowego RSA lub 224-bitowego ECC do ochrony średnioterminowej (np. 10-letniej). Klasyfikują także SHA-1, moduły RSA 1024-bit, klucze ECC 160-bit jako odpowiednie do użycia w starszych wersjach (moim zdaniem SHA-1 nie nadaje się do tych zastosowań).
 
@@ -71,8 +65,6 @@ Podsumowując. Myślę, że jeśli kiedykolwiek znajdziemy się w świecie, w kt
 Wróćmy jeszcze do porównania obu typów kluczy. 256-bitowy klucz ECC może być silniejszy niż 2048-bitowy klucz klasyczny. Jeśli używasz ECDSA, zalecany rozmiar klucza zmienia się w zależności od użycia, patrz [NIST 800-57 (page 12, table 2-1)](https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-57pt3r1.pdf) <sup>[pdf]</sup>.
 
 Główny problem to wdrożenie. Chociaż prawdą jest, że dłuższy klucz zapewnia lepsze bezpieczeństwo, podwajając długość klucza RSA z 2048 do 4096, wzrost bitów bezpieczeństwa wynosi tylko 18, czyli zaledwie 16% (czas na podpisanie wiadomości wzrasta 7 razy, a w niektórych przypadkach czas weryfikacji podpisu zwiększa się ponad 3-krotnie). Ponadto, poza wymaganiem większej przestrzeni dyskowej (jest to co prawda minimalny impakt ich stosowania), dłuższe klucze przekładają się również na zwiększone użycie procesora.
-
-Klucze ECDSA (zawierające klucze publiczne ECC) są zalecane w porównaniu z RSA, ponieważ oferują ten sam poziom bezpieczeństwa z mniejszymi kluczami w przeciwieństwie do kryptografii spoza ECC. Klucze ECC są lepsze niż klucze RSA i DSA, ponieważ algorytm ECC jest trudniejszy do złamania (mniej wrażliwy). Moim zdaniem ECC nadaje się do środowisk, w których występują ograniczone zasoby pamięci lub przetwarzania danych, np. telefony komórkowe, urządzenia PDA i ogólnie systemy wbudowane. Oczywiście klucze RSA są bardzo szybkie, zapewniają bardzo proste szyfrowanie i weryfikację oraz są łatwiejsze do wdrożenia niż ECC.
 
 Tak naprawdę prawdziwą zaletą używania klucza 4096-bitowego jest zabezpieczenie na przyszłość. Jeśli chcesz uzyskać A + ze 100% s na SSL Lab (dla Key Exchange), zdecydowanie powinieneś użyć 4096 bitowych kluczy prywatnych. To główny (i jedyny dla mnie) powód, dla którego powinieneś ich używać.
 
@@ -98,22 +90,3 @@ Tak naprawdę prawdziwą zaletą używania klucza 4096-bitowego jest zabezpiecze
 - [Why ninety-day lifetimes for certificates?](https://letsencrypt.org/2015/11/09/why-90-days.html)
 - [SSL Certificate Validity Will Be Limited to One Year by Apple’s Safari Browser](https://www.thesslstore.com/blog/ssl-certificate-validity-will-be-limited-to-one-year-by-apples-safari-browser/)
 - [Certificate lifetime capped to 1 year from Sep 2020](https://scotthelme.co.uk/certificate-lifetime-capped-to-1-year-from-sep-2020/)
-
-# Certyfikaty
-
-Certyfikat SSL zawiera klucz publiczny i informacje o jego właścicielu, uwierzytelnia tożsamość strony internetowej i umożliwia bezpieczne połączenia z serwera internetowego do przeglądarki poprzez szyfrowanie informacji i ochronę poufnych danych (dane logowania, rejestracje, adresy i płatności) przesyłane z i na twojej stronie internetowej.
-
-Autentyczność i integralność certyfikatu można sprawdzić metodami kryptograficznymi. Certyfikat cyfrowy zawiera dane wymagane do jego weryfikacji.
-
-  > Bez certyfikatu SSL wszelkie dane gromadzone za pośrednictwem witryny są podatne na przechwycenie przez osoby trzecie.
-
-Certyfikaty pozwalają zabezpieczyć domenę główną i wszystkie jej poddomeny (np. `example.com` i `api.example.com`) za pomocą jednego certyfikatu SSL.
-
-## Łańcuch certyfikatów
-
-Walidacja łańcucha certyfikatów jest kluczową częścią każdego procesu uwierzytelniania opartego na certyfikatach. Jeśli system nie przestrzega łańcucha zaufania certyfikatu do serwera głównego, certyfikat traci wszelką użyteczność jako wskaźnik zaufania.
-
-Łańcuch certyfikatów składa się ze wszystkich certyfikatów potrzebnych do certyfikacji podmiotu określonego w certyfikacie końcowym. W praktyce obejmuje to certyfikat końcowy, certyfikaty pośrednich urzędów certyfikacji oraz certyfikat głównego urzędu certyfikacji zaufany przez wszystkie strony w łańcuchu. Każdy pośredni urząd certyfikacji w łańcuchu posiada certyfikat wydany przez urząd certyfikacji jeden poziom nad nim w hierarchii zaufania.
-
-Certyfikat serwera wraz z łańcuchem nie jest przeznaczony dla serwera. Serwer nie ma zastosowania do własnego certyfikatu. Certyfikaty są zawsze dla innych osób (tutaj klienta). Serwer używa klucza prywatnego (który odpowiada kluczowi publicznemu w certyfikacie). W szczególności serwer nie musi ufać własnemu certyfikatowi ani żadnemu urzędowi certyfikacji, który go wydał.
-

@@ -57,7 +57,9 @@ Rozwiązaniem tymczasowym jest właśnie wykorzystanie mechanizmu **SNI**, któr
 
 Spójrz na poniższy obrazek:
 
-<img src="/assets/img/posts/sni_tls.jpg" align="center" title="sni_tls preview">
+<p align="center">
+  <img src="/assets/img/posts/sni_tls.jpg">
+</p>
 
 Dzięki rozszerzeniu **SNI** serwer może bezpiecznie "trzymać" wiele certyfikatów używając pojedynczego adresu IP.
 

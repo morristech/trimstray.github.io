@@ -18,7 +18,9 @@ Organizacja Let's Encrypt nie ujawnia źródłowych adresów IP punktów weryfik
 
 Cały proces będzie wyglądał mniej więcej tak:
 
-<img src="/assets/img/posts/multiple-perspective-validation.png" align="center" title="multiple-perspective-validation preview">
+<p align="center">
+  <img src="/assets/img/posts/multiple-perspective-validation.png">
+</p>
 
 Skąd taka zmiana?
 

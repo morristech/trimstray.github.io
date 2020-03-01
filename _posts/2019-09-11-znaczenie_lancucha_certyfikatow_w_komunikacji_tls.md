@@ -39,7 +39,9 @@ Certyfikat serwera wraz z łańcuchem nie jest przeznaczony dla serwera. Serwer 
 
 Łańcuch certyfikatów składa się ze wszystkich certyfikatów potrzebnych do weryfikacji podmiotu określonego w certyfikacie końcowym. W praktyce obejmuje to certyfikat serwera, certyfikaty pośrednie urzędów certyfikacji oraz certyfikat głównego urzędu certyfikacji — zaufany przez wszystkie strony w łańcuchu. Każdy pośredni urząd certyfikacji posiada certyfikat wydany przez urząd certyfikacji jeden poziom nad nim w hierarchii zaufania.
 
-<img src="/assets/img/posts/chain_of_trust.png" align="center" title="chain_of_trust preview">
+<p align="center">
+  <img src="/assets/img/posts/chain_of_trust.png">
+</p>
 
 Przeglądarki oraz systemy operacyjne zawierają listę zaufanych urzędów certyfikacji. Te wstępnie zainstalowane certyfikaty służą jako kotwice zaufania, z których można czerpać dalsze zaufanie (mam nadzieję, że jest to odpowiednie określenie).
 

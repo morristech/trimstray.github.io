@@ -21,13 +21,11 @@ Narzędzie firmy Mozilla dostępne jest także w wersji [konsolowej](https://git
 - **[Security Headers](https://securityheaders.com/)**
 
 <p align="center">
-    <img src="/assets/img/posts/securityheaders.com_preview.png"
-        alt="securityheaders.com preview">
+  <img src="/assets/img/posts/securityheaders.com_preview.png">
 </p>
 
 - **[Observatory by Mozilla](https://observatory.mozilla.org/)**
 
 <p align="center">
-    <img src="/assets/img/posts/observatory.mozilla.org_preview.png"
-        alt="observatory.mozilla.org preview">
+  <img src="/assets/img/posts/observatory.mozilla.org_preview.png">
 </p>

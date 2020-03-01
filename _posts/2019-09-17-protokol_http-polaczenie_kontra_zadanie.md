@@ -16,7 +16,9 @@ Zasadniczo, nawiązujemy połączenia w celu wysyłania za ich pomocą żądań.
 
 Spójrz na poniższy zrzut:
 
-<img src="/assets/img/posts/http_conn_requests_over_tcp.png" align="center" title="http_conn_requests_over_tcp preview">
+<p align="center">
+  <img src="/assets/img/posts/http_conn_requests_over_tcp.png">
+</p>
 
 Połączenie jest niezawodnym potokiem opartym na protokole TCP między dwoma punktami końcowymi. Każde połączenie wymaga śledzenia zarówno adresów/portów punktów końcowych, numerów sekwencyjnych, jak i pakietów, których nie potwierdzono. Żądanie zaś to "prośba" o dany zasób za pomocą określonej metody, wykorzystująca połączenia podczas komunikacji z serwerem.
 

@@ -46,7 +46,9 @@ Polecam zapoznać się ze świetnymi materiałami na temat dostępnych metod prz
 
 Zobacz także test (z wykorzystaniem biblioteki [libevent](http://libevent.org/)) porównujący każdą z metod:
 
-<img src="/assets/img/posts/libevent-benchmark.jpg" align="center" title="libevent-benchmark preview">
+<p align="center">
+  <img src="/assets/img/posts/libevent-benchmark.jpg">
+</p>
 
 Jest to jedna z odpowiedzi, dlaczego warto uruchamiać produkcyjnie serwer NGINX na systemach BSD. Polecam obejrzeć [Why did Netflix use NGINX and FreeBSD to build their own CDN?](https://www.youtube.com/watch?v=KP_bKvXkoC4), a także zapoznać się z [świetnym artykułem](https://devinteske.com/wp/freebsd-nginx-performance/) opisującym wydajność serwera NGINX w systemie FreeBSD.
 

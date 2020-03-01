@@ -38,7 +38,9 @@ Pochodzenie jest tutaj słowem kluczowym, ponieważ cookies nie dbają o to, w j
 
 Musimy też wiedzieć, że zasadniczo istnieją dwa rodzaje plików cookie — własne (ang. `same-site`) i zewnętrzne (ang. `cross-site`). Oba typy mogą zawierać te same informacje; są one jednak dostępne i tworzone inaczej:
 
-<img src="/assets/img/posts/cookie-comparison.png" align="center" title="cookie-comparison preview">
+<p align="center">
+  <img src="/assets/img/posts/cookie-comparison.png">
+</p>
 
 <sup><i>Grafika pochodzi z serwisu [Heroku Blog](https://blog.heroku.com/chrome-changes-samesite-cookie).</i></sup>
 
@@ -89,7 +91,9 @@ Oczywiście nadal istnieje możliwość użycia `SameSite=None` (będzie działa
 
 Zerknij na poniższą ściągę, która z drugiej strony uzmysławia ew. problemy, z jakimi będzie można się zmierzyć:
 
-<img src="/assets/img/posts/chrome_80_samesite_recommendations.png" align="center" title="chrome_80_samesite_recommendations preview">
+<p align="center">
+  <img src="/assets/img/posts/chrome_80_samesite_recommendations.png">
+</p>
 
 <sup><i>Grafika pochodzi z serwisu [adzerk.com](https://adzerk.com/blog/chrome-samesite/).</i></sup>
 

@@ -95,7 +95,9 @@ Jest to logiczne i prawidłowe zachowanie i ma związek z całym mechanizmem prz
 
 Przygotowałem również prostą grafikę, która pomoże ci zrozumieć, jakie moduły oraz dyrektywy są używane na każdym etapie:
 
-<img src="/assets/img/posts/nginx_phases.png" align="center" title="nginx_phases preview">
+<p align="center">
+  <img src="/assets/img/posts/nginx_phases.png">
+</p>
 
 Dodatkowo na każdej fazie można zarejestrować dowolną liczbę handlerów oraz każda z nich ma listę powiązanych z nią procedur obsługi.
 
