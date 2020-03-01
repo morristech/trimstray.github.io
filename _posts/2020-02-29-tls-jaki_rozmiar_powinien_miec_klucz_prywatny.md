@@ -16,9 +16,9 @@ W tym wpisie chciałbym omówić kwestię długości klucza prywatnego oraz prze
 
 # Czym jest klucz prywatny?
 
-Klucz prywatny jest kluczem tajnym (co do zasady powinien być traktowany jako tajny) używanym do odszyfrowywania wiadomości, które są zaszyfrowane kluczem publicznych (dostarczanym razem z certyfikatem). Jego użycie pozwala uniknąć słabości szyfrowania symetrycznego, w którym klucz tajny jest współdzielony przez obie strony komunikacji.
+Klucz prywatny jest kluczem tajnym (co do zasady powinien być traktowany jako tajny) używanym do odszyfrowywania wiadomości, które są zaszyfrowane kluczem publicznych (dostarczanym razem z certyfikatem i przesyłanym za każdym razem do klienta). Jego użycie pozwala uniknąć słabości szyfrowania symetrycznego, w którym klucz tajny jest współdzielony przez obie strony komunikacji.
 
-  > Serwer NGINX udostępnia dyrektywę `ssl_certificate_key` za pomocą której ustawiamy klucz prywatny.
+  > Serwer NGINX dostarcza dyrektywę `ssl_certificate_key` za pomocą której można ustawić ścieżkę do klucza prywatnego. Plik z kluczem prywatnym powinien być przechowywany w pliku z ograniczonym dostępem, co więcej, musi być możliwy do odczytania przez główny proces NGINX.
 
 Na podstawie znajomości klucza publicznego, nie można odtworzyć klucza prywatnego, i na odwrót. Co więcej, każda asymetryczna para kluczy jest unikatowa, dzięki czemu wiadomość zaszyfrowana przy użyciu klucza publicznego może zostać odczytana tylko przez osobę posiadającą odpowiedni klucz prywatny.
 

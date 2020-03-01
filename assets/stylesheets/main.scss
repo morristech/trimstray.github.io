@@ -233,7 +233,12 @@ code.highlighter-rouge {
   padding: 2px 4px;
   margin: 0 .3rem;
   border-radius: 4px;
-  font-size: 18px;
+  /* font-size: 18px; */
+  font-size: 85%;
+}
+
+code, kbd, samp, pre {
+  font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
 }
 
 .copyright {
