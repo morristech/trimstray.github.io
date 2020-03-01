@@ -34,13 +34,11 @@ Klucze ECDSA (zawierające klucze publiczne ECC) są zalecane w porównaniu z RS
 
 Rekomendacja: <font color="#e5282d"><b>Używaj kluczy prywatnych RSA min. 2048-bit lub ECC min. 256-bit</b></font>
 
-Certyfikaty SSL najczęściej używają kluczy RSA, zaś zalecany rozmiar tych kluczy rośnie co jakiś czas, aby utrzymać wystarczającą siłę kryptograficzną.
+Certyfikaty SSL najczęściej używają kluczy RSA, zaś zalecany rozmiar tych kluczy rośnie co jakiś czas, aby utrzymać wystarczającą siłę kryptograficzną. Prawda jest taka (zwłaszcza jeśli mówimy o RSA), że przemysł/społeczność są podzielone na temat rozmiaru kluczy. Sam jestem w obozie „używaj kluczy RSA 2048-bit, ponieważ 4096-bit nie daje nam prawie nic, a jednocześnie sporo kosztuje”.
 
-Alternatywą dla RSA jest ECC. ECC (i ECDSA) jest prawdopodobnie lepszy do większości celów, ale nie do wszystkiego. Oba typy kluczy mają tę samą ważną właściwość, mianowicie są algorytmami asymetrycznymi (jeden klucz do szyfrowania i jeden klucz do deszyfrowania).
+Alternatywą dla RSA jest ECC (ECDSA). Oba typy kluczy mają tę samą ważną właściwość, mianowicie są algorytmami asymetrycznymi (jeden klucz do szyfrowania i jeden klucz do deszyfrowania).
 
   > NGINX obsługuje podwójne certyfikaty, dzięki czemu możesz używać lżejszych i szybszych certyfikatów ECC równocześnie nadal zezwalać odwiedzającym przeglądać Twoją witrynę za pomocą standardowych certyfikatów.
-
-Prawda jest taka (zwłaszcza jeśli mówimy o RSA), że przemysł/społeczność są podzielone na temat rozmiaru kluczy. Sam jestem w obozie „używaj kluczy RSA 2048-bit, ponieważ 4096-bit nie daje nam prawie nic, a jednocześnie sporo kosztuje”.
 
 Eksperci ds. Bezpieczeństwa przewidują, że 2048 bitów będzie wystarczające do użytku komercyjnego do około 2030 roku (zgodnie z normą [NIST](https://www.keylength.com/en/4/)). Amerykańska Agencja Bezpieczeństwa Narodowego (NSA) wymaga, aby wszystkie ściśle tajne pliki i dokumenty były szyfrowane przy użyciu 384-bitowych kluczy ECC (7680-bitowy klucz RSA). Ponadto, ze względów bezpieczeństwa, [CA/Browser forum - Baseline Requirements](https://cabforum.org/wp-content/uploads/CA-Browser-Forum-BR-1.6.7.pdf) <sup>[pdf]</sup> i IST zaleca użycie 2048-bitowego klucza RSA do certyfikatów/kluczy subskrybentów.
 
@@ -48,15 +46,15 @@ Z drugiej strony, najnowsza wersja [FIPS-186-5 (Draft)](https://nvlpubs.nist.gov
 
 Co więcej, zalecenia Europejskiej Rady ds. Płatności ([EPC342-08 v8.0](https://www.europeanpaymentscouncil.eu/sites/default/files/kb/file/2019-01/EPC342-08%20v8.0%20Guidelines%20on%20cryptographic%20algorithms%20usage%20and%20key%20management.pdf) <sup>[pdf]</sup>) mówią, że należy unikać używania 1024-bitowych kluczy RSA i 160-bitowych kluczy ECC w nowych aplikacjach, z wyjątkiem krótkoterminowej ochrony niekrytycznych aplikacji. EPC zaleca stosowanie co najmniej 2048-bitowego RSA lub 224-bitowego ECC do ochrony średnioterminowej (np. 10-letniej). Klasyfikują także SHA-1, moduły RSA 1024-bit, klucze ECC 160-bit jako odpowiednie do użycia w starszych wersjach (moim zdaniem SHA-1 nie nadaje się do tych zastosowań).
 
-Książka "SSL/TLS Deployment Best Practices" także opisuje problem rozmiaru klucza w interesujący sposób:
+Książka „SSL/TLS Deployment Best Practices” także opisuje problem rozmiaru klucza w interesujący sposób:
 
   > The cryptographic handshake, which is used to establish secure connections, is an operation whose cost is highly influenced by private key size. Using a key that is too short is insecure, but using a key that is too long will result in "too much" security and slow operation. For most web sites, using RSA keys stronger than 2048 bits and ECDSA keys stronger than 256 bits is a waste of CPU power and might impair user experience. Similarly, there is little benefit to increasing the strength of the ephemeral key exchange beyond 2048 bits for DHE and 256 bits for ECDHE.
 
-Dłuższe klucze RSA generują więcej czasu i wymagają więcej procesora i energii, gdy są używane do szyfrowania i deszyfrowania, również uzgadnianie SSL na początku każdego połączenia będzie wolniejsze. Ma również niewielki wpływ na stronę klienta (np. przeglądarki). Podczas korzystania z krzywej `curve25519`, ECC jest uważane za bardziej bezpieczne. Z założenia jest szybki i odporny na różne ataki z boku kanału. RSA jest jednak nie mniej bezpieczny, ale pod względem praktycznym jest również uważany za niezniszczalny.
+Dłuższe klucze RSA zajmują więcej czasu procesora, gdy są używane do szyfrowania i deszyfrowania. Również uzgadnianie sesji SSL/TLS na początku każdego połączenia będzie wolniejsze. Ten typ kryptografii ma również niewielki wpływ na stronę klienta (np. przeglądarki). Podczas korzystania z krzywej `curve25519`, ECC jest uważane za bardziej bezpieczne. Z założenia jest szybki i odporny na różne ataki. Oczywiście, RSA nie jest mniej bezpieczny, co więcej, pod względem praktycznym jest również uważany za „niezniszczalny”.
 
 Zasadniczo nie ma istotnego powodu, aby wybierać klucze 4096-bitowe. Nie spotkałem się z dodatkowymi wytycznymi co do tego, jednak moim zdaniem istnieje jeden ważny warunek, na który powinieneś zwrócić uwagę. Stosowanie kluczy 2048-bit powinno iść w parze z rozsądnymi interwałami ważności (np. nie więcej niż 6-12 miesięcy dla 2048-bitowego klucza i certyfikatu), aby dać atakującemu mniej czasu na złamanie klucza i zminimalizować prawdopodobieństwo, że ktoś wykorzysta wszelkie luki, które mogą wystąpić w przypadku naruszenia jego bezpieczeństwa.
 
-  > Moim zdaniem powinniśmy bardziej martwić się, że nasze klucze prywatne zostaną skradzione w wyniku naruszenia bezpieczeństwa serwera. Pamiętaj, że ciągły postęp technologiczny naraża nasz klucz na ataki.
+  > Moim zdaniem powinniśmy bardziej martwić się, że nasze klucze prywatne zostaną skradzione w wyniku naruszenia bezpieczeństwa serwera. Pamiętaj, że ciągły postęp technologiczny naraża nasz klucz na ataki. Polecam przeczytanie dokumentu [Secure Distribution of SSL Private Keys with NGINX](https://www.nginx.com/blog/secure-distribution-ssl-private-keys-nginx/) w celu zminimalizowania ew. ataku na klucze prywatne obsługiwane z poziomu serwera NGINX.
 
 Podsumowując. Myślę, że jeśli kiedykolwiek znajdziemy się w świecie, w którym 2048-bitowe klucze nie będą już wystarczająco dobre, nie będzie to w cale spowodowane możliwością ich z brute-forcowania, tylko dlatego, że RSA stanie się po prostu przestarzałe jako technologia w opozycji do rewolucyjnych osiągnięć komputerowych. Jeśli tak się stanie, 3072 lub 4096 bitów i tak nie zrobi dużej różnicy. Właśnie dlatego wszystko powyżej 2048 bitów jest ogólnie uważane za rodzaj mocnego przerysowania jeśli chodzi o bezpieczeństwo.
 
@@ -64,9 +62,9 @@ Podsumowując. Myślę, że jeśli kiedykolwiek znajdziemy się w świecie, w kt
 
 Wróćmy jeszcze do porównania obu typów kluczy. 256-bitowy klucz ECC może być silniejszy niż 2048-bitowy klucz klasyczny. Jeśli używasz ECDSA, zalecany rozmiar klucza zmienia się w zależności od użycia, patrz [NIST 800-57 (page 12, table 2-1)](https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-57pt3r1.pdf) <sup>[pdf]</sup>.
 
-Główny problem to wdrożenie. Chociaż prawdą jest, że dłuższy klucz zapewnia lepsze bezpieczeństwo, podwajając długość klucza RSA z 2048 do 4096, wzrost bitów bezpieczeństwa wynosi tylko 18, czyli zaledwie 16% (czas na podpisanie wiadomości wzrasta 7 razy, a w niektórych przypadkach czas weryfikacji podpisu zwiększa się ponad 3-krotnie). Ponadto, poza wymaganiem większej przestrzeni dyskowej (jest to co prawda minimalny impakt ich stosowania), dłuższe klucze przekładają się również na zwiększone użycie procesora.
+Główny problem to wdrożenie. Chociaż prawdą jest, że dłuższy klucz zapewnia lepsze bezpieczeństwo, podwajając długość klucza RSA z 2048 do 4096, wzrost bitów bezpieczeństwa wynosi tylko 18, czyli zaledwie 16% (czas na podpisanie wiadomości wzrasta 7 razy, a w niektórych przypadkach czas weryfikacji podpisu zwiększa się ponad 3-krotnie). Ponadto, poza wymaganiem większej przestrzeni dyskowej (jest to co prawda minimalny skutek uboczny ich stosowania), dłuższe klucze przekładają się również na zwiększone użycie procesora.
 
-Tak naprawdę prawdziwą zaletą używania klucza 4096-bitowego jest zabezpieczenie na przyszłość. Jeśli chcesz uzyskać A + ze 100% s na SSL Lab (dla Key Exchange), zdecydowanie powinieneś użyć 4096 bitowych kluczy prywatnych. To główny (i jedyny dla mnie) powód, dla którego powinieneś ich używać.
+Tak naprawdę prawdziwą zaletą używania klucza 4096-bitowego jest zabezpieczenie na przyszłość. Jeśli chcesz uzyskać ocenę A+ oraz 100%s dla Key Exchange skanera SSLLabs, zdecydowanie powinieneś użyć 4096 bitowych kluczy prywatnych. To główny (i jedyny dla mnie) powód, dla którego powinieneś ich używać.
 
 ## Dodatkowe źródła
 
