@@ -10,48 +10,33 @@ seo:
   date_modified: 2020-02-25 08:59:14 +0100
 ---
 
-Napisano wiele bardzo dobrych artykułów dotyczących TLS. Podczas moich badań na tym protokołem sporządziłem wiele notatek, którymi chciałbym się podzielić. W tym wpisie, chciałbym przedstawić najważniejsze rzeczy oraz poruszyć niektóre ciekawe tematy z punktu widzenia każdego administratora, a także przedstawić je na przykładzie konfiguracji serwera NGINX.
+Kryptografia klucza publicznego, zwana także kryptografią asymetryczną zakłada, że każda transmisja danych używa dwóch kluczy (w przeciwieństwie do kryptografii symetrycznej). Jeden z nich, klucz publiczny, wykorzystywany jest do szyfrowania wiadomości, zaś drugi, klucz prywatny, do jej odszyfrowania. W tym wpisie chciałbym omówić kwestię długości klucza prywatnego oraz przedstawić czym jest i jaką pełni rolę w komunikacji.
 
-Prezentowane konfiguracje oraz zasady odnoszą się do najnowszych zaleceń. Oczywiście musimy mieć świadomość, że niektóre z opisywanych tutaj rzeczy mogą ulec przedawnieniu szybciej niż inne dlatego zawsze powinieneś weryfikować dane zagadnienie oraz konfiguracje, którą wprowadzasz. W tym dokumencie zawarłem także odnośniki do zewnętrznych zasobów w celu pogłebienia wiedzy na dany temat.
+# Do czego potrzebny jest klucz prywatny?
 
-# Czym jest TLS?
+Klucz prywatny jest kluczem tajnym (co do zasady powinien być traktowany jako tajny) używanym do odszyfrowywania wiadomości, które są zaszyfrowane kluczem publicznych. Jego użycie pozwala uniknąć słabości szyfrowania symetrycznego, w którym klucz tajny jest współdzielony przez obie strony komunikacji.
 
-Protokół TLS (ang. _Transport Layer Security_) jest podstawowym protokołem zapewniającym prywatność i integralność danych między dwoma komunikującymi się urządzeniami lub aplikacjami. Jest to także najczęściej stosowany protokół bezpieczeństwa używany w przeglądarkach internetowych i innych aplikacjach wymagających bezpiecznej wymiany danych przez sieć. TLS zastępuje także starszą wersję protokołu, tj. SSL (ang. _Secure Socket Layer_).
+  > Na podstawie znajomości klucza publicznego, nie można odtworzyć klucza prywatnego, i na odwrót. Co więcej, każda asymetryczna para kluczy jest unikatowa, dzięki czemu wiadomość zaszyfrowana przy użyciu klucza publicznego może zostać odczytana tylko przez osobę posiadającą odpowiedni klucz prywatny.
 
-Jedną z ważniejszych funkcji protokołu TLS jest gwarancja, że podczas połączenia ze zdalnym punktem końcowym, jest on tym, za kogo się podaje. Wynika to z dwóch kluczowych funkcji:
+Jeżeli klucz prywatny zostanie udostępniony lub w jakikolwiek sposób ujawniony, bezpieczeństwo wszystkich wiadomości, które zostały zaszyfrowane za pomocą odpowiadającego mu klucza publicznego, zostanie naruszona.
 
-- szyfrowania komunikacji między punktem źródłowym a punktem docelowym
-- weryfikacji tożsamości punktu docelowego
+Spójrzmy na przykładzie komunikacji klienta z serwerem HTTP:
 
-# Biblioteka OpenSSL
+<img src="/assets/img/posts/cert_priv_key_sess_key.jpg" align="center" title="cert_priv_key_sess_key preview">
 
-Rekomendacja: <font color="#e5282d"><b>Używaj aktualnej i gotowej do uruchomienia produkcyjnie wersji OpenSSL</b></font>
+Po tym, jak klient otrzyma certyfikat klucza publicznego serwera, sprawdza, czy urząd certyfikacji, który podpisał certyfikat serwera znajduje się na prywatnej liście zaufanych urzędów certyfikacji w lokalnym magazynie klienta (ustalając, że teraz ufa także temu urzędowi certyfikacji).
 
-Biblioteka [OpenSSL](https://www.openssl.org/) jest najpopularniejszą implementacją protokołu SSL/TLS. Zawiera ona podstawowe funkcje kryptograficzne wykorzystywane przez aplikacje oraz dostarcza szereg narzędzi administracyjnych.
+https://www.cloudflare.com/learning/ssl/what-is-a-session-key/
 
-  > OpenSSL jest dostępny dla większości systemów w tym GNU/Linux oraz BSD.
+## Czym jest klucz sesji?
 
-Moim zdaniem, jedyny bezpieczny sposób wykorzystania tej biblioteki opiera się na aktualnej, wciąż wspieranej i gotowej produkcyjnie wersji. Co więcej, polecam trzymać się najnowszych wersji (np. 1.1.1 lub 1.1.1d w tym momencie).
+Następnie można bezpiecznie wysłać do serwera klucz sesji, którym każdy może teraz zarówno szyfrować, jak i deszyfrować późniejszą komunikację. Klucz ten (zwany inaczej jednorazowym) jest zwykle losowo generowanym kluczem symetrycznym używanym do szyfrowania dużego zestawu danych. Szyfrowanie takiego zestawu danych jest kosztowne przy użyciu klucza asymetrycznego stąd wybór jednego klucza symetrycznego.
 
-Upewnij się więc, że twoja biblioteka OpenSSL jest zaktualizowana do najnowszej dostępnej wersji i zachęcaj swoich klientów do korzystania ze zaktualizowanego OpenSSL i współpracującego z nim oprogramowania.
+W SSL/TLS dwie komunikujące się strony (klient i serwer) generują zazwyczaj 4 klucze sesji na początku każdej sesji komunikacyjnej, podczas uzgadniania TLS. Według [RFC 5246](https://tools.ietf.org/html/rfc5246) tak naprawdę nie nazywa tych kluczy „kluczami sesji”, ale funkcjonalnie jest to dokładnie to, czym są.
 
-Dobrym pomysłem jest także śledzenie [Release Strategy Policies](https://www.openssl.org/policies/releasestrat.html) oraz oficjalnej [listy zmian](https://www.openssl.org/news/changelog.html).
+Podobna koncepcja jest stosowana podczas SSL / TLS.
 
-Oczywiście kryteria wyboru odpowiedniej wersji mogą się różnić i wszystko zależy od zastosowania. Uważam jednak, że niezależnie od zastosowań powinniśmy wybrać jedną z wersji, dla której wciąż świadczone jest wsparcie:
-
-- wersja 1.1.1 wciąż wspierana do 2023-09-11 (LTS)
-  - ostatnia: 1.1.1d (10 września 2019 r.)
-- wersja 1.1.0 wciąż wspierana do 2019-09-11
-  - ostatnia: 1.1.0k (28 maja 2018 r.)
-- wersja 1.0.2 ciąż wspierana do 2019-12-31 (LTS)
-  - ostatnia: 1.0.2s (28 maja 2018 r.)
-- wszelkie inne wersje nie są już obsługiwane
-
-  > Następną wersją biblioteki OpenSSL będzie [OpenSSL 3.0.0](https://blog.apnic.net/2019/10/21/openssl-3-0-accelerating-forwards/).
-
-# Klucze prywatne
-
-Rekomendacja: <font color="#e5282d"><b>Używaj kluczy prywatnych RSA min. 2048-bit lub ECC min. 256-bit</b></font>
+Ze względu na złożone operacje matematyczne związane z szyfrowaniem i odszyfrowywaniem, algorytmy asymetryczne okazują się dosyć powolne w przypadku zetknięcia ich z dużymi zestawami danych.
 
 Certyfikaty SSL najczęściej używają kluczy RSA, zaś zalecany rozmiar tych kluczy rośnie co jakiś czas, aby utrzymać wystarczającą siłę kryptograficzną.
 
@@ -127,4 +112,3 @@ Walidacja łańcucha certyfikatów jest kluczową częścią każdego procesu uw
 Łańcuch certyfikatów składa się ze wszystkich certyfikatów potrzebnych do certyfikacji podmiotu określonego w certyfikacie końcowym. W praktyce obejmuje to certyfikat końcowy, certyfikaty pośrednich urzędów certyfikacji oraz certyfikat głównego urzędu certyfikacji zaufany przez wszystkie strony w łańcuchu. Każdy pośredni urząd certyfikacji w łańcuchu posiada certyfikat wydany przez urząd certyfikacji jeden poziom nad nim w hierarchii zaufania.
 
 Certyfikat serwera wraz z łańcuchem nie jest przeznaczony dla serwera. Serwer nie ma zastosowania do własnego certyfikatu. Certyfikaty są zawsze dla innych osób (tutaj klienta). Serwer używa klucza prywatnego (który odpowiada kluczowi publicznemu w certyfikacie). W szczególności serwer nie musi ufać własnemu certyfikatowi ani żadnemu urzędowi certyfikacji, który go wydał.
-

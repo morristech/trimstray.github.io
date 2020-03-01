@@ -17,9 +17,10 @@ remote_theme: mmistakes/jekyll-theme-basically-basic
 lang: pl-PL
 title: trimstray.github.io
 email: trimstray@gmail.com
-tagline: "*NIX & SYSOPS & SECURITY"
+tagline: >-
+  *NIX & SYSOPS & SECURITY
 description: >-
-  "*NIX & SYSOPS & SECURITY"
+  *NIX & SYSOPS & SECURITY
 baseurl: ''
 url: https://trimstray.github.io
 author:

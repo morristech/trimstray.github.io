@@ -10,44 +10,33 @@ seo:
   date_modified: 2020-02-25 08:59:14 +0100
 ---
 
-Napisano wiele bardzo dobrych artykułów dotyczących TLS. Podczas moich badań na tym protokołem sporządziłem wiele notatek, którymi chciałbym się podzielić. W tym wpisie, chciałbym przedstawić najważniejsze rzeczy oraz poruszyć niektóre ciekawe tematy z punktu widzenia każdego administratora, a także przedstawić je na przykładzie konfiguracji serwera NGINX.
+Kryptografia klucza publicznego, zwana także kryptografią asymetryczną zakłada, że każda transmisja danych używa dwóch kluczy (w przeciwieństwie do kryptografii symetrycznej). Jeden z nich, klucz publiczny, wykorzystywany jest do szyfrowania wiadomości, zaś drugi, klucz prywatny, do jej deszyfrowania.
 
-Prezentowane konfiguracje oraz zasady odnoszą się do najnowszych zaleceń. Oczywiście musimy mieć świadomość, że niektóre z opisywanych tutaj rzeczy mogą ulec przedawnieniu szybciej niż inne dlatego zawsze powinieneś weryfikować dane zagadnienie oraz konfiguracje, którą wprowadzasz. W tym dokumencie zawarłem także odnośniki do zewnętrznych zasobów w celu pogłebienia wiedzy na dany temat.
+W tym wpisie chciałbym omówić kwestię długości klucza prywatnego oraz przedstawić czym jest i jaką pełni rolę w komunikacji.
 
-# Czym jest TLS?
+# Najważniejsze informacje
 
-Protokół TLS (ang. _Transport Layer Security_) jest podstawowym protokołem zapewniającym prywatność i integralność danych między dwoma komunikującymi się urządzeniami lub aplikacjami. Jest to także najczęściej stosowany protokół bezpieczeństwa używany w przeglądarkach internetowych i innych aplikacjach wymagających bezpiecznej wymiany danych przez sieć. TLS zastępuje także starszą wersję protokołu, tj. SSL (ang. _Secure Socket Layer_).
+Klucz prywatny jest kluczem tajnym (co do zasady powinien być traktowany jako tajny) używanym do odszyfrowywania wiadomości, które są zaszyfrowane kluczem publicznych (dostarczanym razem z certyfikatem). Jego użycie pozwala uniknąć słabości szyfrowania symetrycznego, w którym klucz tajny jest współdzielony przez obie strony komunikacji.
 
-Jedną z ważniejszych funkcji protokołu TLS jest gwarancja, że podczas połączenia ze zdalnym punktem końcowym, jest on tym, za kogo się podaje. Wynika to z dwóch kluczowych funkcji:
+Na podstawie znajomości klucza publicznego, nie można odtworzyć klucza prywatnego, i na odwrót. Co więcej, każda asymetryczna para kluczy jest unikatowa, dzięki czemu wiadomość zaszyfrowana przy użyciu klucza publicznego może zostać odczytana tylko przez osobę posiadającą odpowiedni klucz prywatny.
 
-- szyfrowania komunikacji między punktem źródłowym a punktem docelowym
-- weryfikacji tożsamości punktu docelowego
+  > Jeżeli klucz prywatny zostanie udostępniony lub w jakikolwiek sposób ujawniony, bezpieczeństwo wszystkich wiadomości, które zostały zaszyfrowane za pomocą odpowiadającego mu klucza publicznego, zostanie naruszona.
 
-# Biblioteka OpenSSL
+Jednym z najpopularniejszych algorytmów asymetrycznych jest RSA. Niestety, ze względu na złożone operacje matematyczne związane z szyfrowaniem i deszyfrowywaniem, algorytmy asymetryczne okazują się dosyć powolne (zwłaszcza sam proces deszyfrowania) w przypadku zetknięcia ich z dużymi zestawami danych.
 
-Rekomendacja: <font color="#e5282d"><b>Używaj aktualnej i gotowej do uruchomienia produkcyjnie wersji OpenSSL</b></font>
+Dzieje się tak, ponieważ bezpieczeństwo szyfrowania opiera się na trudności faktoryzacji (złożoności obliczeniowej) dużych liczb pierwszych (tzw. `p` i `q`). Alternatywą jest szyfrowania oparte na krzywych eliptycznych, które wymaga znacznie mniejszych kluczy.
 
-Biblioteka [OpenSSL](https://www.openssl.org/) jest najpopularniejszą implementacją protokołu SSL/TLS. Zawiera ona podstawowe funkcje kryptograficzne wykorzystywane przez aplikacje oraz dostarcza szereg narzędzi administracyjnych.
+Po tym, jak klient otrzyma certyfikat klucza publicznego serwera, sprawdza, czy urząd certyfikacji, który podpisał certyfikat serwera znajduje się na prywatnej liście zaufanych urzędów certyfikacji w lokalnym magazynie klienta (ustalając, że teraz ufa także temu urzędowi certyfikacji).
 
-  > OpenSSL jest dostępny dla większości systemów w tym GNU/Linux oraz BSD.
+<img src="/assets/img/posts/cert_priv_key_sess_key.jpg" align="center" title="cert_priv_key_sess_key preview">
 
-Moim zdaniem, jedyny bezpieczny sposób wykorzystania tej biblioteki opiera się na aktualnej, wciąż wspieranej i gotowej produkcyjnie wersji. Co więcej, polecam trzymać się najnowszych wersji (np. 1.1.1 lub 1.1.1d w tym momencie).
+Następnie można bezpiecznie wysłać do serwera klucz sesji, którym każdy może teraz zarówno szyfrować, jak i deszyfrować późniejszą komunikację. Klucz ten (zwany inaczej jednorazowym) jest zwykle losowo generowanym kluczem symetrycznym używanym do szyfrowania dużego zestawu danych.
 
-Upewnij się więc, że twoja biblioteka OpenSSL jest zaktualizowana do najnowszej dostępnej wersji i zachęcaj swoich klientów do korzystania ze zaktualizowanego OpenSSL i współpracującego z nim oprogramowania.
+Jak już wspomniałem, szyfrowanie i deszyfrowanie RSA jest powolne, zwykle jest używane jako część tzw. hybrydowych systemów. Aby zaszyfrować wiadomość, zamiast używać pary kluczy RSA do szyfrowania i deszyfrowania, generujemy unikalny klucz symetryczny (dla SSL/TLS klucz sesyjny), szyfrujemy klucz symetryczny za pomocą RSA i szyfrujemy wiadomość za pomocą klucza sesyjnego. W ten sposób RSA służy tylko do szyfrowania pojedynczego bloku kilkuset bitów.
 
-Dobrym pomysłem jest także śledzenie [Release Strategy Policies](https://www.openssl.org/policies/releasestrat.html) oraz oficjalnej [listy zmian](https://www.openssl.org/news/changelog.html).
+Gdy używana jest wymiana kluczy RSA, klucz jest generowany losowo przez klienta, a następnie szyfrowany przy użyciu certyfikatu serwera. Podczas korzystania z wymiany kluczy RSA serwer ma bardzo mało do powiedzenia na temat klucza sesji.
 
-Oczywiście kryteria wyboru odpowiedniej wersji mogą się różnić i wszystko zależy od zastosowania. Uważam jednak, że niezależnie od zastosowań powinniśmy wybrać jedną z wersji, dla której wciąż świadczone jest wsparcie:
-
-- wersja 1.1.1 wciąż wspierana do 2023-09-11 (LTS)
-  - ostatnia: 1.1.1d (10 września 2019 r.)
-- wersja 1.1.0 wciąż wspierana do 2019-09-11
-  - ostatnia: 1.1.0k (28 maja 2018 r.)
-- wersja 1.0.2 ciąż wspierana do 2019-12-31 (LTS)
-  - ostatnia: 1.0.2s (28 maja 2018 r.)
-- wszelkie inne wersje nie są już obsługiwane
-
-  > Następną wersją biblioteki OpenSSL będzie [OpenSSL 3.0.0](https://blog.apnic.net/2019/10/21/openssl-3-0-accelerating-forwards/).
+Nowoczesna konfiguracja TLS zwykle zaleca Diffie Hellman, który jest bardziej odpowiednio nazywany protokołem uzgodnienia klucza, ponieważ klucz sesji jest obliczany na podstawie losowych danych wejściowych zarówno od klienta, jak i serwera.
 
 # Klucze prywatne
 
