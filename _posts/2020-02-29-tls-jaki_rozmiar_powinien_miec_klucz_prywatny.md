@@ -20,7 +20,19 @@ Klucz prywatny jest kluczem tajnym (co do zasady powinien być traktowany jako t
 
   > Serwer NGINX dostarcza dyrektywę `ssl_certificate_key` za pomocą której można ustawić ścieżkę do klucza prywatnego. Plik z kluczem prywatnym powinien być przechowywany w pliku z ograniczonym dostępem, co więcej, musi być możliwy do odczytania przez główny proces NGINX.
 
-Na podstawie znajomości klucza publicznego, nie można odtworzyć klucza prywatnego, i na odwrót. Co więcej, każda asymetryczna para kluczy jest unikatowa, dzięki czemu wiadomość zaszyfrowana przy użyciu klucza publicznego może zostać odczytana tylko przez osobę posiadającą odpowiedni klucz prywatny.
+Spójrzmy na przykładzie komunikacji klienta z serwerem HTTP:
+
+<p align="center">
+  <img src="/assets/img/posts/tls_priv_pub.png">
+</p>
+
+# Związek między długością klucza a wydajnością
+
+Klucz publiczny jest w pewien sposób powiązany z kluczem prywatnym co oznacza, że między nimi musi istnieć jakaś unikalna (matematyczna) zależność. W związku z tym, może to być słaby punkt, który przy jego złamaniu, może doprowadzić do kompromitacji szyfrowania. Stąd klucze asymetryczne muszą być znacznie dłuższe, aby móc zapewnić równoważny poziom bezpieczeństwa.
+
+Narzut obliczeniowy jest wtedy dość oczywisty, ponieważ klucz publiczny jest dostępny dla każdego, stąd musi być wraz z kluczem prywatnym wystarczająco długi by zapewnić silniejszy poziom szyfrowania oraz by nie można było go złamać. Rezultatem jest oczywiście znacznie silniejszy poziom szyfrowania. Koniec końców, 128-bitowy klucz symetryczny i 2048-bitowy klucz asymetryczny oferują mniej więcej podobny poziom bezpieczeństwa.
+
+Na podstawie znajomości klucza publicznego, nie powinno być możliwe odtworzenie klucza prywatnego, i na odwrót. Co więcej, każda asymetryczna para kluczy jest unikatowa, dzięki czemu wiadomość zaszyfrowana przy użyciu klucza publicznego może zostać odczytana tylko przez osobę posiadającą odpowiedni klucz prywatny.
 
   > Jeżeli klucz prywatny zostanie udostępniony lub w jakikolwiek sposób ujawniony, bezpieczeństwo wszystkich wiadomości, które zostały zaszyfrowane za pomocą odpowiadającego mu klucza publicznego, zostanie naruszona.
 
@@ -28,7 +40,9 @@ Jednym z najpopularniejszych algorytmów asymetrycznych jest RSA. Niestety, ze w
 
 Dzieje się tak, ponieważ bezpieczeństwo szyfrowania opiera się na trudności faktoryzacji (złożoności obliczeniowej) dużych liczb pierwszych (tzw. `p` i `q`). Alternatywą jest szyfrowania oparte na krzywych eliptycznych, które wymaga znacznie mniejszych kluczy.
 
-Klucze ECDSA (zawierające klucze publiczne ECC) są zalecane w porównaniu z RSA, ponieważ oferują ten sam lub większy (klucze oparte na krzywych eliptycznych są mniej wrażliwe i trudniejsze do złamania) poziom bezpieczeństwa. Oczywiście klucze RSA są również bardzo szybkie, zapewniając bardzo proste szyfrowanie i weryfikację oraz są łatwiejsze do wdrożenia niż ECC.
+Klucze ECDSA (zawierające klucze publiczne ECC) są zalecane w porównaniu z RSA, ponieważ oferują ten sam lub większy poziom bezpieczeństwa — klucze oparte na krzywych eliptycznych są mniej wrażliwe i trudniejsze do złamania. Oczywiście klucze RSA są również bardzo szybkie, zapewniając bardzo proste szyfrowanie i weryfikację oraz są łatwiejsze do wdrożenia niż ECC.
+
+Oczywiście istnieje wiele innych dodatkowych czynników, które mogą wpływać na „szybkość” infrastruktury klucza publicznego. Ponieważ jednym z problemów związanych z tym systemem jest zaufanie, większość implementacji dotyczy urzędu certyfikacji (CA), które są podmiotami ufającymi w delegowaniu par kluczy i sprawdzaniu „tożsamości” kluczy.
 
 # Długość klucza prywatnego - fakty i mity
 

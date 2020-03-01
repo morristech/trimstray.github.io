@@ -232,3 +232,7 @@ Tak naprawdę prawdziwą zaletą używania klucza 4096-bitowego jest zabezpiecze
 - [Why ninety-day lifetimes for certificates?](https://letsencrypt.org/2015/11/09/why-90-days.html)
 - [SSL Certificate Validity Will Be Limited to One Year by Apple’s Safari Browser](https://www.thesslstore.com/blog/ssl-certificate-validity-will-be-limited-to-one-year-by-apples-safari-browser/)
 - [Certificate lifetime capped to 1 year from Sep 2020](https://scotthelme.co.uk/certificate-lifetime-capped-to-1-year-from-sep-2020/)
+
+--
+
+Aby zapewnić ważność klucza publicznego, należy wprowadzić urząd certyfikacji. Jest to strona trzecia, która może poświadczyć autentyczność klucza publicznego. Zwiększa to dodatkowe obciążenie w procesie szyfrowania. Jednak mając to na uwadze, podczas gdy szyfrowanie kluczem publicznym jest wolniejsze, zapewnia znacznie większe zaufanie do procesu kryptograficznego.
