@@ -94,6 +94,14 @@ li:hover {
   z-index:2000;
 }
 
+.site-title a {
+  color: #170420;
+}
+
+.site-title a:hover {
+  color: #ea1646;
+}
+
 .entry a {
   /* color: #00838a; */
   color: #170420;
@@ -112,8 +120,8 @@ li:hover {
 }
 
 .entries-list .entry-title a:hover {
-    color: #006268;
-    background: aquamarine;
+  color: #006268;
+  background: aquamarine;
 }
 
 /* the fallback color from https://raw.githubusercontent.com/jwarby/pygments-css/master/github.css */
