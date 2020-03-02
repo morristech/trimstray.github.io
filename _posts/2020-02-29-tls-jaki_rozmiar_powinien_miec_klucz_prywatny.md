@@ -36,17 +36,15 @@ Na podstawie znajomości klucza publicznego, nie powinno być możliwe odtworzen
 
 Jak widzisz, klucz publiczny jest w pewien sposób powiązany z kluczem prywatnym co oznacza, że między nimi musi istnieć jakaś unikalna (matematyczna) zależność. W związku z tym może to być słaby punkt, który przy jego złamaniu, może doprowadzić do kompromitacji szyfrowania.
 
-Narzut obliczeniowy jest wtedy dość oczywisty, ponieważ klucz publiczny jest dostępny dla każdego, stąd musi być wraz z kluczem prywatnym wystarczająco długi aby zapewnić silniejszy poziom szyfrowania i zminimalizować możliwość jego złamania. Rezultatem jest oczywiście znacznie silniejszy poziom szyfrowania. Koniec końców, 128-bitowy klucz symetryczny i 2048-bitowy klucz asymetryczny oferują mniej więcej podobny poziom bezpieczeństwa.
+Narzut obliczeniowy jest wtedy dość oczywisty, ponieważ klucz publiczny jest dostępny dla każdego, stąd musi być (wraz z kluczem prywatnym) wystarczająco długi aby zapewnić silniejszy poziom szyfrowania i zminimalizować możliwość jego złamania. Rezultatem jest oczywiście znacznie silniejszy poziom szyfrowania. Koniec końców, 128-bitowy klucz symetryczny i 2048-bitowy klucz asymetryczny oferują mniej więcej podobny poziom bezpieczeństwa.
 
 Oczywiście istnieje wiele innych dodatkowych czynników, które mogą wpływać na „szybkość” infrastruktury klucza publicznego. Ponieważ jednym z problemów związanych z tym systemem jest zaufanie, większość problemów implementacji dotyczy urzędów certyfikacji (CA), które są podmiotami ufającymi w delegowaniu par kluczy i sprawdzaniu ich „tożsamości”.
 
 ## RSA vs ECC
 
-Jednym z najpopularniejszych algorytmów asymetrycznych jest RSA. Niestety, ze względu na złożone operacje matematyczne związane z szyfrowaniem i deszyfrowywaniem, algorytmy asymetryczne okazują się dosyć powolne (zwłaszcza sam proces deszyfrowania) w przypadku zetknięcia z dużymi zestawami danych.
+Jednym z najpopularniejszych algorytmów asymetrycznych jest RSA. Niestety, ze względu na złożone operacje matematyczne związane z szyfrowaniem i deszyfrowywaniem, algorytmy asymetryczne okazują się dosyć powolne (zwłaszcza sam proces deszyfrowania) w przypadku zetknięcia z dużymi zestawami danych. Dzieje się tak, ponieważ bezpieczeństwo szyfrowania opiera się na trudności faktoryzacji (złożoności obliczeniowej) dużych liczb pierwszych (tzw. `p` i `q`).
 
-Dzieje się tak, ponieważ bezpieczeństwo szyfrowania opiera się na trudności faktoryzacji (złożoności obliczeniowej) dużych liczb pierwszych (tzw. `p` i `q`). Alternatywą jest szyfrowania oparte na krzywych eliptycznych, które wymaga znacznie mniejszych kluczy.
-
-Alternatywą dla RSA jest kryptografia wykorzystująca krzywe eliptyczne (ECC, ang. _Elliptic Curve Cryptography_). Oba typy kluczy mają tę samą ważną właściwość, mianowicie są algorytmami asymetrycznymi (jak już wspomniałem, jeden klucz do szyfrowania i jeden klucz do deszyfrowania).
+Alternatywą dla RSA jest kryptografia wykorzystująca krzywe eliptyczne (ECC, ang. _Elliptic Curve Cryptography_), która wymaga znacznie mniejszych kluczy. Oba typy kluczy mają tę samą ważną właściwość, mianowicie są algorytmami asymetrycznymi (jak już wspomniałem, jeden klucz do szyfrowania i jeden klucz do deszyfrowania).
 
   > NGINX obsługuje podwójne certyfikaty, dzięki czemu możesz używać lżejszych i szybszych certyfikatów ECC równocześnie nadal zezwalać odwiedzającym przeglądać Twoją witrynę za pomocą standardowych certyfikatów.
 
