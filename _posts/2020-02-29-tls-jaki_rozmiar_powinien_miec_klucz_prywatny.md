@@ -42,7 +42,9 @@ Oczywiście istnieje wiele innych dodatkowych czynników, które mogą wpływać
 
 ## RSA vs ECC
 
-Jednym z najpopularniejszych algorytmów asymetrycznych jest RSA. Niestety, ze względu na złożone operacje matematyczne związane z szyfrowaniem i deszyfrowywaniem, algorytmy asymetryczne okazują się dosyć powolne (zwłaszcza sam proces deszyfrowania) w przypadku zetknięcia z dużymi zestawami danych. Dzieje się tak, ponieważ bezpieczeństwo szyfrowania opiera się na trudności faktoryzacji (złożoności obliczeniowej) dużych liczb pierwszych (tzw. `p` i `q`).
+Jednym z najpopularniejszych algorytmów asymetrycznych jest RSA (_Rivest–Shamir–Adleman_). Niestety, ze względu na złożone operacje matematyczne związane z szyfrowaniem i deszyfrowywaniem, algorytmy asymetryczne okazują się dosyć powolne (zwłaszcza sam proces deszyfrowania) w przypadku zetknięcia z dużymi zestawami danych.
+
+Dzieje się tak, ponieważ bezpieczeństwo szyfrowania opiera się na trudności faktoryzacji (złożoności obliczeniowej) dużych liczb pierwszych (tzw. `p` i `q`).
 
 Alternatywą dla RSA jest kryptografia wykorzystująca krzywe eliptyczne (ECC, ang. _Elliptic Curve Cryptography_), która wymaga znacznie mniejszych kluczy. Oba typy kluczy mają tę samą ważną właściwość, mianowicie są algorytmami asymetrycznymi (jak już wspomniałem, jeden klucz do szyfrowania i jeden klucz do deszyfrowania).
 
