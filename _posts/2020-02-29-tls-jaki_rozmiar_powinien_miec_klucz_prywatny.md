@@ -72,6 +72,8 @@ rsa 4096 bits 0.006109s 0.000093s    163.7  10706.8
 
 Podsumowując: większe rozmiary kluczy kryptograficznych, dwa klucze kryptograficzne zamiast jednego oraz wprowadzenie urzędu certyfikacji: dodatkowe wyszukiwania DNS i czasy odpowiedzi serwera. To z powodu tych dodatkowych obciążeń większość implementacji korzysta z algorytmu hybrydowego, w którym klucze publiczne i prywatne są używane do generowania klucza sesji (symetrycznego klucza tymczasowego, używanego tylko raz, do faktycznego szyfrowania i deszyfrowania danych) w celu uzyskania najlepszych zalet z tzw. obu światów.
 
+Jeżeli chcesz pogłębić swoją wiedzę dotyczącą obu rodzajów kryptografii polecam świetną prezentację pod tytułem [ECC vs RSA: Battle of the Crypto-Ninjas](https://www.slideshare.net/JamesMcGivern/ecc-vs-rsa-battle-of-the-cryptoninjas).
+
 # Jakie są zalecenia co do rozmiaru klucza prywatnego?
 
 Rekomendacja: <font color="#e5282d"><b>Używaj kluczy prywatnych RSA min. 2048-bit lub ECC min. 256-bit</b></font>
