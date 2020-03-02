@@ -95,11 +95,16 @@ li:hover {
 }
 
 .entry a {
-  color: #00838a;
+  /* color: #00838a; */
+  color: #170420;
 }
 
 .entry a:hover {
   color: #006268;
+}
+
+.entry-meta .icon {
+  fill: #006268;
 }
 
 .entries-list .entry-title a:hover {
