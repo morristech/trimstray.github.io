@@ -10,7 +10,7 @@ seo:
   date_modified: 2020-02-22 09:47:41 +0100
 ---
 
-Wykonanie kopii systemu za pomocą narzędzia `tar` w parze z `gzip/pigz` ma kilka zalet a jedną z nich jest niewątpliwie prostota, ponieważ nie potrzebujemy żadnych zewnętrznych narzędzi. Co więcej jesteśmy w stanie wykonać kopię całego systemu.
+Wykonanie kopii systemu za pomocą narzędzia `tar` w parze z `gzip/pigz` ma kilka zalet, a jedną z nich jest niewątpliwie prostota, ponieważ nie potrzebujemy żadnych zewnętrznych narzędzi.
 
 Sposób na wykonanie kopii całego systemu z wykorzystaniem narzędzia `tar`, włączając w to kompresję `gzip`:
 
