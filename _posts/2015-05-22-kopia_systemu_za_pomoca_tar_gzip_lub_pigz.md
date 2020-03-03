@@ -17,7 +17,7 @@ tar czvpf /mnt/system-$(date +%d%m%Y%s).tgz --directory=/ --exclude=proc --exclu
 --exclude=dev --exclude=mnt --exclude=tmp.
 ```
 
-Jeżeli maszyna posiada więcej niż jeden rdzeń, zamiast kompresji programem `gzip`, można użyć polecenia `pigz`, które działa wielowątkowo (pamiętajmy o usunięciu opcji `-z`) dzięki czemu znacznie przyspiesza cały proces:
+Jeżeli maszyna posiada więcej niż jeden rdzeń, zamiast kompresji programem `gzip`, można użyć polecenia `pigz`, które działa wielowątkowo (pamiętajmy o usunięciu opcji `-z`), dzięki czemu znacznie przyspiesza cały proces:
 
 ```bash
 tar cvpf /backup/snapshot-$(date +%d%m%Y%s).tgz --directory=/mnt/system \
