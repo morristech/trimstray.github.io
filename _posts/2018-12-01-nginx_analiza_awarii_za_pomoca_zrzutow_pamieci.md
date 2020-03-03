@@ -10,15 +10,15 @@ seo:
   date_modified: 2020-02-22 09:47:41 +0100
 ---
 
-NGINX jest niewiarygodnie stabilnym programem, jednak czasami może się zdarzyć, że nastąpi niestandardowe zakończenie jego działania (np. naruszenie ochrony pamięci). W takiej sytuacji, powinieneś wykorzystać mechanizm zrzucania pamięci, gdy NGINX zwróci nieoczekiwany błąd lub ulegnie awarii.
+NGINX jest niewiarygodnie stabilnym programem, jednak czasami może się zdarzyć, że nastąpi niestandardowe zakończenie jego działania (np. naruszenie ochrony pamięci). W takiej sytuacji powinieneś wykorzystać mechanizm zrzucania pamięci, gdy NGINX zwróci nieoczekiwany błąd lub ulegnie awarii.
 
-W przypadku analizy problemów z procesami serwera NGINX, pomocne mogą okazać się narzędziach takie jak `eBPF`, `ftrace`, `perf trace` lub `strace`.
+W przypadku analizy problemów z procesami serwera NGINX pomocne mogą okazać się dodatkowe narzędzia takie jak `eBPF`, `ftrace`, `perf trace` lub `strace`.
 
 # Czym jest zrzut pamięci?
 
-Zrzut pamięci lub inaczej zrzut rdzenia (ang. _core dump_) jest migawką pamięci (natychmiastowym obrazem pamięci)  procesu w chwili, gdy próbuje on zrobić coś bardzo złego - gdy uległ awarii lub zakończył pracę w nieoczekiwany sposób. Najczęściej taki obszar pamięci jest zapisywany do pliku w celu późniejszej analizy.
+Zrzut pamięci lub inaczej zrzut rdzenia (ang. _core dump_) jest migawką pamięci (natychmiastowym obrazem pamięci)  procesu w chwili, gdy próbuje on zrobić coś bardzo złego — gdy uległ awarii lub zakończył pracę w nieoczekiwany sposób. Najczęściej taki obszar pamięci jest zapisywany do pliku w celu późniejszej analizy.
 
-Na podstawie takiego zrzutu można podjąć próbę zdiagnozowania co było przyczyną błędu. Myślę, że jest to dobra praktyka w tego typu sytuacjach. Odpowiednio zebrane pliki i powiązane informacje z wystąpieniem błedu są jednym z pierwszych elementów poprawnej diagnozy.
+Na podstawie takiego zrzutu można podjąć próbę zdiagnozowania przyczyny błędu. Myślę, że jest to dobra praktyka w tego typu sytuacjach. Odpowiednio zebrane pliki i powiązane informacje z wystąpieniem błedu są jednym z pierwszych elementów poprawnej diagnozy.
 
 ## Debugging Symbols
 
@@ -195,7 +195,7 @@ Oficjalna dokumentacja opisuje to w ten sposób:
 
   > This directive is used for debugging. When internal error is detected, e.g. the leak of sockets on restart of working processes, enabling `debug_points` leads to a core file creation (abort) or to stopping of a process (stop) for further analysis using a system debugger. [...] This will result in `abort()` call once NGINX detects leak and core dump.
 
-W celu analizy należy należy aktywować punkty debugowania (ang. _break points_) w głównym kontekście pliku konfiguracyjnego:
+W celu analizy tego błędu, należy aktywować punkty debugowania (ang. _break points_) w głównym kontekście pliku konfiguracyjnego:
 
 ```nginx
 debug_points abort;
@@ -215,7 +215,7 @@ set $r = (ngx_http_request_t *) $c->data
 p *$r
 ```
 
-`p $c->log->connection` wyświetli wartość połączenia (tutaj 456) dla którego wystąpił błąd, np. `[...] left in connection 456`. Dzięki temu możliwe będzie przefiltrowanie pliku z dziennikiem:
+`p $c->log->connection` wyświetli wartość połączenia (tutaj 456), dla którego wystąpił błąd, np. `[...] left in connection 456`. Dzięki temu możliwe będzie przefiltrowanie pliku z dziennikiem:
 
 ```
 fgrep ' *12345678 ' /var/log/nginx/error_log;
