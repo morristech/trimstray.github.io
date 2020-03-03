@@ -18,7 +18,7 @@ W przypadku analizy problemów z procesami serwera NGINX pomocne mogą okazać s
 
 Zrzut pamięci lub inaczej zrzut rdzenia (ang. _core dump_) jest migawką pamięci (natychmiastowym obrazem pamięci)  procesu w chwili, gdy próbuje on zrobić coś bardzo złego — gdy uległ awarii lub zakończył pracę w nieoczekiwany sposób. Najczęściej taki obszar pamięci jest zapisywany do pliku w celu późniejszej analizy.
 
-Na podstawie takiego zrzutu można podjąć próbę zdiagnozowania przyczyny błędu. Myślę, że jest to dobra praktyka w tego typu sytuacjach. Odpowiednio zebrane pliki i powiązane informacje z wystąpieniem błedu są jednym z pierwszych elementów poprawnej diagnozy.
+Na podstawie takiego zrzutu można podjąć próbę zdiagnozowania przyczyny błędu. Myślę, że jest to dobra praktyka w tego typu sytuacjach. Odpowiednio zebrane pliki i powiązane informacje z wystąpieniem błędu są jednym z pierwszych elementów poprawnej diagnozy.
 
 ## Debugging Symbols
 
@@ -74,7 +74,7 @@ ulimit -c unlimited
 sh -c "ulimit -c unlimited && exec su $LOGNAME"
 ```
 
-Ostatnia rzecz to włączenie zrzuty pamięci dla procesów z ustawionymi `setuid` i `setgid`:
+Ostatnia rzecz to włączenie core dump'ów dla procesów z ustawionymi `setuid` i `setgid`:
 
 ```
 # %e.%p.%h.%t - <executable_filename>.<pid>.<hostname>.<unix_time>
@@ -92,7 +92,7 @@ Jest to bardzo przydatne, gdy trzeba sprawdzić, która konfiguracja została za
 
 Zapisz parametry gdb do pliku, np. `nginx-config.gdb`:
 
-```gdb
+```
 set $cd = ngx_cycle->config_dump
 set $nelts = $cd.nelts
 set $elts = (ngx_conf_dump_t*)($cd.elts)
@@ -104,15 +104,15 @@ append memory nginx.conf.running \
 end
 ```
 
-  > `ngx_conf_t` jest rodzajem struktury używanej podczas parsowania konfiguracji przez proces główny i oczywiście nie można uzyskać do niej dostępu po zakończenu analizy. Do wyciągnięcia zrzutu z uruchomionego procesu należy użyć `ngx_conf_dump_t`.
+  > `ngx_conf_t` jest rodzajem struktury używanej podczas parsowania konfiguracji przez proces główny i oczywiście nie można uzyskać do niej dostępu po zakończenu takiej analizy. Do wyciągnięcia konfiguracji z uruchomionego procesu należy użyć `ngx_conf_dump_t`.
 
-Uruchom debuger w trybie wsadowym:
+Uruchom debugger w trybie wsadowym:
 
 ```
 gdb -p $(pgrep -f "nginx: master") -batch -x nginx.gdb
 ```
 
-Zrzut został zapisany do pliku `nginx.conf.running`. Od teraz możesz go przejżeć:
+Zrzut został zapisany do pliku `nginx.conf.running`. Od teraz możesz go przejrzeć:
 
 ```
 less nginx.conf.running
@@ -221,7 +221,7 @@ p *$r
 fgrep ' *12345678 ' /var/log/nginx/error_log;
 ```
 
-Na koniec, spójrz na świetne wyjaśnienie powyższego problemu:
+Na koniec, spójrz na świetne wyjaśnienia powyższego problemu:
 
 - [Socket leak](https://forum.nginx.org/read.php?29,239511,239511#msg-239511)
 - [[nginx] Fixed socket leak with "return 444" in error_page (ticket #274)](https://forum.nginx.org/read.php?29,281339,281339#msg-281339)
