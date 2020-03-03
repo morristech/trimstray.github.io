@@ -16,15 +16,11 @@ Podczas nawiązywania połączenia klient sprawdza czy istnieje klucz i na jego 
 
 Jeżeli zależy Nam na wymuszeniu jednej z metod możemy przekazać parametry wywołania z poziomu klienta.
 
-# Wymuszenie logowania za pomocą hasła
-
 Jeżeli mamy problem z logowaniem za pomocą klucza można spróbować wymusić logowanie za pomocą hasła (standardowy sposób). Powiedzie się on jedynie w przypadku pozostawienia takiej możliwości autoryzacji po stronie serwera:
 
 ```bash
 ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no user@remote_host
 ```
-
-# Wymuszenie logowania za pomocą klucza
 
 Jeżeli chcielibyśmy wykonać sytuację odwrotną czyli wymusić na kliencie logowanie za pomocą klucza:
 
