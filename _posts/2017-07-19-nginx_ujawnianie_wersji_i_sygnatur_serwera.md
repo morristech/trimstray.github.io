@@ -12,13 +12,15 @@ seo:
 
 Ujawnienie wersji oraz sygnatur serwera NGINX może być niepożądane, szczególnie w środowiskach wrażliwych na ujawnianie informacji (tj. przetwarzających dane krytyczne). NGINX domyślnie wyświetla numer wersji na stronach błędów i w nagłówkach odpowiedzi HTTP.
 
-Informacje te mogą być wykorzystane jako punkt wyjścia dla atakujących, którzy znają określone luki związane z określonymi wersjami i mogą pomóc w lepszym zrozumieniu używanych systemów, a także potencjalnie rozwinąć dalsze ataki ukierunkowane na określoną wersję usługi. Na przykład Shodan zapewnia powszechnie używaną bazę danych tych informacji. O wiele bardziej wydajne jest po prostu wypróbowanie luki na wszystkich losowych serwerach niż ich zapytanie.
+Informacje te mogą być wykorzystane jako punkt wyjścia dla atakujących, którzy znają określone luki związane z określonymi wersjami i mogą pomóc w lepszym zrozumieniu używanych systemów, a także potencjalnie rozwinąć dalsze ataki ukierunkowane na określoną wersję usługi.
 
-Zlekceważenie tak ważnego czynnika związanego z bezpieczeństwem jest moim zdaniem elementarnym błędem. Oczywiście bezpieczeństwo poprzez zaciemnienie nie ma tak naprawdę żadnego wpływu na bezpieczeństwo serwera czy infrastruktury, jednak jest pewne, że ochroni przed najprostrzymi wektorami ataku.
+Na przykład Shodan zapewnia powszechnie używaną bazę danych zawierającą takie informacje dzięki czemu jest idealnym miejscem do rozpoczęcia analizy i zbierania informacji o celu. O wiele bardziej wydajne jest po prostu wypróbowanie luki na wszystkich losowych serwerach niż bezpośrednie odpytywanie każdego z nich.
 
-Moim zdaniem, bezpieczeństwo poprzez zaciemnienie jest koniecznym krokiem i powinno być podstawową zasadą związaną z hardeningiem serwera. Całkowite pominięcie tego kroku to bardzo zły pomysł, ponieważ nawet najbezpieczniejsze serwery HTTP mogą zostać złamane, jeśli znany jest wektor ataku specyficzny dla wersji.
+Zlekceważenie tak ważnego czynnika związanego z bezpieczeństwem jest moim zdaniem elementarnym błędem. Oczywiście [bezpieczeństwo poprzez zaciemnienie](https://danielmiessler.com/study/security-by-obscurity/) (ang. _Security through obscurity_) nie ma tak naprawdę żadnego wpływu na bezpieczeństwo serwera czy infrastruktury, jednak jest pewne, że ochroni (opóźni) przed najprostrzymi wektorami ataku.
 
-Jeżeli masz jakiekolwiek dylematy co do takiej konfiguracji, [RFC 2616 - Personal Information](https://tools.ietf.org/html/rfc2616#section-15.1) będzie tutaj bardzo pomocne w podjęciu decyzji:
+Moim zdaniem, w tym wypadku, bezpieczeństwo poprzez zaciemnienie jest koniecznym krokiem i powinno być podstawową zasadą związaną z hardeningiem serwera. Całkowite pominięcie tego kroku to bardzo zły pomysł, ponieważ nawet najbezpieczniejsze serwery HTTP mogą zostać złamane, jeśli znany jest wektor ataku specyficzny dla wersji.
+
+Jeżeli masz jakiekolwiek dylematy co do takiego podejścia, [RFC 2616 - Personal Information](https://tools.ietf.org/html/rfc2616#section-15.1) będzie tutaj bardzo pomocne w podjęciu decyzji:
 
   > _History shows that errors in this area often create serious security and/or privacy problems and generate highly adverse publicity for the implementor's company. [...] Like any generic data transfer protocol, HTTP cannot regulate the content of the data that is transferred, nor is there any a priori method of determining the sensitivity of any particular piece of information within the context of any given request. Therefore, applications SHOULD supply as much control over this information as possible to the provider of that information. Four header fields are worth special mention in this context: `Server`, `Via`, `Referer` and `From`._
 
@@ -37,9 +39,9 @@ Polecam także:
 
 Ukrywanie informacji o wersji nie powstrzyma ataku, ale sprawi, że będziesz mniejszym celem, jeśli atakujący szukają określonej wersji sprzętu lub oprogramowania. Według mnie, dane transmitowane przez serwer HTTP należy traktować jako dane osobowe (bynajmniej nie jest to stwierdzenie ani trochę na wyrost).
 
-Bezpieczeństwo przez zaciemnienie nie oznacza, że ​​jesteś bezpieczny, ale czasami spowalnia atakującego, i to jest dokładnie to, co jest potrzebne w przypadku luk w zerowym dniu.
+Bezpieczeństwo przez zaciemnienie nie oznacza, że ​​jesteś bezpieczny, ale czasami spowalnia atakującego, i to jest dokładnie to, co jest potrzebne w przypadku ataków [Zero-day](https://portswigger.net/daily-swig/zero-day).
 
-Aby wyłączyć rozgłaszanie wersji na stronach błedów oraz w polu nagłówka `Server`:
+Aby zapobiec ujawnianiu wersji, należy wyłączyć rozgłaszanie wersji na stronach błędów oraz w polu nagłówka `Server` za pomocą poniższej dyrektywy:
 
 ```nginx
 server_tokens off;
@@ -47,7 +49,7 @@ server_tokens off;
 
 # Ujawnianie sygnatur serwera
 
-Nagłówek `Server` zawiera informacje o oprogramowaniu używanym przez serwer obsługujący żądania. Wartość tego nagłówka jest używana przez takie serwisy jak Alexa i Netcraft do zbierania statystyk o serwerach HTTP. Jednym z najłatwiejszych kroków zabezpieczenia serwera HTTP jest wyłączenie wyświetlania informacji o używanym oprogramowaniu i technologii za pośrednictwem tego nagłówka serwera.
+Nagłówek `Server` zawiera informacje o oprogramowaniu używanym przez serwer HTTP obsługujący żądania. Wartość tego nagłówka jest używana do zbierania statystyk o serwerach HTTP przez takie serwisy jak Alexa i Netcraft. Jednym z najłatwiejszych kroków zabezpieczenia serwera HTTP jest wyłączenie wyświetlania informacji o używanym oprogramowaniu i technologii za pośrednictwem tego nagłówka serwera.
 
 Istnieje kilka powodów, dla których rozgłaszanie wersji jest bardzo nieporządane. Osoba atakująca zbiera wszystkie dostępne informacje o aplikacji i jej środowisku. Informacje o zastosowanych technologiach i wersjach oprogramowania są niezwykle cennymi informacjami.
 
