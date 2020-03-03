@@ -24,7 +24,7 @@ Cały proces będzie wyglądał mniej więcej tak:
 
 Skąd taka zmiana?
 
-  > At Let’s Encrypt we’re always looking for ways to improve the security and integrity of the Web PKI. We’re proud to launch multi-perspective domain validation today because we believe it’s an important step forward for the domain validation process. To our knowledge we are the first CA to deploy multi-perspective validation at scale.
+  > _At Let’s Encrypt we’re always looking for ways to improve the security and integrity of the Web PKI. We’re proud to launch multi-perspective domain validation today because we believe it’s an important step forward for the domain validation process. To our knowledge we are the first CA to deploy multi-perspective validation at scale._
 
 I co było jej genezą? Otóż jest ona związana z... protokołem BGP oraz możliwością przejęcia lub przekierowania ruchu sieciowego wykorzystującego ścieżkę weryfikacji poprawności (np. weryfikacja DNS) podmiotu ubiegającego się o certyfikat. Zespół badawczy z Princeton wykazał możliwość przeprowadzenia takiego ataku, który został opisany w dokumencie [Bamboozling Certificate Authorities with BGP](https://www.princeton.edu/~pmittal/publications/bgp-tls-usenix18.pdf).
 

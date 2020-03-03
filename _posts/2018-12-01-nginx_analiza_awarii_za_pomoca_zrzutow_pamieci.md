@@ -193,7 +193,7 @@ Występowanie wycieków zasobów może spowodować wygenerowanie następujących
 
 Oficjalna dokumentacja opisuje to w ten sposób:
 
-  > This directive is used for debugging. When internal error is detected, e.g. the leak of sockets on restart of working processes, enabling `debug_points` leads to a core file creation (abort) or to stopping of a process (stop) for further analysis using a system debugger. [...] This will result in `abort()` call once NGINX detects leak and core dump.
+  > _This directive is used for debugging. When internal error is detected, e.g. the leak of sockets on restart of working processes, enabling `debug_points` leads to a core file creation (abort) or to stopping of a process (stop) for further analysis using a system debugger. [...] This will result in `abort()` call once NGINX detects leak and core dump._
 
 W celu analizy tego błędu, należy aktywować punkty debugowania (ang. _break points_) w głównym kontekście pliku konfiguracyjnego:
 

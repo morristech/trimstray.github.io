@@ -14,7 +14,7 @@ Mechanizm ten powinien się przydać, jeśli chcesz poprawić czas zamykania pro
 
 Po upływie tego czasu, NGINX spróbuje zamknąć wszystkie aktualnie otwarte połączenia, aby ułatwić zamknięcie worker'ów. Maxim Dounin wyjaśnia to w ten oto sposób:
 
-  > The `worker_shutdown_timeout` directive is not expected to delay shutdown if there are no active connections. It was introduced to limit possible time spent in shutdown, that is, to ensure fast enough shutdown even if there are active connections.
+  > _The `worker_shutdown_timeout` directive is not expected to delay shutdown if there are no active connections. It was introduced to limit possible time spent in shutdown, that is, to ensure fast enough shutdown even if there are active connections._
 
 Zobacz co się dzieje, gdy proces roboczy wchodzi w stan „wychodzenia”. Wykonywanych jest wtedy kilka czynności:
 

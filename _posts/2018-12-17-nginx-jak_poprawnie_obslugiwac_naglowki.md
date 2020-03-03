@@ -22,7 +22,7 @@ Istnieją dodatkowe rozwiązania tego problemu, takie jak użycie alternatywnego
 
 Dodatkowo istnieje świetne wyjaśnienie problemu:
 
-  > Therefore, let’s say you have an http block and have specified the add_header directive within that block. Then, within the http block you have 2 server blocks - one for HTTP and one for HTTPs. [...] Let’s say we don’t include an add_header directive within the HTTP server block, however we do include an additional add_header within the HTTPs server block. In this scenario, the add_header directive defined in the http block will only be inherited by the HTTP server block as it does not have any add_header directive defined on the current level. On the other hand, the HTTPS server block will not inherit the add_header directive defined in the http block.
+  > _Therefore, let’s say you have an http block and have specified the add_header directive within that block. Then, within the http block you have 2 server blocks - one for HTTP and one for HTTPs. [...] Let’s say we don’t include an add_header directive within the HTTP server block, however we do include an additional add_header within the HTTPs server block. In this scenario, the add_header directive defined in the http block will only be inherited by the HTTP server block as it does not have any add_header directive defined on the current level. On the other hand, the HTTPS server block will not inherit the add_header directive defined in the http block._
 
 Przykład:
 
