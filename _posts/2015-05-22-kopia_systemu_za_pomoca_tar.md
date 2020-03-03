@@ -10,7 +10,7 @@ seo:
   date_modified: 2020-02-22 09:47:41 +0100
 ---
 
-Wykonanie kopii systemu za pomocą narzędzia `tar` w parze z `gzip/pigz` ma kilka zalet, a jedną z nich jest niewątpliwie prostota, ponieważ nie potrzebujemy żadnych zewnętrznych narzędzi.
+Wykonanie kopii systemu za pomocą narzędzia `tar` w parze z `gzip/pigz` ma kilka zalet, a jedną z nich jest niewątpliwie prostota, ponieważ nie potrzebujemy żadnych zewnętrznych narzędzi do tego celu.
 
 Sposób na wykonanie kopii całego systemu z wykorzystaniem narzędzia `tar`, włączając w to kompresję `gzip`:
 
@@ -19,7 +19,7 @@ tar czvpf /mnt/system-$(date +%d%m%Y%s).tgz --directory=/ --exclude=proc \
 --exclude=sys --exclude=dev --exclude=mnt --exclude=tmp.
 ```
 
-Jeżeli maszyna posiada więcej niż jeden rdzeń, zamiast kompresji programem `gzip`, można użyć polecenia `pigz`, które działa wielowątkowo (pamiętajmy o usunięciu opcji `-z`), dzięki czemu znacznie przyspiesza cały proces:
+Jeżeli serwer posiada więcej niż jeden rdzeń, zamiast kompresji programem `gzip`, można użyć polecenia `pigz`, które działa wielowątkowo (pamiętajmy o usunięciu opcji `-z`), dzięki czemu znacznie przyspiesza cały proces tworzenia kopii:
 
 ```bash
 tar cvpf /backup/snapshot-$(date +%d%m%Y%s).tgz --directory=/mnt/system \

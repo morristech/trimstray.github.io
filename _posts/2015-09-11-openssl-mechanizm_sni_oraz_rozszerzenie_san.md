@@ -61,7 +61,7 @@ Spójrz na poniższy obrazek:
   <img src="/assets/img/posts/sni_tls.jpg">
 </p>
 
-Dzięki rozszerzeniu **SNI** serwer może bezpiecznie "trzymać" wiele certyfikatów używając pojedynczego adresu IP.
+Dzięki rozszerzeniu **SNI** serwer może bezpiecznie „trzymać” wiele certyfikatów używając pojedynczego adresu IP.
 
 ## SNI a Subject Alternative Name (SAN)
 

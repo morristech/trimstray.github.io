@@ -12,7 +12,9 @@ seo:
 
 Domyślną metodą autoryzacji z poziomu klienta SSH jest logowanie za pomocą loginu i hasła, jednak oczywiście istnieje możliwość autoryzacji za pomocą klucza. Jeżeli zależy Nam na wymuszeniu jednej z metod, możemy przekazać parametry wywołania z poziomu klienta.
 
-Podczas nawiązywania połączenia klient sprawdza, czy istnieje klucz i na jego podstawie ustala sposób logowania. Jeżeli taka metoda się nie powiedzie, podejmowana jest próba autoryzacji za pomocą loginu i hasła. W przypadku problemów z logowaniem za pomocą klucza można spróbować wymusić logowanie za pomocą hasła (standardowy sposób). Powiedzie się on jedynie w przypadku pozostawienia takiej możliwości autoryzacji po stronie serwera:
+Podczas nawiązywania połączenia klient sprawdza, czy istnieje klucz i na jego podstawie ustala sposób logowania. Jeżeli taka metoda się nie powiedzie, podejmowana jest próba autoryzacji za pomocą loginu i hasła.
+
+W przypadku problemów z logowaniem za pomocą klucza można spróbować wymusić logowanie za pomocą hasła (standardowy sposób). Powiedzie się on jedynie w przypadku pozostawienia takiej możliwości autoryzacji po stronie serwera:
 
 ```bash
 ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no user@remote_host
