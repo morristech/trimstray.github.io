@@ -257,9 +257,10 @@ div.highlighter-rouge > pre, div.highlighter-rouge pre.highlight, figure.highlig
 code.highlighter-rouge {
   padding: 2px 4px;
   margin: 0 .3rem;
-  border-radius: 4px;
   /* font-size: 18px; */
   font-size: 85%;
+  background-color: rgba(27,31,35,.05);
+  border-radius: 3px;
 }
 
 code, kbd, samp, pre {
