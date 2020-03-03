@@ -13,8 +13,8 @@ seo:
 Sposób na wykonanie kopii całego systemu z wykorzystaniem narzędzi `tar` oraz `gzip`:
 
 ```bash
-tar czvpf /mnt/system-$(date +%d%m%Y%s).tgz --directory=/ --exclude=proc --exclude=sys \
---exclude=dev --exclude=mnt --exclude=tmp.
+tar czvpf /mnt/system-$(date +%d%m%Y%s).tgz --directory=/ --exclude=proc \
+--exclude=sys --exclude=dev --exclude=mnt --exclude=tmp.
 ```
 
 Jeżeli maszyna posiada więcej niż jeden rdzeń, zamiast kompresji programem `gzip`, można użyć polecenia `pigz`, które działa wielowątkowo (pamiętajmy o usunięciu opcji `-z`), dzięki czemu znacznie przyspiesza cały proces:
