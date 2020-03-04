@@ -12,7 +12,7 @@ seo:
 
 Kryptografia klucza publicznego, zwana także kryptografią asymetryczną zakłada, że każda transmisja danych używa dwóch kluczy (w przeciwieństwie do kryptografii symetrycznej). Jeden z nich, klucz publiczny, wykorzystywany jest do szyfrowania wiadomości, a drugi, klucz prywatny, do jej deszyfrowania.
 
-W tym wpisie chciałbym omówić kwestię długości klucza prywatnego, jego wpływ na wydajność oraz przedstawić czym jest oraz jaką pełni funkcję w komunikacji.
+W tym wpisie chciałbym omówić kwestię długości klucza prywatnego, jaki ma wpływ na wydajność oraz przedstawić czym jest oraz jaką pełni funkcję w komunikacji.
 
 # Czym jest klucz prywatny?
 
@@ -20,7 +20,7 @@ Klucz prywatny jest kluczem tajnym (co do zasady powinien być traktowany jako t
 
   > Serwer NGINX dostarcza dyrektywę `ssl_certificate_key` za pomocą której można ustawić ścieżkę do klucza prywatnego. Plik z kluczem prywatnym powinien być przechowywany w pliku z ograniczonym dostępem, co więcej, musi być możliwy do odczytania przez główny proces NGINX.
 
-Spójrzmy na przykład komunikacji klienta z serwerem HTTP:
+Spójrzmy na przykładzie komunikacji klienta z serwerem HTTP:
 
 <p align="center">
   <img src="/assets/img/posts/tls_priv_pub.png">
@@ -38,19 +38,19 @@ Jak widzisz, klucz publiczny jest w pewien sposób powiązany z kluczem prywatny
 
 Narzut obliczeniowy jest wtedy dość oczywisty, ponieważ klucz publiczny jest dostępny dla każdego, stąd musi być (wraz z kluczem prywatnym) wystarczająco długi aby zapewnić silniejszy poziom szyfrowania i zminimalizować możliwość jego złamania. Rezultatem jest oczywiście znacznie silniejszy poziom szyfrowania. Koniec końców, 128-bitowy klucz symetryczny i 2048-bitowy klucz asymetryczny oferują mniej więcej podobny poziom bezpieczeństwa.
 
-Oczywiście istnieje wiele innych dodatkowych czynników, które mogą wpływać na „szybkość” infrastruktury klucza publicznego. Ponieważ jednym z problemów związanych z tym systemem jest zaufanie, większość problemów implementacji dotyczy urzędów certyfikacji (CA), które są podmiotami ufającymi w delegowaniu par kluczy i sprawdzaniu ich „tożsamości”.
+Oczywiście istnieje wiele innych dodatkowych czynników, które mogą wpływać na „szybkość” infrastruktury klucza publicznego. Ponieważ jednym z problemów związanych z tym systemem jest zaufanie, większość problemów implementacji dotyczy urzędów certyfikacji (CA), które są podmiotami ufającymi w delegowaniu par kluczy i sprawdzaniu ich tożsamości.
 
 ## RSA vs ECC
 
 Jednym z najpopularniejszych algorytmów asymetrycznych jest RSA (_Rivest–Shamir–Adleman_). Niestety, ze względu na złożone operacje matematyczne związane z szyfrowaniem i deszyfrowywaniem, algorytmy asymetryczne okazują się dosyć powolne (zwłaszcza sam proces deszyfrowania) w przypadku zetknięcia z dużymi zestawami danych.
 
-Dzieje się tak, ponieważ bezpieczeństwo szyfrowania opiera się na trudności faktoryzacji (złożoności obliczeniowej) dużych liczb pierwszych (tzw. `p` i `q`).
+Dzieje się tak, ponieważ bezpieczeństwo szyfrowania opiera się na trudności faktoryzacji (złożoności obliczeniowej) dwóch dużych i różnych liczb pierwszych (tzw. `p` i `q`), których odgadnięcie nie jest zbyt proste.
 
 Alternatywą dla RSA jest kryptografia wykorzystująca krzywe eliptyczne (ECC, ang. _Elliptic Curve Cryptography_), która wymaga znacznie mniejszych kluczy. Oba typy kluczy mają tę samą ważną właściwość, mianowicie są algorytmami asymetrycznymi (jak już wspomniałem, jeden klucz do szyfrowania i jeden klucz do deszyfrowania).
 
   > NGINX obsługuje podwójne certyfikaty, dzięki czemu możesz używać lżejszych i szybszych certyfikatów ECC równocześnie nadal zezwalać odwiedzającym przeglądać Twoją witrynę za pomocą standardowych certyfikatów.
 
-Algorytmy podpisu cyfrowego ECC, takie jak ECDSA (dla klasycznych krzywych) są zalecane w porównaniu z RSA, ponieważ oferują ten sam lub większy poziom bezpieczeństwa — są mniej wrażliwe i trudniejsze do złamania. Oczywiście klucze RSA są również bardzo szybkie, zapewniając bardzo proste szyfrowanie i weryfikację oraz są łatwiejsze do wdrożenia co jest ich ogromną zaletą.
+Algorytmy podpisu cyfrowego ECC, takie jak ECDSA (dla klasycznych krzywych) są zalecane w porównaniu z RSA, ponieważ oferują ten sam lub większy poziom bezpieczeństwa — w konsekwencji są mniej wrażliwe i trudniejsze do złamania. Oczywiście klucze RSA są również bardzo szybkie, zapewniając bardzo proste szyfrowanie i weryfikację oraz są łatwiejsze do wdrożenia, co jest ich ogromną zaletą.
 
   > Należy wiedzieć, że w przypadku krzywych eliptycznych, poziom bezpieczeństwa (siła kryptograficzna), wydajność (szybkość) oraz długość klucza zależy od zastosowanej krzywej. Co ciekawe, niektóre z nich nie nadają się do zastosowań kryptograficznych ze względu na znane słabości. Więcej informacji na ten temat znajdziesz [tutaj](http://safecurves.cr.yp.to/).
 
@@ -70,7 +70,7 @@ rsa 4096 bits 0.006109s 0.000093s    163.7  10706.8
 
 <sup><i>OpenSSL 1.1.0j 20 Nov 2018; Intel(R) Xeon(R) CPU E5-2620 v4 @ 2.10GHz</i></sup>
 
-Podsumowując: większe rozmiary kluczy kryptograficznych, dwa klucze kryptograficzne zamiast jednego oraz wprowadzenie urzędu certyfikacji: dodatkowe wyszukiwania DNS i czasy odpowiedzi serwera. To z powodu tych dodatkowych obciążeń większość implementacji korzysta z algorytmu hybrydowego, w którym klucze publiczne i prywatne są używane do generowania klucza sesji (symetrycznego klucza tymczasowego, używanego tylko raz, do faktycznego szyfrowania i deszyfrowania danych) w celu uzyskania najlepszych zalet z tzw. obu światów.
+Podsumowując: większe rozmiary kluczy kryptograficznych, dwa klucze kryptograficzne zamiast jednego oraz wprowadzenie urzędu certyfikacji: dodatkowe wyszukiwania DNS i czasy odpowiedzi serwera — to z powodu tych dodatkowych obciążeń większość implementacji korzysta z algorytmu hybrydowego, w którym klucze publiczne i prywatne są używane do generowania klucza sesji (symetrycznego klucza tymczasowego, używanego tylko raz, do faktycznego szyfrowania i deszyfrowania danych) w celu uzyskania najlepszych zalet z tzw. obu światów.
 
 Jeżeli chcesz pogłębić swoją wiedzę dotyczącą obu rodzajów kryptografii polecam świetną prezentację pod tytułem [ECC vs RSA: Battle of the Crypto-Ninjas](https://www.slideshare.net/JamesMcGivern/ecc-vs-rsa-battle-of-the-cryptoninjas).
 
@@ -86,7 +86,7 @@ Eksperci ds. Bezpieczeństwa przewidują, że 2048 bitów będzie wystarczające
   <img src="/assets/img/posts/rsa_ecc_lengths.png">
 </p>
 
-Najnowsza wersja [FIPS-186-5 (Draft)](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-5-draft.pdf) <sup>[pdf]</sup> określa zastosowanie modułu, którego długość bitu jest liczbą całkowitą równą 2048-bit lub większą (co ciekawe, starsza wersja, tj. FIPS-186-4 z 2013 roku, mówiła, że rząd federalny USA generuje (i używa) podpisy cyfrowe o długości klucza 1024, 2048 lub 3072 bity).
+Najnowsza wersja [FIPS-186-5 (Draft)](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-5-draft.pdf) <sup>[pdf]</sup> określa zastosowanie modułu, którego długość bitu jest liczbą całkowitą równą 2048-bit lub większą (co ciekawe, starsza wersja, tj. FIPS-186-4 z 2013 roku, mówiła, że rząd federalny USA generuje (i używa) podpisy cyfrowe o długości klucza 1024, 2048 lub 3072 bit).
 
 Co więcej, zalecenia Europejskiej Rady ds. Płatności ([EPC342-08 v8.0](https://www.europeanpaymentscouncil.eu/sites/default/files/kb/file/2019-01/EPC342-08%20v8.0%20Guidelines%20on%20cryptographic%20algorithms%20usage%20and%20key%20management.pdf) <sup>[pdf]</sup>) mówią, że należy unikać używania 1024-bitowych kluczy RSA i 160-bitowych kluczy ECC w nowych aplikacjach, z wyjątkiem krótkoterminowej ochrony niekrytycznych aplikacji. EPC zaleca stosowanie co najmniej 2048-bitowego RSA lub 224-bitowego ECC do ochrony średnioterminowej (np. 10-letniej). Klasyfikują także SHA-1, moduły RSA 1024-bit, klucze ECC 160-bit jako odpowiednie do użycia w starszych wersjach (moim zdaniem SHA-1 nie nadaje się do tych zastosowań).
 

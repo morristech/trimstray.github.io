@@ -23,7 +23,7 @@ Traffic mirroring można wykorzystać do:
 - rozwiązywania problemów z ruchem (diagnozowania błędów)
 - kopiowania rzeczywistego ruchu produkcyjnego w inne miejsce w celu dodatkowej analizy
 
-Samo tworzenie kopii lustrzanych nie wpływa na oryginalne żądania (analizowane są tylko żądania). Co więcej, błędy w serwerze lustrzanym nie wpływają na backend główny.
+Samo tworzenie kopii lustrzanych nie wpływa (nie wprowadza zmian w jego strukturze) na oryginalne żądania. Co więcej, analizowane są tylko żądania a błędy w serwerze lustrzanym nie wpływają na backend główny.
 
 Przykład wykorzystania:
 

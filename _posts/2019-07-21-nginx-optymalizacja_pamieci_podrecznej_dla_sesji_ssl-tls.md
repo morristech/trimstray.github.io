@@ -10,11 +10,11 @@ seo:
   date_modified: 2020-02-23 09:14:19 +0100
 ---
 
-Domyślnie wbudowana pamięć podręczna sesji nie jest optymalna, ponieważ może być używana tylko przez jeden proces roboczy, co może powodować fragmentację. O wiele lepiej jest używać współdzielonej pamięci podręcznej, a także zoptymalizować dodatkowe parametry, które dostarcza NGINX.
+Domyślnie wbudowana pamięć podręczna sesji SSL/TLS nie jest optymalna, ponieważ może być używana tylko przez jeden proces roboczy, co może powodować fragmentację pamięci. O wiele lepiej jest używać współdzielonej pamięci podręcznej, a także zoptymalizować dodatkowe parametry.
 
 ## ssl_session_cache
 
-Pierwszy z parametrów zwiększa wydajność połączeń (zwłaszcza połączeń typu `Keep-Alive`). Wartość 10MB jest dobrym punktem wyjścia (1 MB współdzielonej pamięci podręcznej może pomieścić około 4000 sesji). Dzięki parametrowi `shared` pamięć dla połączeń SSL jest współdzielona przez wszystkie procesy robocze (pamięć podręczna o tej samej nazwie może być używana na kilku serwerach wirtualnych).
+Pierwszy z parametrów zwiększa ogólną wydajność połączeń (zwłaszcza połączeń typu `Keep-Alive`). Wartość 10MB jest dobrym punktem wyjścia (1 MB współdzielonej pamięci podręcznej może pomieścić około 4000 sesji). Dzięki parametrowi `shared` pamięć dla połączeń SSL jest współdzielona przez wszystkie procesy robocze (co więcej pamięć podręczna o tej samej nazwie może być używana na kilku serwerach wirtualnych).
 
 Oczywiście nie ma róży bez kolców. Jednym z powodów, dla których nie należy używać bardzo dużej pamięci podręcznej, jest to, że większość implementacji nie usuwa z niej żadnych rekordów. Nawet wygasłe sesje mogą nadal znajdować się w pamięci podręcznej i można je odzyskać!
 
@@ -44,11 +44,11 @@ ssl_session_timeout 4h;
 
 # ssl_session_tickets
 
-Ostatnia rzecz do poprawy to klucze sesji lub tzw. bilety sesji. Zawierają one pełny stan sesji (w tym klucz wynegocjowany między klientem a serwerem oraz wykorzystywany zestaw szyfrów). Wszystkie informacje wymagane do kontynuowania sesji są tam zawarte, więc serwer może wznowić sesję bez przechowywania żadnych informacji. Całe dodatkowe ładowanie odbywa się po stronie klienta.
+Kolejna rzecz do poprawy to klucze sesji lub tzw. bilety sesji. Zawierają one pełny stan sesji (w tym klucz wynegocjowany między klientem a serwerem oraz wykorzystywany zestaw szyfrów). Wszystkie informacje wymagane do kontynuowania sesji są tam zawarte, więc serwer może wznowić sesję wykorzystując wcześniejsze parametry. Cała dodatkowa obsługa odbywa się po stronie klienta.
 
 Niestety większość serwerów nie usuwa kluczy sesji ani biletów, zwiększając w ten sposób ryzyko wycieku danych z poprzednich (i przyszłych) połączeń. Co więcej, takie zachowanie "niszczy" tajemnicę przekazywania (ang. `Forward Secrecy`). Moim zdaniem jedynym sposobem na prawdziwe usunięcie danych sesyjnych jest zastąpienie ich nową sesją.
 
-  > [Vincent Bernat](https://vincent.bernat.ch/en) napisał świetne [narzędzie](https://github.com/vincentbernat/rfc5077/blob/master/rfc5077-client.c) do testowania wznowienia sesji z biletami i bez biletów.
+  > [Vincent Bernat](https://vincent.bernat.ch/en) napisał świetne [narzędzie](https://github.com/vincentbernat/rfc5077/blob/master/rfc5077-client.c) do testowania mechanizmu wznawiania sesji z wykorzystaniem ticket'ów.
 
 Przykład:
 
@@ -58,7 +58,7 @@ ssl_session_tickets off;
 
 # ssl_buffer_size
 
-Parametr ten odpowiada za ustawienie bufora przesyłanych danych za pomocą protokołu TLS. Jest to jeden z tych parametrów, dla którego spotkać można różne wartości. Spowodowane jest to pewną niejednoznacznością. Aby dostosować wartość tego parametru, pamiętać należy m.in. o rezerwacji miejsca na różne opcje TCP (znaczniki czasu czy SACK), które mogą zajmowac do 40 bajtów. Uwzględnić należy także rekordy TLS (średnio od 20 do 60 bajtów) w zależności od wynegocjowanego szyfru między klientem a serwerem.
+Parametr ten odpowiada za ustawienie bufora przesyłanych danych za pomocą protokołu TLS. Jest to jeden z tych parametrów, dla którego spotkać można różne wartości. Spowodowane jest to pewną niejednoznacznością. Aby dostosować wartość tego parametru, należy pamiętać m.in. o rezerwacji miejsca na różne opcje TCP (znaczniki czasu czy SACK), które mogą zajmowac do 40 bajtów. Uwzględnić należy także rekordy TLS (średnio od 20 do 60 bajtów) w zależności od wynegocjowanego szyfru między klientem a serwerem.
 
 Tym samym można przyjąć: 1500 bajtów (MTU) - 40 bajtów (IP) - 20 bajtów (TCP) - 60-100 bajtów (narzut TLS) ~= 1300 bajtów.
 

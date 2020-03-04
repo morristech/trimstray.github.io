@@ -35,7 +35,7 @@ Zaufanie jest tutaj kluczowe, ponieważ nadal niejawnie autoryzujesz wystawcę (
 
 ## Słów kilka o certyfikacie self-signed
 
-Różnica między certyfikatem self-signed a certyfikatem podpisanym przez urząd certyfikacji, polega na sposobie oznaczenia certyfikatu jako zaufanego. Dla certyfikatów podpisanych przez CA użytkownik ufa całemu zestawowi zaufanych urzędów certyfikacji zainstalowanych w przeglądarce/systemie operacyjnym. Jeśli przeglądarka zobaczy certyfikat podpisany przez jednego z nich, akceptuje go i wszystko jest w porządku. Jeśli tak nie jest, otrzymasz duże przerażające ostrzeżenie.
+Różnica między certyfikatem self-signed a certyfikatem podpisanym przez urząd certyfikacji polega na sposobie oznaczenia certyfikatu jako zaufanego. Dla certyfikatów podpisanych przez CA użytkownik ufa całemu zestawowi zaufanych urzędów certyfikacji zainstalowanych w przeglądarce/systemie operacyjnym. Jeśli przeglądarka zobaczy certyfikat podpisany przez jednego z nich, akceptuje go i wszystko jest w porządku. Jeśli tak nie jest, otrzymasz duże przerażające ostrzeżenie.
 
 To ostrzeżenie jest wyświetlane w przypadku certyfikatów samopodpisanych, ponieważ przeglądarka nie ma pojęcia, kto kontroluje certyfikat. Urzędy certyfikacji, którym ufa, są znane z tego, że weryfikują/podpisują tylko certyfikaty właściciela strony internetowej. Dlatego przeglądarka, poprzez domniemanie, ufa, że ​​odpowiedni certyfikat oraz klucz prywatny certyfikatu jest kontrolowany przez operatora strony internetowej (i ma nadzieję, że tak jest).
 
@@ -45,7 +45,7 @@ Tak naprawdę, wykorzystanie szyfrowanego połączenia ma sens jedynie wtedy, gd
 
 # Wydajność
 
-Ważną rzeczą, o której należy pamiętać, jest wydajność. HTTP jest wolniejszy niż HTTPS wykorzystujący HTTP/2 (tj. jedno połączenie TCP, multipleksowanie, kompresja nagłówków HPACK), HSTS, OCSP Stapling i kilka innych ulepszeń, z wyjątkiem początkowego uzgadniania TLS.
+Ważną rzeczą, o której należy pamiętać, jest wydajność. HTTP jest wolniejszy niż HTTPS wykorzystujący HTTP/2 (tj. jedno połączenie TCP, multipleksowanie, kompresja nagłówków HPACK), HSTS, OCSP Stapling i kilka innych ulepszeń, z pewnym wyjątkiem.
 
 Jak wiemy, HTTPS wymaga wstępnego „uścisku dłoni”. Proces ten może być bardzo wolny mimo tego, że rzeczywista ilość danych przesyłanych w ramach uzgadniania nie jest ogromna (zwykle poniżej 5 kB). Jednak w przypadku bardzo małych żądań może to być dość duże obciążenie.
 

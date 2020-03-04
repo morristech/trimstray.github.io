@@ -26,9 +26,9 @@ Połączenie jest niezawodnym potokiem opartym na protokole TCP między dwoma pu
 
 - Żądanie (ang. _request_) - klient pyta serwer o dany zasób; aby złożyć żądanie HTTP, należy już ustanowić połączenie z serwerem
 
-Większość współczesnych przeglądarek otwiera jednocześnie kilka połączeń i jednocześnie pobiera różne pliki (obrazy, css, js), aby przyspieszyć ładowanie strony. Oczywiście, wszystko zależy również od wykorzystywanej wersji protokołu HTTP. Stąd jak widać, każde połączenie może obsługiwać wiele żądań.
+Większość współczesnych przeglądarek otwiera jednocześnie kilka połączeń i jednocześnie pobiera różne pliki (obrazy, css, js), aby przyspieszyć ładowanie strony. Oczywiście, wszystko zależy również od wykorzystywanej wersji protokołu HTTP.
 
-Jeśli nawiązano połączenie, można złożyć wiele żądań przy użyciu tego samego połączenia. Dla HTTP/1.0 jest to domyślnie jedno żądanie na połączenie, dla HTTP/1.1 domyślnie od 4 do 6 połączeń z możliwością wykorzystania mechanizmu podtrzymywania połączeń (`Keep-Alive`).
+Stąd jak widać, każde połączenie może obsługiwać wiele żądań (można złożyć wiele żądań przy użyciu tego samego połączenia). Dla HTTP/1.0 jest to domyślnie jedno żądanie na połączenie, dla HTTP/1.1 domyślnie od 4 do 6 połączeń z możliwością wykorzystania mechanizmu podtrzymywania połączeń (`Keep-Alive`).
 
 <img src="/assets/img/posts/http_conn_requests.png" align="center" title="http_conn_requests preview">
 

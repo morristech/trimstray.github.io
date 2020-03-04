@@ -145,10 +145,14 @@ Moim zdaniem bezpieczna wartość `worker_rlimit_nofile` (i limitów systemowych
 
 ```
 # Jeden uchwyt dla jednego połączenia:
-worker_connections + (shared libs, log files, event pool, etc.) = worker_rlimit_nofile
+worker_connections + (shared libs, log files, event pool, etc.)
+                   =
+          worker_rlimit_nofile
 
 # Dwa uchwyty dla jednego połączenia:
-(worker_connections * 2) + (shared libs, log files, event pool, etc.) = worker_rlimit_nofile
+(worker_connections * 2) + (shared libs, log files, event pool, etc.)
+                   =
+          worker_rlimit_nofile
 ```
 
 Prawdopodobnie tyle plików może otworzyć każdy pracownik i maksymalna ilość deskryptorów plików, które jest w stanie otworzyć NGINX, powinna mieć wartość większą niż liczba połączeń na proces roboczy (zgodnie z powyższą formułą).

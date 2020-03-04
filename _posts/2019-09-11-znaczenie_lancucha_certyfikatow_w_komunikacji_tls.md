@@ -16,9 +16,9 @@ Kluczową częścią każdego procesu uwierzytelniania opartego na certyfikatach
 
 Kotwica zaufania to certyfikat (a ściślej publiczny klucz weryfikacyjny urzędu certyfikacji), któremu ufasz, ponieważ został Ci dostarczony w drodze pewnej wiarygodnej procedury. Jest on używany przez stronę ufającą jako punkt wyjścia do sprawdzania poprawności łańcucha.
 
-  > W [RFC 5280](https://tools.ietf.org/html/rfc5280) łańcuch certyfikatów lub łańcuch zaufania jest zdefiniowany jako _certification path_ (tzw. ścieżka certyfikacji).
+  > W [RFC 5280](https://tools.ietf.org/html/rfc5280) łańcuch certyfikatów lub łańcuch zaufania jest zdefiniowany jako tzw. ścieżka certyfikacji (ang. _certification path_).
 
-Jeśli system nie posiada łańcucha certyfikatów lub jeśli łańcuch jest przerwany (np. brakuje certyfikatów pośrednich), klient nie może sprawdzić, czy certyfikat jest ważny. W związku z tym certyfikat końcowy traci wszelką użyteczność wraz z tzw. wskaźnikiem zaufania (ang. _metric of trust_).
+Jeśli system nie posiada łańcucha certyfikatów lub jeśli łańcuch jest przerwany (np. brakuje certyfikatów pośrednich), klient nie może sprawdzić, czy certyfikat końcowy jest ważny. W związku z tym certyfikat taki traci wszelką użyteczność wraz z tzw. wskaźnikiem zaufania (ang. _metric of trust_).
 
 # Czym jest certyfikat klucza publicznego?
 
@@ -33,7 +33,7 @@ Certyfikat klucza publicznego zawiera cztery istotne informacje:
 
 Podmiot, który poręczy za to powiązanie i podpisze certyfikat, jest wystawcą certyfikatu, a tożsamość, za pomocą której klucz publiczny jest potwierdzony, jest przedmiotem certyfikatu. W celu powiązania tożsamości i klucza publicznego wykorzystywany jest właśnie łańcuch certyfikatów.
 
-Certyfikat serwera wraz z łańcuchem nie jest przeznaczony dla serwera. Serwer nie ma zastosowania do własnego certyfikatu. Certyfikaty są zawsze dla innych podmiotów (tutaj klientów). Serwer używa klucza prywatnego (który odpowiada kluczowi publicznemu w certyfikacie). W szczególności, serwer nie musi ufać własnemu certyfikatowi ani żadnemu urzędowi certyfikacji, który go wydał.
+Certyfikat serwera wraz z łańcuchem nie jest przeznaczony dla serwera. Serwer nie ma zastosowania do własnego certyfikatu. Certyfikaty są zawsze dla innych podmiotów (tutaj klientów). Serwer używa klucza prywatnego (który odpowiada kluczowi publicznemu w certyfikacie) do deszyfrowania wiadomości zaszyfrowanych przez klienta kluczem publicznym. W szczególności, serwer nie musi ufać własnemu certyfikatowi ani żadnemu urzędowi certyfikacji, który go wydał.
 
 # Co wchodzi w skład poprawnego łańcucha certyfikatów?
 
@@ -49,13 +49,13 @@ Podczas odwiedzania witryny HTTPS przeglądarka sprawdza, czy łańcuch zaufania
 
 ## Dlaczego łańcuch certyfikatów nie powinien zawierać certyfikatu głównego?
 
-Zgodnie ze standardem TLS łańcuch może zawierać zawierać certyfikat główny lub nie — klient nie potrzebuje tego certyfikatu, ponieważ już go ma.
+Zgodnie ze standardem TLS łańcuch może zawierać certyfikat główny lub nie — jednak klient nie potrzebuje tego certyfikatu, ponieważ już go ma.
 
 Serwer zawsze wysyła łańcuch, ale nigdy nie powinien prezentować łańcuchów certyfikatów zawierających kotwicę zaufania, która jest certyfikatem głównego urzędu certyfikacji, ponieważ certyfikat główny jest bezużyteczny do celów sprawdzania poprawności.
 
 I rzeczywiście, jeśli klient nie ma jeszcze certyfikatu głównego, wówczas otrzymanie go z serwera nie pomogłoby, ponieważ takiemu certyfikatowi można zaufać tylko wtedy, jeśli zostanie dostarczony z zaufanego źródła (tj. lokalnego magazynu certyfikatów).
 
-Co więcej, obecność kotwicy zaufania na ścieżce certyfikacji może mieć negatywny wpływ na wydajność podczas nawiązywania połączeń za pomocą protokołu SSL/TLS, ponieważ certyfikat główny jest „pobierany” przy każdym uzgadnianiu. Jego brak, zmniejsza również zużycie pamięci po stronie serwera dla parametrów sesji TLS.
+Co więcej, obecność kotwicy zaufania na ścieżce certyfikacji może mieć negatywny wpływ na wydajność podczas nawiązywania połączeń za pomocą protokołu SSL/TLS, ponieważ certyfikat główny jest „pobierany” przy każdym uzgadnianiu połączenia między klientem a serwerem. Jego brak, zmniejsza również zużycie pamięci po stronie serwera dla parametrów sesji TLS.
 
 Zgodnie z zaleceniami, łańcuch certyfikatów powinien zawierać tylko klucz publiczny certyfikatu końcowego i klucze publiczne wszelkich pośrednich urzędów certyfikacji. Przeglądarki będą ufać tylko tym certyfikatom, które przekształcają się w certyfikaty główne, które są już w magazynie zaufanych certyfikatów, ignorując tym samym certyfikat główny wysłany w łańcuchu certyfikatów (w przeciwnym razie każdy mógłby wysłać dowolny certyfikat główny).
 
@@ -65,7 +65,7 @@ Ciekawe pytanie, ponieważ większość dzisiejszych certyfikatów użytkownikó
 
 Jak to zwykle bywa, wszystko związane jest z bezpieczeństwem. Korzystanie z certyfikatów pośredniego urzędu certyfikacji jest bezpieczniejsze (dodatkowy poziom bezpieczeństwa), ponieważ w ten sposób główny urząd certyfikacji działa w trybie offline (poświęca wygodę w celu uzyskania bezpieczeństwa). Tak więc, jeśli certyfikat pośredni jest zagrożony, nie wpływa to na główny urząd certyfikacji.
 
-Jeśli serwer nie wyśle ​​certyfikatów pośrednich wraz z głównym certyfikatem domeny, przeglądarki zaczną zgłaszać błąd z informacją `NET: ERR_CERT_AUTHORITY_INVALID` (w Chrome), ponieważ oczekiwał certyfikatu pośredniego, który podpisał certyfikat domeny, ale dostał tylko certyfikat domeny.
+Jeśli serwer nie wyśle ​​certyfikatów pośrednich wraz z głównym certyfikatem domeny, przeglądarki zaczną zgłaszać błąd z informacją `NET: ERR_CERT_AUTHORITY_INVALID` (w Chrome), ponieważ oczekiwały certyfikatu pośredniego, który podpisał certyfikat domeny, ale w odpowiedzi otrzymały tylko certyfikat domeny.
 
   > Nigdy nie należy ignorować takiego błędu, jeśli nie ufasz wystawcy certyfikatu!
 
@@ -116,14 +116,16 @@ Jeżeli chcesz sprawdzić, jak zachowują się przeglądarki w przypadku napotka
 
 # Przykład złożenia cerytyfikatów w poprawny łańcuch
 
-Przyjmijmy, że dostaliśmy poniższy zestaw certyfikatów. Przed złożeniem ich w łańcuch, należy zweryfikować pola wystawcy oraz podmiotu, dla którego wystawiono certyfikat, aby mieć pewność, że są to wszystkie certyfikaty, za pomocą których utworzymy poprawny łańuch zaufania:
+Przyjmijmy, że dostaliśmy poniższy zestaw certyfikatów. Przed złożeniem ich w łańcuch, należy zweryfikować pola wystawcy oraz podmiotu, dla którego wystawiono certyfikat, aby mieć pewność, że są to wszystkie certyfikaty, za pomocą których utworzymy poprawny łańuch zaufania.
+
+W tym przykładzie mamy następujący zestaw certyfikatów:
 
 ```bash
 $ ls
 root_ca.crt inter_ca.crt example.com.crt
 ```
 
-Możemy zbudować łańcuch ręcznie. Pamiętaj, że pierwszy musi być certyfikat serwera (końcowy):
+Możemy zbudować łańcuch ręcznie, pamiętając, że pierwszym musi być certyfikat serwera (końcowy):
 
 ```bash
 $ cat example.com.crt inter_ca.crt > certs/example.com/example.com-chain.crt
@@ -144,6 +146,47 @@ $ mkchain -i certificate.crt -o /data/certs/example.com-chain.crt
 
 # Możesz także pobrać cały łańcuch dla danej domeny:
 $ mkchain -i https://incomplete-chain.badssl.com/ -o /data/certs/example.com-chain.crt
+```
+
+Razem z nim dostarczone są przykładowe certyfikaty do testowego utworzenia poprawnego łańcucha. Na przykład:
+
+```bash
+cd example
+ls
+github.com  google.com  mozilla.com  ssllabs.com  vultr.com
+cd ssllabs.com/all
+ls
+Intermediate1.crt  Intermediate2.crt  RootCertificate.crt  ServerCertificate.crt
+mkchain -i . -o ../ssllabs-chain.crt
+
+  SSL certificate chain:
+
+             (ServerCertificate.crt)
+             (Identity Certificate)
+    S:(18319780):(ssllabs.com)
+    I:(2835d715):(EntrustCertificationAuthority-L1K)
+             (Intermediate1.crt)
+             (Intermediate Certificate)
+    S:(2835d715):(EntrustCertificationAuthority-L1K)
+    I:(02265526):(EntrustRootCertificationAuthority-G2)
+             (Intermediate2.crt)
+             (Intermediate Certificate)
+    S:(02265526):(EntrustRootCertificationAuthority-G2)
+    I:(6b99d060):(EntrustRootCertificationAuthority)
+             (RootCertificate.crt)
+             (Root Certificate)
+    S:(6b99d060):(EntrustRootCertificationAuthority)
+    I:(6b99d060):(EntrustRootCertificationAuthority)
+
+  Comments:
+
+    * found correct identity (end-user, server) certificate
+    * found 2 correct intermediate certificate(s)
+    * found correct root certificate
+
+  Result: chain generated correctly
+
+  Chain file: ../ssllabs-chain.crt
 ```
 
 # Testowanie łańcucha certyfikatów

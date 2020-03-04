@@ -83,7 +83,7 @@ Co więcej, zaleca się wykonanie dodatkowych czynności:
 
   > [Thread Pools in NGINX Boost Performance 9x!](https://www.nginx.com/blog/thread-pools-boost-performance-9x/) - polecam przeczytać ten artykuł będący świetnym wyjaśnieniem na temat wątków i ogólnie na temat obsługi połączeń przez serwer NGINX. Dobrym źródłem wiedzy na ten temat jest również [Inside NGINX: How We Designed for Performance & Scale](https://www.nginx.com/blog/inside-nginx-how-we-designed-for-performance-scale).
 
-NGINX wykorzystuje architekturę sterowaną zdarzeniami, która w dużym stopniu opiera się na nieblokującym wejściu/wyjściu. Jedną z zalet operacji nieblokujących/asynchronicznych jest to, że można zmaksymalizować wykorzystanie pojedynczego procesora, a także pamięci, ponieważ wątek może kontynuować pracę równolegle. Efektem jest to, że nawet wraz ze wzrostem obciążenia, nadal możliwe jest wydajnie zarządzanie pamięcią i procesorem.
+NGINX wykorzystuje architekturę sterowaną zdarzeniami, która w dużym stopniu opiera się na nieblokującym wejściu/wyjściu. Jedną z zalet operacji nieblokujących i asynchronicznych jest to, że można zmaksymalizować wykorzystanie pojedynczego procesora, a także pamięci, ponieważ wątek może kontynuować pracę równolegle. Efektem jest to, że nawet wraz ze wzrostem obciążenia, nadal możliwe jest wydajnie zarządzanie pamięcią i procesorem.
 
   > Istnieje bardzo dobre i do tego krótkie [podsumowanie](https://stackoverflow.com/questions/8546273/is-non-blocking-i-o-really-faster-than-multi-threaded-blocking-i-o-how) opisujące nieblokujące I/O. Polecam również: [asynchronous vs non-blocking](https://stackoverflow.com/a/2625565).
 

@@ -56,7 +56,7 @@ Jeżeli chodzi o parametr `SameSite`, to udostępnia on trzy różne sposoby kon
 
 W tej chwili w starszych wersjach Chrome domyślną wartością parametru `SameSite` jest `None`, który umożliwia zewnętrznym ciastkom śledzić użytkowników na różnych stronach. Od lutego 2020 roku wartość tego parametru zmieniona jest na `Lax`, co w skrócie oznacza, że cookie będą ustawiane tylko wtedy, gdy domena w adresie URI odpowiada domenie, z którego pochodzi ciastko.
 
-Atrybut `SameSite` pozwala zadeklarować, czy twoje ciastko powinno być ograniczone do kontekstu pierwszej lub tej samej witryny. Tym samym zapewnia, że dane ciasteczko może być wysyłane wyłącznie z żądaniami zainicjowanymi z domeny, dla której zostało zarejestrowane, a nie z zewnętrznych domen.
+Atrybut `SameSite` pozwala zadeklarować, czy twoje ciastko powinno być ograniczone do kontekstu pierwszej lub tej samej witryny. Tym samym zapewnia, że dane cookie może być wysyłane wyłącznie z żądaniami zainicjowanymi z domeny, dla której zostało zarejestrowane, a nie z zewnętrznych domen.
 
   > Na podstawie danych zebranych przez serwis [Can I use](https://caniuse.com/#feat=same-site-cookie-attribute), cookie z atrybutem `SameSite` ma już globalną obsługę 86,58% przeglądarek.
 
