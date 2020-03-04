@@ -10,9 +10,13 @@ seo:
   date_modified: 2020-02-23 09:14:19 +0100
 ---
 
-Nagłówek HSTS (opisany w [RFC 6797](https://tools.ietf.org/html/rfc6797)) jest jednym z najważniejszych nagłówków bezpieczeństwa. Zapobiega on korzystaniu z niezabezpieczonych połączeń HTTP i wymusza użycie protokołu TLS. W tym wpisie po krótce omówię sam nagłówek oraz skupię się mocno na samej procedurze jego poprawnej implementacji.
+Nagłówek HSTS (opisany w [RFC 6797](https://tools.ietf.org/html/rfc6797)) jest jednym z najważniejszych nagłówków bezpieczeństwa. Zapobiega on korzystaniu z niezabezpieczonych połączeń HTTP i wymusza użycie protokołu TLS. W tym wpisie omówię ten nagłówek oraz przedstawię zalecaną procedurę jego poprawnej implementacji.
 
-Zasadniczo HSTS (_HTTP Strict Transport Security_) pozwala stronom internetowym (aplikacjom) informować przeglądarki, że połączenie powinno być zawsze szyfrowane przez czas zdefiniowany w nagłówku. Co ciekawe, nagłówek ten jest świetny pod względem poprawy wydajności, ponieważ instruuje przeglądarkę, aby po stronie klienta przeprowadzała wewnętrzne przekierowanie z HTTP na HTTPS bez dotykania warstwy serwera.
+Zasadniczo HSTS (_HTTP Strict Transport Security_) pozwala stronom internetowym (aplikacjom) informować przeglądarki, że połączenie powinno być zawsze szyfrowane przez czas zdefiniowany w nagłówku, zapewniając silny poziom bezpieczeństwa twojej web aplikacji.
+
+  > W dokumencie [SSL Labs Grading 2018](https://discussions.qualys.com/docs/DOC-6321-ssl-labs-grading-2018) określono wykorzystanie nagłówka HSTS jako mocno wskazane. Wykluczenie treści mieszanej, pełne wykorzystanie protokołu HTTPS oraz wykorzystanie nagłówka HSTS z zalecanymi parametrami i wartościami potrafi podbić ogólną ocenę twojej domeny.
+
+Co ciekawe, nagłówek ten jest świetny pod względem poprawy wydajności, ponieważ instruuje przeglądarkę, aby już po stronie klienta przeprowadzała wewnętrzne przekierowanie z HTTP na HTTPS bez dotykania warstwy serwera.
 
 <p align="center">
   <img src="/assets/img/posts/hsts_acunetix.png">
@@ -20,7 +24,9 @@ Zasadniczo HSTS (_HTTP Strict Transport Security_) pozwala stronom internetowym 
 
 <sup><i>Obrazek pochodzi ze świetnego dokumentu <a href="https://www.acunetix.com/blog/articles/what-is-hsts-why-use-it/">What Is HSTS and Why Should I Use It?</a></i></sup>
 
-Nagłówek HSTS pozwala zapobiec atakom MITM, atakom typu downgrade, a także wysyłaniu plików cookie i identyfikatorów sesji niezaszyfrowanym kanałem. Prawidłowe wdrożenie HSTS to dodatkowy mechanizm bezpieczeństwa zgodny z zasadą bezpieczeństwa wielowarstwowego (ang. _defense in depth_). Jedyną obecnie znaną metodą obejścia HSTS jest atak oparty na protokole NTP. Jeśli klient jest podatny na atak NTP, można go oszukać powodując wygaśnięcie zasad HSTS i jednorazowy dostęp do witryny za pomocą protokołu HTTP. Polecam dwa świetne dokumenty: [Bypassing HTTP Strict Transport Security](https://www.blackhat.com/docs/eu-14/materials/eu-14-Selvi-Bypassing-HTTP-Strict-Transport-Security.pdf) <sup>[pdf]</sup> oraz [Attacking the Network Time Protocol](http://www.cs.bu.edu/~goldbe/papers/NTPattack.pdf) <sup>[pdf]</sup>.
+Jeżeli chodzi o bezpieczeństwo, to nagłówek HSTS pozwala zapobiec atakom MITM, atakom typu downgrade, a także wysyłaniu plików cookie i identyfikatorów sesji niezaszyfrowanym kanałem. Prawidłowe wdrożenie HSTS to dodatkowy mechanizm bezpieczeństwa zgodny z zasadą bezpieczeństwa wielowarstwowego (ang. _defense in depth_).
+
+Jedyną obecnie znaną metodą obejścia HSTS jest atak oparty na protokole NTP. Jeśli klient jest podatny na atak NTP, można go oszukać powodując wygaśnięcie zasad HSTS i jednorazowy dostęp do witryny za pomocą protokołu HTTP. Polecam dwa świetne dokumenty: [Bypassing HTTP Strict Transport Security](https://www.blackhat.com/docs/eu-14/materials/eu-14-Selvi-Bypassing-HTTP-Strict-Transport-Security.pdf) <sup>[pdf]</sup> oraz [Attacking the Network Time Protocol](http://www.cs.bu.edu/~goldbe/papers/NTPattack.pdf) <sup>[pdf]</sup>.
 
   > Jedną z ważniejszych informacji o tym nagłówku jest to, że wskazuje on, jak długo przeglądarka powinna bezwarunkowo odmawiać udziału w niezabezpieczonym połączeniu HTTP dla określonej domeny.
 
@@ -30,8 +36,6 @@ Gdy przeglądarka wie, że domena włączyła HSTS, robi dwie rzeczy:
 - usuwa możliwość zatwierdzania ostrzeżeń o nieważnych certyfikatach
 
 Nagłówek ten powinien być zawsze ustawiony z parametrem `includeSubdomains`. Zapewni to solidne bezpieczeństwo zarówno dla głównej domeny, jak i wszystkich subdomen. Problem polega na tym, że bez tego parametru atakujący, który przeprowadza atak man-in-the-middle, może stworzyć dowolne subdomeny i używać ich do wstrzykiwania plików cookie do aplikacji.
-
-Wadą tego parametru jest oczywiście to, że będziesz musiał wdrożyć TLS dla wszystkich subdomen (jednak obecnie powinno to być standardem!).
 
 Co więcej, parametr określający maksymalny czas przez jaki komunikacja będzie wykorzystywać protokół HTTPS, zgodnie z zaleceniami, powinien być ustawiony na dużą wartość, np. 31536000 (12 miesięcy) lub 63072000 (24 miesiące). Maksymalny wiek HSTS jest odświeżany za każdym razem, gdy przeglądarka odczytuje nagłówek.
 
@@ -51,6 +55,8 @@ Tak. Niestety przy pierwszym wejściu na stronę nie jesteś chroniony przez HST
 
 W celu zminimalizowania tego problemu, HSTS dostarcza tzw. [listę wstępnego ładowania](https://hstspreload.org/). Jest to lista dystrybuowana wraz z przeglądarkami (prowadzona przez projekt Chromium, jednak nie jest oficjalnie częścią standardu), zawierająca serwisy korzystające z protokołu HSTS. Jeżeli dodasz swoją witrynę do tej listy, przeglądarka najpierw sprawdzi czy serwis widnieje na liście, jeśli tak, dostęp do twojej strony nigdy nie będzie przez protokół HTTP, **nawet podczas pierwszej próby połączenia**.
 
+Dodatkowo, jeśli chodzi o parametr `includeSubdomains`, jego skutkiem ubocznym jest oczywiście to, że będziesz musiał wdrożyć TLS dla wszystkich subdomen (jednak obecnie powinno to być standardem!).
+
 # Na co uważać przy wdrażaniu nagłówka HSTS?
 
 Wdrożenie nagłówka HSTS powinno być obowiązkowym krokiem, jednak musi zostać zrobione z głową. Niestety wiele artykułów pomija dobre praktyki związane z przeprowadzeniem jego prawidłowej implementacji i skupia się na samych zaleceniach jego włączenia podając tylko parametry i ich wartości.
@@ -67,7 +73,7 @@ Myślę, że najlepszym how-to jak to zrobić są zalecenia firmy Qualys opisane
 
 - It is not recommended to provide an HSTS policy via the `http-equiv` attribute of a meta tag. According to [RFC 6797](https://tools.ietf.org/html/rfc6797) <sup>[IETF]</sup>, user agents don’t heed `http-equiv="Strict-Transport-Security"` attribute on `<meta>` elements on the received content
 
-Nieprzemyślane włączenie tego nagłówka zwiększa znacznie strategię wycofywania. Dlatego przed wdrożeniem koniecznie zapoznaj się z zaleceniami firmy Google, która definiuje reguły włączenie HSTS:
+Nieprzemyślane włączenie tego nagłówka utrudnia znacznie strategię jego wycofywania. Dlatego przed wdrożeniem koniecznie zapoznaj się z zaleceniami firmy Google, która definiuje reguły włączenie HSTS:
 
 - bądź pewny, że twoja witryna rzeczywiście w całości działa z wykorzystaniem protokołu HTTPS
 - opublikuj najpierw swoją witrynę z wykorzystaniem protokołu HTTPS bez nagłówka HSTS
@@ -75,3 +81,22 @@ Nieprzemyślane włączenie tego nagłówka zwiększa znacznie strategię wycofy
 - monitoruj ruch zarówno użytkowników, jak i innych klientów, a także wydajność
 - powoli zwiększaj wartość parametru `max-age`
 - jeśli HSTS nie wpływa negatywnie na użytkowników i wyszukiwarki, możesz poprosić o dodanie Twojej witryny do tzw. listy wstępnego ładowania HSTS używanej przez większość głównych przeglądarek
+
+Myślę, że rozsądnie jest przyjąć następujące kroki:
+
+- sprawdź czy po wejściu na stronę w pełni wykorzystywane jest połączenie HTTPS i czy nie ma treści pobranej poprzez zwykłe nie szyfrowane połączenie HTTP
+- zweryfikuj wszystkie subdomeny i upewnij się, że działają one wykorzystując protokół HTTPS
+- dodaj nagłówek `Strict-Transport-Security` do wszystkich odpowiedzi HTTPS i stopniowo zwiększaj wartość parametru `max-age`, używając następujących wartości:
+  - 5 minut: `max-age=300; includeSubDomains`
+  - 1 tydzień: `max-age=604800; includeSubDomains`
+  - 1 miesiąc: `max-age=2592000; includeSubDomains`
+
+Na każdym etapie sprawdzaj, czy po wejścu na stronę nie zwraca ona żadnych błędów. Pamiętaj także o monitorowaniu ruchu i wpływu wprowadzonych zmian na wyszukiwarki, roboty oraz innych klientów. Jeżeli pojawią się jakiekolwiek problemy na danym etapie, zlokalizuj problem i go napraw, a następnie poczekaj ponownie pełen maksymalny czas etapu, zanim przejdziesz dalej.
+
+Jeżeli weryfikacja ostatniego etapu (tj. odczekanie pełnego miesiąca) przejdzie pomyślnie, zwiększ maksymalny wiek do 12 lub 24 miesięcy i dodaj swoją witrynę na listę wstępnego ładowania pamiętając o odpowiednim ustawieniu nagłówka: `max-age=63072000; includeSubDomains; preload`.
+
+Na zakończenie polecam przeczytać:
+
+- [The Road To HSTS](https://engineeringblog.yelp.com/2017/09/the-road-to-hsts.html)
+- [How to configure HSTS on www and other subdomains](https://www.danielmorell.com/blog/how-to-configure-hsts-on-www-and-other-subdomains)
+- [HTTP Strict Transport Security (HSTS) and NGINX](https://www.nginx.com/blog/http-strict-transport-security-hsts-and-nginx/)
