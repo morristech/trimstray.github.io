@@ -12,26 +12,48 @@ seo:
 
 Nagłówek HSTS (opisany w [RFC 6797](https://tools.ietf.org/html/rfc6797)) jest jednym z najważniejszych nagłówków bezpieczeństwa. Zapobiega on korzystaniu z niezabezpieczonych połączeń HTTP i wymusza użycie protokołu TLS. W tym wpisie po krótce omówię sam nagłówek oraz skupię się mocno na samej procedurze jego poprawnej implementacji.
 
-Zasadniczo HSTS (_HTTP Strict Transport Security_) pozwala stronom internetowym (aplikacjom) informować przeglądarki, że połączenie powinno być zawsze szyfrowane. Pozwala on zapobiegać atakom MITM, atakom typu downgrade, a także wysyłaniu plików cookie i identyfikatorów sesji niezaszyfrowanym kanałem. Prawidłowe wdrożenie HSTS to dodatkowy mechanizm bezpieczeństwa zgodny z zasadą bezpieczeństwa wielowarstwowego (ang. _defense in depth_).
+Zasadniczo HSTS (_HTTP Strict Transport Security_) pozwala stronom internetowym (aplikacjom) informować przeglądarki, że połączenie powinno być zawsze szyfrowane przez czas zdefiniowany w nagłówku. Co ciekawe, nagłówek ten jest świetny pod względem poprawy wydajności, ponieważ instruuje przeglądarkę, aby po stronie klienta przeprowadzała wewnętrzne przekierowanie z HTTP na HTTPS bez dotykania warstwy serwera.
 
-Co ciekawe, nagłówek ten jest świetny pod względem poprawy wydajności, ponieważ instruuje przeglądarkę, aby po stronie klienta przeprowadzała przekierowanie z HTTP na HTTPS bez dotykania warstwy serwera.
+<p align="center">
+  <img src="/assets/img/posts/hsts_acunetix.png">
+</p>
+
+<sup><i>Obrazek pochodzi ze świetnego dokumentu <a href="https://www.acunetix.com/blog/articles/what-is-hsts-why-use-it/">What Is HSTS and Why Should I Use It?</a></i></sup>
+
+Nagłówek HSTS pozwala zapobiec atakom MITM, atakom typu downgrade, a także wysyłaniu plików cookie i identyfikatorów sesji niezaszyfrowanym kanałem. Prawidłowe wdrożenie HSTS to dodatkowy mechanizm bezpieczeństwa zgodny z zasadą bezpieczeństwa wielowarstwowego (ang. _defense in depth_). Jedyną obecnie znaną metodą obejścia HSTS jest atak oparty na protokole NTP. Jeśli klient jest podatny na atak NTP, można go oszukać powodując wygaśnięcie zasad HSTS i jednorazowy dostęp do witryny za pomocą protokołu HTTP. Polecam dwa świetne dokumenty: [Bypassing HTTP Strict Transport Security](https://www.blackhat.com/docs/eu-14/materials/eu-14-Selvi-Bypassing-HTTP-Strict-Transport-Security.pdf) <sup>[pdf]</sup> oraz [Attacking the Network Time Protocol](http://www.cs.bu.edu/~goldbe/papers/NTPattack.pdf) <sup>[pdf]</sup>.
 
   > Jedną z ważniejszych informacji o tym nagłówku jest to, że wskazuje on, jak długo przeglądarka powinna bezwarunkowo odmawiać udziału w niezabezpieczonym połączeniu HTTP dla określonej domeny.
 
 Gdy przeglądarka wie, że domena włączyła HSTS, robi dwie rzeczy:
 
-  - zawsze używa połączenia `https://`, nawet po kliknięciu linku `http://` lub po wpisaniu domeny w pasku lokalizacji bez określania protokołu
-  - usuwa możliwość zatwierdzania ostrzeżeń o nieważnych certyfikatach
+- zawsze używa połączenia `https://`, nawet po kliknięciu linku `http://` lub po wpisaniu domeny w pasku adresu bez określania protokołu
+- usuwa możliwość zatwierdzania ostrzeżeń o nieważnych certyfikatach
 
-Nagłówek ten powinien być zawsze ustawiony z parametrem `includeSubdomains`. Zapewni to solidne bezpieczeństwo zarówno dla głównej domeny, jak i wszystkich subdomen. Problem polega na tym, że (bez `includeSubdomains`) atakujący, który przeprowadza atak man-in-the-middle, może stworzyć dowolne subdomeny i używać ich do wstrzykiwania plików cookie do aplikacji.
+Nagłówek ten powinien być zawsze ustawiony z parametrem `includeSubdomains`. Zapewni to solidne bezpieczeństwo zarówno dla głównej domeny, jak i wszystkich subdomen. Problem polega na tym, że bez tego parametru atakujący, który przeprowadza atak man-in-the-middle, może stworzyć dowolne subdomeny i używać ich do wstrzykiwania plików cookie do aplikacji.
 
-Wadą tego parametru jest oczywiście to, że będziesz musiał wdrożyć wszystkie subdomeny za pośrednictwem protokołu SSL (jednak obecnie powinno to być standardem!).
+Wadą tego parametru jest oczywiście to, że będziesz musiał wdrożyć TLS dla wszystkich subdomen (jednak obecnie powinno to być standardem!).
+
+Co więcej, parametr określający maksymalny czas przez jaki komunikacja będzie wykorzystywać protokół HTTPS, zgodnie z zaleceniami, powinien być ustawiony na dużą wartość, np. 31536000 (12 miesięcy) lub 63072000 (24 miesiące). Maksymalny wiek HSTS jest odświeżany za każdym razem, gdy przeglądarka odczytuje nagłówek.
+
+  > Ciekawostka: HSTS w ogóle nie próbuje obsługiwać zawartości mieszanej, po prostu kontroluje, czy przeglądarka powinna wykonywać wewnętrzne przekierowanie 307 do HTTPS za każdym razem, gdy próbuje załadować adresy URL HTTP, czy nie. Ostrzeżenie o mieszanej zawartości we wszystkich wymienionych przeglądarkach jest sprawdzane przed załadowaniem jakiejkolwiek treści, w tym odczytaniu nagłówka HSTS.
 
 Jeżeli chcemy ustawić ten nagłówek z poziomu serwera NGINX, należy pamiętać o ustawieniu go w bloku `http` z opcją `ssl` dla danej konfiguracji nasłuchiwania — w przeciwnym razie ryzykujesz wysłanie nagłówka `Strict-Transport-Security` przez połączenie HTTP, które również mogłeś skonfigurować w innym bloku konfiguracji. Dodatkowo powinieneś użyć przekierowania 301 za pomocą `return 301`, aby blok serwera HTTP został przekierowany do HTTPS.
 
+Dla HSTS nagłówek powinien wyglądać tak:
+
+```nginx
+add_header Strict-Transport-Security "max-age=63072000; includeSubdomains" always;
+```
+
+# Czy HSTS ma jakieś minusy?
+
+Tak. Niestety przy pierwszym wejściu na stronę nie jesteś chroniony przez HSTS. Jeśli witryna dodaje nagłówek HSTS do połączenia HTTP, nagłówek ten jest ignorowany. Jest tak, ponieważ atakujący może usunąć lub dodać nagłówki podczas ataku man-in-the-middle. Nie można ufać nagłówkowi HSTS, chyba że zostanie dostarczony przez HTTPS.
+
+W celu zminimalizowania tego problemu, HSTS dostarcza tzw. [listę wstępnego ładowania](https://hstspreload.org/). Jest to lista dystrybuowana wraz z przeglądarkami (prowadzona przez projekt Chromium, jednak nie jest oficjalnie częścią standardu), zawierająca serwisy korzystające z protokołu HSTS. Jeżeli dodasz swoją witrynę do tej listy, przeglądarka najpierw sprawdzi czy serwis widnieje na liście, jeśli tak, dostęp do twojej strony nigdy nie będzie przez protokół HTTP, **nawet podczas pierwszej próby połączenia**.
+
 # Na co uważać przy wdrażaniu nagłówka HSTS?
 
-Wdrożenie nagłówka HSTS powinno być obowiązkowym krokiem, jednak musi zostać zrobione z głową. Niestety wiele artykułów pomija dobre praktyki związane z przeprowadzeniem jego prawidłowej implementacji i skupia się na samych zaleceniach jego włączenia.
+Wdrożenie nagłówka HSTS powinno być obowiązkowym krokiem, jednak musi zostać zrobione z głową. Niestety wiele artykułów pomija dobre praktyki związane z przeprowadzeniem jego prawidłowej implementacji i skupia się na samych zaleceniach jego włączenia podając tylko parametry i ich wartości.
 
 Myślę, że najlepszym how-to jak to zrobić są zalecenia firmy Qualys opisane w dokumencie [The Importance of a Proper HTTP Strict Transport Security Implementation on Your Web Server](https://blog.qualys.com/securitylabs/2016/03/28/the-importance-of-a-proper-http-strict-transport-security-implementation-on-your-web-server). Jest to świetne wyjaśnienie, dlatego pozwolę sobie je zacytować:
 
@@ -45,7 +67,7 @@ Myślę, że najlepszym how-to jak to zrobić są zalecenia firmy Qualys opisane
 
 - It is not recommended to provide an HSTS policy via the `http-equiv` attribute of a meta tag. According to [RFC 6797](https://tools.ietf.org/html/rfc6797) <sup>[IETF]</sup>, user agents don’t heed `http-equiv="Strict-Transport-Security"` attribute on `<meta>` elements on the received content
 
-Co ważne, przed wdrożeniem tego nagłówka koniecznie zapoznaj się z zaleceniami firmy Google, która zaleca włączenie HSTS zgodnie z poniższą procedurą, ponieważ nieprzemyślane włączenie zwiększa znacznie strategię wycofywania:
+Nieprzemyślane włączenie tego nagłówka zwiększa znacznie strategię wycofywania. Dlatego przed wdrożeniem koniecznie zapoznaj się z zaleceniami firmy Google, która definiuje reguły włączenie HSTS:
 
 - bądź pewny, że twoja witryna rzeczywiście w całości działa z wykorzystaniem protokołu HTTPS
 - opublikuj najpierw swoją witrynę z wykorzystaniem protokołu HTTPS bez nagłówka HSTS
