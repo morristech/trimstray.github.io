@@ -10,7 +10,7 @@ seo:
   date_modified: 2020-02-23 09:14:19 +0100
 ---
 
-Nagłówek HSTS (opisany w [RFC 6797](https://tools.ietf.org/html/rfc6797)) jest jednym z najważniejszych nagłówków bezpieczeństwa. W dużym skrócie zapobiega on korzystaniu z niezabezpieczonych połączeń HTTP i wymusza użycie protokołu TLS. W tym wpisie po krótce omówię sam nagłówek oraz skupię się mocno na samej procedurze jego poprawnej implementacji.
+Nagłówek HSTS (opisany w [RFC 6797](https://tools.ietf.org/html/rfc6797)) jest jednym z najważniejszych nagłówków bezpieczeństwa. Zapobiega on korzystaniu z niezabezpieczonych połączeń HTTP i wymusza użycie protokołu TLS. W tym wpisie po krótce omówię sam nagłówek oraz skupię się mocno na samej procedurze jego poprawnej implementacji.
 
 Zasadniczo HSTS (_HTTP Strict Transport Security_) pozwala stronom internetowym (aplikacjom) informować przeglądarki, że połączenie powinno być zawsze szyfrowane. Pozwala on zapobiegać atakom MITM, atakom typu downgrade, a także wysyłaniu plików cookie i identyfikatorów sesji niezaszyfrowanym kanałem. Prawidłowe wdrożenie HSTS to dodatkowy mechanizm bezpieczeństwa zgodny z zasadą bezpieczeństwa wielowarstwowego (ang. _defense in depth_).
 
