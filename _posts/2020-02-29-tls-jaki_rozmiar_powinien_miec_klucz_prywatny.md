@@ -12,7 +12,7 @@ seo:
 
 Kryptografia klucza publicznego, zwana także kryptografią asymetryczną zakłada, że każda transmisja danych używa dwóch kluczy (w przeciwieństwie do kryptografii symetrycznej). Jeden z nich, klucz publiczny, wykorzystywany jest do szyfrowania wiadomości, a drugi, klucz prywatny, do jej deszyfrowania.
 
-W tym wpisie chciałbym omówić kwestię długości klucza prywatnego, jej wpływ na wydajność oraz przedstawić czym jest klucz prywatny i jaką pełni funkcję w komunikacji.
+W tym wpisie chciałbym omówić kwestię długości klucza prywatnego, jego wpływ na wydajność oraz przedstawić czym jest oraz jaką pełni funkcję w komunikacji.
 
 # Czym jest klucz prywatny?
 
