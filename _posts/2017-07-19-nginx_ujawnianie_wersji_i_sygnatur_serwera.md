@@ -16,9 +16,9 @@ Informacje te mogą być wykorzystane jako punkt wyjścia dla atakujących, któ
 
 Na przykład Shodan zapewnia powszechnie używaną bazę danych zawierającą takie informacje dzięki czemu jest idealnym miejscem do rozpoczęcia analizy i zbierania informacji o celu. O wiele bardziej wydajne jest po prostu wypróbowanie luki na wszystkich losowych serwerach niż bezpośrednie odpytywanie każdego z nich.
 
-Zlekceważenie tak ważnego czynnika związanego z bezpieczeństwem jest moim zdaniem elementarnym błędem. Oczywiście [bezpieczeństwo poprzez zaciemnienie](https://danielmiessler.com/study/security-by-obscurity/) (ang. _Security through obscurity_) nie ma tak naprawdę żadnego wpływu na bezpieczeństwo serwera czy infrastruktury, jednak jest pewne, że ochroni (opóźni) przed najprostrzymi wektorami ataku.
+Zlekceważenie tak ważnego czynnika związanego z bezpieczeństwem jest moim zdaniem elementarnym błędem. Oczywiście [bezpieczeństwo poprzez zaciemnienie](https://danielmiessler.com/study/security-by-obscurity/) (ang. _Security through obscurity_) nie ma tak naprawdę żadnego wpływu na bezpieczeństwo serwera czy infrastruktury, jednak jest pewne, że opóźni przeprowadzenie ataku, jeśli znany jest jego wektor specyficzny dla danej wersji usługi.
 
-Moim zdaniem, w tym wypadku, bezpieczeństwo poprzez zaciemnienie jest koniecznym krokiem i powinno być podstawową zasadą związaną z hardeningiem serwera. Całkowite pominięcie tego kroku to bardzo zły pomysł, ponieważ nawet najbezpieczniejsze serwery HTTP mogą zostać złamane, jeśli znany jest wektor ataku specyficzny dla wersji.
+  > Całkowite pominięcie tego kroku to bardzo zły pomysł, ponieważ nawet najbezpieczniejsze serwery HTTP mogą zostać złamane. Takie podejście nie daje gwarancji, że ​​jesteś bezpieczny, ale w większości spowalnia atakującego, i to jest dokładnie to, co jest potrzebne w przypadku ataków [Zero-day](https://portswigger.net/daily-swig/zero-day).
 
 Jeżeli masz jakiekolwiek dylematy co do takiego podejścia, [RFC 2616 - Personal Information](https://tools.ietf.org/html/rfc2616#section-15.1) będzie tutaj bardzo pomocne w podjęciu decyzji:
 
@@ -39,8 +39,6 @@ Polecam także:
 
 Ukrywanie informacji o wersji nie powstrzyma ataku, ale sprawi, że będziesz mniejszym celem, jeśli atakujący szukają określonej wersji sprzętu lub oprogramowania. Według mnie, dane transmitowane przez serwer HTTP należy traktować jako dane osobowe (bynajmniej nie jest to stwierdzenie ani trochę na wyrost).
 
-Bezpieczeństwo przez zaciemnienie nie oznacza, że ​​jesteś bezpieczny, ale czasami spowalnia atakującego, i to jest dokładnie to, co jest potrzebne w przypadku ataków [Zero-day](https://portswigger.net/daily-swig/zero-day).
-
 Aby zapobiec ujawnianiu wersji, należy wyłączyć rozgłaszanie wersji na stronach błędów oraz w polu nagłówka `Server` za pomocą poniższej dyrektywy:
 
 ```nginx
@@ -49,9 +47,9 @@ server_tokens off;
 
 # Ujawnianie sygnatur serwera
 
-Nagłówek `Server` zawiera informacje o oprogramowaniu używanym przez serwer HTTP obsługujący żądania. Wartość tego nagłówka jest używana do zbierania statystyk o serwerach HTTP przez takie serwisy jak Alexa i Netcraft. Jednym z najłatwiejszych kroków zabezpieczenia serwera HTTP jest wyłączenie wyświetlania informacji o używanym oprogramowaniu i technologii za pośrednictwem tego nagłówka serwera.
+Nagłówek `Server` zawiera informacje identyfikujące serwer i użyte w nim oprogramowanie. Wartość tego nagłówka jest np. używana do zbierania statystyk o serwerach HTTP przez takie serwisy jak Alexa czy Netcraft. Jednym z najłatwiejszych kroków zabezpieczenia serwera HTTP jest wyłączenie wyświetlania informacji o używanym oprogramowaniu i technologii za pośrednictwem tego nagłówka.
 
-Istnieje kilka powodów, dla których rozgłaszanie wersji jest bardzo nieporządane. Osoba atakująca zbiera wszystkie dostępne informacje o aplikacji i jej środowisku. Informacje o zastosowanych technologiach i wersjach oprogramowania są niezwykle cennymi informacjami.
+Istnieje kilka powodów, dla których rozgłaszanie wersji jest bardzo nieporządane. Jak już wspomniałem, atakujący zbiera wszystkie dostępne informacje o aplikacji i jej środowisku. Informacje o zastosowanych technologiach i wersjach oprogramowania są niezwykle cennymi informacjami.
 
 Moim zdaniem nie ma żadnego racjonalnego powodu ani potrzeby pokazywania tak wielu informacji o twoim serwerze. Po wykryciu numeru wersji łatwo jest wyszukać określone luki w zabezpieczeniach. Co więcej, nie są to informacje kluczowe i niezbędne do poprawnego działania serwera lub aplikacji (w tym aplikacji zewnętrznych), więc zasadniczo jestem za ich usunięciem, jeśli można to osiągnąć przy minimalnym wysiłku.
 
