@@ -14,7 +14,7 @@ Nagłówek HSTS (opisany w [RFC 6797](https://tools.ietf.org/html/rfc6797)) jest
 
 Zasadniczo HSTS (_HTTP Strict Transport Security_) pozwala stronom internetowym (aplikacjom) informować przeglądarki, że połączenie powinno być zawsze szyfrowane. Pozwala on zapobiegać atakom MITM, atakom typu downgrade, a także wysyłaniu plików cookie i identyfikatorów sesji niezaszyfrowanym kanałem. Prawidłowe wdrożenie HSTS to dodatkowy mechanizm bezpieczeństwa zgodny z zasadą bezpieczeństwa wielowarstwowego (ang. _defense in depth_).
 
-Co ciekawe, nagłówek ten jest świetny pod względem wydajności, ponieważ instruuje przeglądarkę, aby po stronie klienta przeprowadzała przekierowanie HTTP na HTTPS bez dotykania warstwy serwera.
+Co ciekawe, nagłówek ten jest świetny pod względem poprawy wydajności, ponieważ instruuje przeglądarkę, aby po stronie klienta przeprowadzała przekierowanie z HTTP na HTTPS bez dotykania warstwy serwera.
 
   > Jedną z ważniejszych informacji o tym nagłówku jest to, że wskazuje on, jak długo przeglądarka powinna bezwarunkowo odmawiać udziału w niezabezpieczonym połączeniu HTTP dla określonej domeny.
 
@@ -23,11 +23,11 @@ Gdy przeglądarka wie, że domena włączyła HSTS, robi dwie rzeczy:
   - zawsze używa połączenia `https://`, nawet po kliknięciu linku `http://` lub po wpisaniu domeny w pasku lokalizacji bez określania protokołu
   - usuwa możliwość zatwierdzania ostrzeżeń o nieważnych certyfikatach
 
-Jeżeli chcemy ustawić ten nagłówek z poziomu serwera NGINX, należy pamiętać o ustawieniu go w bloku `http` z opcją `ssl` dla danej konfiguracji nasłuchiwania — w przeciwnym razie ryzykujesz wysłanie nagłówka `Strict-Transport-Security` przez połączenie HTTP, które również mogłeś skonfigurować w innym bloku konfiguracji. Dodatkowo powinieneś użyć przekierowania 301 za pomocą `return 301`, aby blok serwera HTTP został przekierowany do HTTPS.
-
 Nagłówek ten powinien być zawsze ustawiony z parametrem `includeSubdomains`. Zapewni to solidne bezpieczeństwo zarówno dla głównej domeny, jak i wszystkich subdomen. Problem polega na tym, że (bez `includeSubdomains`) atakujący, który przeprowadza atak man-in-the-middle, może stworzyć dowolne subdomeny i używać ich do wstrzykiwania plików cookie do aplikacji.
 
 Wadą tego parametru jest oczywiście to, że będziesz musiał wdrożyć wszystkie subdomeny za pośrednictwem protokołu SSL (jednak obecnie powinno to być standardem!).
+
+Jeżeli chcemy ustawić ten nagłówek z poziomu serwera NGINX, należy pamiętać o ustawieniu go w bloku `http` z opcją `ssl` dla danej konfiguracji nasłuchiwania — w przeciwnym razie ryzykujesz wysłanie nagłówka `Strict-Transport-Security` przez połączenie HTTP, które również mogłeś skonfigurować w innym bloku konfiguracji. Dodatkowo powinieneś użyć przekierowania 301 za pomocą `return 301`, aby blok serwera HTTP został przekierowany do HTTPS.
 
 # Na co uważać przy wdrażaniu nagłówka HSTS?
 
@@ -48,7 +48,8 @@ Myślę, że najlepszym how-to jak to zrobić są zalecenia firmy Qualys opisane
 Co ważne, przed wdrożeniem tego nagłówka koniecznie zapoznaj się z zaleceniami firmy Google, która zaleca włączenie HSTS zgodnie z poniższą procedurą, ponieważ nieprzemyślane włączenie zwiększa znacznie strategię wycofywania:
 
 - bądź pewny, że twoja witryna rzeczywiście w całości działa z wykorzystaniem protokołu HTTPS
-- opublikuj najpierw swoją aplikację z wykorzystaniem protokołu HTTPS bez nagłówka HSTS
-- zacznij wysyłać nagłówki HSTS z niską wartością parametru `max-age`. Monitoruj ruch zarówno użytkowników, jak i innych klientów, a także wydajność
+- opublikuj najpierw swoją witrynę z wykorzystaniem protokołu HTTPS bez nagłówka HSTS
+- zacznij wysyłać nagłówki HSTS z niską wartością parametru `max-age`
+- monitoruj ruch zarówno użytkowników, jak i innych klientów, a także wydajność
 - powoli zwiększaj wartość parametru `max-age`
 - jeśli HSTS nie wpływa negatywnie na użytkowników i wyszukiwarki, możesz poprosić o dodanie Twojej witryny do tzw. listy wstępnego ładowania HSTS używanej przez większość głównych przeglądarek
