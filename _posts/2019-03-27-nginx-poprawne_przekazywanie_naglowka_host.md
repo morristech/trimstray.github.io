@@ -10,7 +10,7 @@ seo:
   date_modified: 2020-02-23 09:14:19 +0100
 ---
 
-Nagłówek `Host` jest jednym z najważniejszych nagłówków w komunikacji HTTP. Informuje on serwer, którego wirtualnego hosta ma użyć, pod jaki adres chcemy wysłać zapytanie oraz określa, która witryna internetowa lub aplikacja internetowa powinna przetwarzać przychodzące żądanie HTTP.
+Nagłówek `Host` jest jednym z najważniejszych nagłówków w komunikacji HTTP. Informuje on serwer, którego wirtualnego hosta ma użyć, pod jaki adres chcemy wysłać zapytanie oraz określa, która aplikacja powinna przetwarzać przychodzące żądanie HTTP.
 
 Nagłówek ten, wprowadzony w HTTP/1.1, to trzecia z najważniejszych informacji której można użyć, oprócz adresu IP i numeru portu, w celu jednoznacznego zidentyfikowania serwera aplikacji lub domeny internetowej. Możesz sobie wyobrazić, że jest on pewnego rodzaju mechanizmem routingu na poziomie aplikacji — na jego podstawie serwery aplikacyjne decydują o dalszym sposobie przetwarzania żądania, a także umożliwiają obsługę wielu serwisów na jednym adresie IP.
 
@@ -24,11 +24,11 @@ Jeśli serwer aplikacji nie jest właściwie skonfigurowany, napastnik będzie m
 
 Jednak jeśli obsługa nagłówka `Host` jest wymagana po stronie aplikacji, jako administratorzy powinniśmy zagwarantować jego poprawną wartość (oczywiście na ile jest to możliwe) aby upewnić się, że zachowanie hosta wirtualnego na dalszym serwerze działa tak, jak powinna.
 
-Zgodnie z [RFC 7230 - Host](https://tools.ietf.org/html/rfc7230#section-5.4), gdy serwer proxy (który jest szczególnie wrażliwy na fałszowanie tego nagłówka) odbierze żądanie w formie bezwzględnej ([absolute-form](https://tools.ietf.org/html/rfc7230#section-5.3.2), przykład: `GET https://example.com/index.html HTTP/1.1` zamiast „standardowej” postaci tj. `GET /index.html HTTP/1.1 Host: example.com`) docelowego żądania, musi zignorować otrzymane pole nagłówka `Host` (jeśli istnieje) i zamiast tego zastąpić je informacją o hoście będącym celem żądania.
+Zgodnie z [RFC 7230 - Host](https://tools.ietf.org/html/rfc7230#section-5.4), gdy serwer proxy (który jest szczególnie wrażliwy na fałszowanie tego nagłówka) odbierze żądanie w formie bezwzględnej ([absolute-form](https://tools.ietf.org/html/rfc7230#section-5.3.2), przykład: `GET https://example.com/index.html HTTP/1.1` zamiast „standardowej” postaci tj. `GET /index.html HTTP/1.1, Host: example.com`) docelowego żądania, musi zignorować otrzymane pole nagłówka `Host` (jeśli istnieje) i zamiast tego zastąpić je informacją o hoście będącym celem żądania.
 
-Serwer proxy, który przekazuje takie żądanie, musi wygenerować nową wartość nagłówka na podstawie otrzymanego celu żądania, a nie przekazywać odebraną wartość pola `Host`. W takiej sytuacja serwer musi odpowiedzieć kodem 400 (Bad Request) na każdy komunikat żądania HTTP, który nie ma pola nagłówka `Host`, i na każdy komunikat żądania zawierający więcej niż jedno pole tego nagłówka lub zawierające niepoprawną wartością (według mnie, także adres IP).
+Serwer proxy, który przekazuje takie żądanie, musi wygenerować nową wartość nagłówka na podstawie otrzymanego celu żądania, a nie przekazywać odebraną wartość pola `Host` w żądaniu klienta. W takiej sytuacja serwer musi odpowiedzieć kodem 400 (Bad Request) na każdy komunikat żądania HTTP, który nie ma pola nagłówka `Host`, na każdy komunikat żądania zawierający więcej niż jedno pole tego nagłówka lub zawierający niepoprawną wartością (według mnie, także adres IP).
 
-Oczywiście najważniejszą linią obrony jest odpowiednia implementacja mechanizmów weryfikujących po stronie aplikacji, np. wykorzystanie listy dozwolonych wartości nagłówka `Host`. Twoja aplikacja powinna być w pełni zgodna z [RFC 7230](https://tools.ietf.org/html/rfc7230), aby uniknąć problemów spowodowanych niespójną interpretacją hosta w celu powiązania go z daną transakcją HTTP. Zgodnie z RFC 7230 poprawnym rozwiązaniem jest traktowanie wielu nagłówków `Host` i białych znaków wokół nazw pól jako błędów.
+Oczywiście najważniejszą linią obrony jest odpowiednia implementacja mechanizmów weryfikujących po stronie aplikacji, np. wykorzystanie listy dozwolonych wartości nagłówka `Host`. Twoja aplikacja powinna być w pełni zgodna z [RFC 7230](https://tools.ietf.org/html/rfc7230), aby uniknąć problemów spowodowanych niespójną interpretacją hosta w celu powiązania go z daną transakcją HTTP. Zgodnie z zaleceniami poprawnym rozwiązaniem jest traktowanie wielu nagłówków `Host` i białych znaków wokół nazw pól jako błędów.
 
 # Nagłówek Host a NGINX
 
@@ -46,27 +46,27 @@ Zgodnie z tym `$host` to po prostu `$http_host` z pewnymi modyfikacjami (zostaje
 
   > Zmienna `$host` to nazwa hosta z wiersza żądania lub nagłówka HTTP. Zmienna `$server_name` to nazwa bloku serwera, w którym przetwarzane jest żądanie.
 
-Różnicę wyjaśniono w dokumentacji NGINX:
+Różnice wyjaśniono w dokumentacji NGINX:
 
-- `$host` zawiera w następującej kolejności: nazwa hosta z wiersza żądania, nazwa hosta z pola nagłówka żądania lub nazwa serwera pasująca do żądania
+- `$host` zawiera wartości zdefiniowane w następującej kolejności: nazwa hosta z wiersza żądania, nazwa hosta z pola nagłówka żądania lub nazwa serwera pasująca do żądania
 - `$http_host` zawiera zawartość pola nagłówka `Host`, jeśli była obecna w żądaniu (zawsze równa się nagłówkowi żądania `HTTP_HOST`)
 - `$server_name` zawiera nazwę serwera wirtualnego hosta, który przetworzył żądanie, tak jak zostało zdefiniowane w konfiguracji NGINX. Jeśli serwer zawiera wiele nazw serwerów, tylko pierwszy z nich będzie obecny w tej zmiennej
 
 `$http_host` ponadto jest lepszy niż konstrukcja `$host:$server_port`, ponieważ używa portu obecnego w adresie URL, w przeciwieństwie do `$server_port`, który używa portu, na którym nasłuchuje NGINX.
 
-W związku z tym, aby poprawnie przekazać wartość nagłówka `Host` do aplikacji należy:
+W związku z tym, aby poprawnie przekazać wartość nagłówka `Host` do aplikacji należy wykonać to za pomocą poniższej konstrukcji:
 
 ```nginx
 proxy_set_header Host $host;
 ```
 
-Takie ustawienie pozwala używać przeparsowanego nazwy host z wierdza żądania lub nagłówka `Host` oraz gwarantuje, że nagłówek hosta jest ustawiony tak, aby serwer nadrzędny mógł odwzorować żądanie na serwer wirtualny lub w inny sposób wykorzystać część hosta adresu URL wprowadzonego przez użytkownika.
+Takie ustawienie pozwala używać przeparsowanej nazwy hosta z wierdza żądania lub nagłówka `Host` oraz gwarantuje, że wartość przekazana do kolejnej warstwy jest ustawiony tak, aby serwer nadrzędny mógł odwzorować żądanie na serwer wirtualny lub w inny sposób wykorzystać część hosta adresu URL wprowadzonego przez użytkownika.
 
-Z drugiej strony, użycie zmiennej `$host` ma swoją własną podatność; musisz poradzić sobie z sytuacją, gdy pole nagłówka `Host` jest nieobecne, definiując domyślne bloki serwera, aby wychwycić takie żądania. Kluczową kwestią jest jednak to, że dyrektywa `proxy_set_header Host $host` w ogóle nie zmieni tego zachowania, ponieważ wartość zawarta w zmiennej `$host` będzie równa wartości `$http_host`, gdy obecne będzie pole nagłówka w żądaniu HTTP.
+Z drugiej strony, użycie zmiennej `$host` ma swoją własną podatność; musisz poradzić sobie z sytuacją, gdy pole nagłówka `Host` jest nieobecne, definiując domyślne bloki serwera, aby wychwycić takie żądania. Kluczową kwestią jest jednak to, że powyższa dyrektywa w ogóle nie zmieni tego zachowania, ponieważ wartość zawarta w zmiennej `$host` będzie równa wartości `$http_host`, gdy obecne będzie pole nagłówka w żądaniu HTTP.
 
   > Jeśli wymagane jest użycie origynalnej nazwy wirtualnego hosta z pierwotnego żądania, możesz użyć zmiennej `$http_host` zamiast `$host`.
 
-Aby temu zapobiec, należy wykorzystać wirtualne hosty typu catch-all. Są to bloki, do których odwołuje się serwer NGINX, jeśli w żądaniu klienta pojawia się nierozpoznany/niezdefiniowany nagłówek `Host`. Dobrym pomysłem jest także podanie dokładnej (niewieloznacznej) wartości w dyrektywie `server_name`.
+Aby temu zapobiec, należy wykorzystać wirtualne hosty typu catch-all. Są to bloki, do których odwołuje się serwer NGINX, jeśli w żądaniu klienta pojawia się nierozpoznany lub niezdefiniowany nagłówek `Host`. Dobrym pomysłem jest także podanie dokładnej (niewieloznacznej) wartości w dyrektywie `server_name`.
 
 # Alterntywy dla nagłówka Host
 
