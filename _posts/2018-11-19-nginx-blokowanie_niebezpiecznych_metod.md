@@ -14,6 +14,8 @@ Zwykły serwer HTTP obsługuje metody `GET`, `HEAD` i `POST` w celu pobierania z
 
 Niektóre z tych metod są zazwyczaj niebezpieczne, a inne są po prostu niepotrzebne w środowisku produkcyjnym. Według mnie warto je wyłączyć, ponieważ prawdopodobnie nie będziesz ich potrzebować. Listę dostępnych metod znajdziesz w dokumencie [Hypertext Transfer Protocol (HTTP) Method Registry](https://www.iana.org/assignments/http-methods/http-methods.xhtml) <sup>[IANA]</sup>.
 
+  > Możesz także spróbować ominąć mechanizmy filtrujące aplikacji lub serwera HTTP, wysyłając dowolne ciągi znaków, takie jak `gEt` lub nawet `AsdF`, jako metody HTTP przekazane w żądaniu.
+
 Dodatkowo polecam zaznajomić się z poniższymi zasobami:
 
 - [Vulnerability name: Unsafe HTTP methods](https://www.onwebsecurity.com/security/unsafe-http-methods.html)
@@ -25,15 +27,17 @@ Moim zdaniem, obsługa metody `OPTIONS` nie jest bezpośrednim zagrożeniem, ale
 
   > Niektóre interfejsy API (np. RESTful API) korzystają również z innych metod. Oprócz ochrony po stronie serwera architekci aplikacji powinni również weryfikować przychodzące żądania.
 
-Co ciekawe, obsługa metody `HEAD` jest również ryzykowna (naprawdę!), ponieważ może przyspieszyć proces ataku, ograniczając ilość danych wysyłanych z serwera. Co wiecej, może być wykorzystana do zaatakowania aplikacji poprzez tzw. Mimicking Attack, polegający na naśladowaniu metody `GET`, dzięki czemu można pominąć mechanizmu uwierzytelniania. Wiele artykułów uznaje metodę `HEAD` jako w pełni bezpieczną jednak należy mieć świadomość ewentualnych zagrożeń.
+Co ciekawe, obsługa metody `HEAD` jest również ryzykowna (naprawdę!), ponieważ może przyspieszyć proces ataku, ograniczając ilość danych wysyłanych z serwera. Co wiecej, może być wykorzystana do zaatakowania aplikacji poprzez tzw. Mimicking Attack, polegający na naśladowaniu metody `GET`, dzięki czemu można pominąć mechanizmu uwierzytelniania. Wiele artykułów uznaje metodę `HEAD` za w pełni bezpieczną jednak należy mieć świadomość ewentualnych zagrożeń.
 
   > Jeśli mechanizmy autoryzacji są oparte na `GET` i `POST`, metoda `HEAD` może także pozwolić na ominięcie tych zabezpieczeń.
 
-Użycie metody `HEAD` jest jednak bardzo przydatne do wyszukiwania meta informacji zapisanych w nagłówkach odpowiedzi, bez konieczności przenoszenia jej całej zawartości. Na przykład pozwala na skuteczne określenie, czy dany zasób uległ zmianie bez zwiększania kosztu (ruchu w sieci) jaki wykonany by został przy pomocy metody `GET` (z drugiej strony atakujący mogą uzyskać te same informacje także za pomocą właśnie metody `GET`).
+Użycie metody `HEAD` jest jednak bardzo przydatne do wyszukiwania meta informacji zapisanych w nagłówkach odpowiedzi, bez konieczności przenoszenia jej całej zawartości. Na przykład pozwala na skuteczne określenie, czy dany zasób uległ zmianie bez zwiększania kosztu (ruchu w sieci), jaki wykonany by został przy pomocy metody `GET` (z drugiej strony atakujący mogą uzyskać te same informacje także za pomocą właśnie metody `GET`).
 
-  > Bardziej prawdopodobne jest, że Twoja przeglądarka lub wyszukiwarki prawdopodobnie używają żądań `HEAD`, aby sprawdzić, czy ich wersje stron w pamięci podręcznej są nadal aktualne.
+  > Bardzo prawdopodobne jest, że przeglądarki lub wyszukiwarki używają żądań `HEAD`, aby sprawdzić, czy ich wersje stron w pamięci podręcznej są nadal aktualne. Jeśli nie, to logicznym byłoby takie wykorzystanie tej metody.
 
-Zanim zaczniesz blokować potencjalnie niebezpieczne metody, chciałbym zwrócić uwagę na jeszcze jedną pomijaną rzecz. Otóż jaki kod błędu powinien zostać zwrócony w przypadku żądania z wykorzystaniem jednej z niedozwolonych przez twój serwer metod? Odpowiedź nie jest w cale taka oczywista (z jednej strony, ponieważ mam nadzieję, że każdy pomyślał o kodzie 405) i jest związana z kolejnością kodów odpowiedzi, które powinny zostać zwrócone przez poprawnie napisany i skonfigurowany serwer HTTP — czyli w pełni zgodny z [RFC7230](https://tools.ietf.org/html/rfc7230), [RFC7231](https://tools.ietf.org/html/rfc7231), [RFC7232](https://tools.ietf.org/html/rfc7232), [RFC7233](https://tools.ietf.org/html/rfc7233), [RFC7234](https://tools.ietf.org/html/rfc7234) a także [RFC7235](https://tools.ietf.org/html/rfc7235).
+Zanim zaczniesz blokować potencjalnie niebezpieczne metody, chciałbym zwrócić uwagę na jeszcze jedną pomijaną rzecz. Otóż jaki kod błędu powinien zostać zwrócony w przypadku żądania z wykorzystaniem jednej z niedozwolonych przez twój serwer metod?
+
+Odpowiedź nie jest wcale taka oczywista (z jednej strony, ponieważ mam nadzieję, że każdy pomyślał o kodzie 405) i jest związana z kolejnością kodów odpowiedzi, które powinny zostać zwrócone przez poprawnie napisany i skonfigurowany serwer HTTP — czyli w pełni zgodny z [RFC7230](https://tools.ietf.org/html/rfc7230), [RFC7231](https://tools.ietf.org/html/rfc7231), [RFC7232](https://tools.ietf.org/html/rfc7232), [RFC7233](https://tools.ietf.org/html/rfc7233), [RFC7234](https://tools.ietf.org/html/rfc7234) a także [RFC7235](https://tools.ietf.org/html/rfc7235).
 
 Spójrz na poniższe wyjaśnie opisujące różnice oraz pierwszeństwo typowej implementacji:
 
