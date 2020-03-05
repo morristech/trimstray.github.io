@@ -14,7 +14,7 @@ Jak zdefiniować połączenie a jak żądanie? Czym jest pierwsze a czym drugie?
 
 Zasadniczo, nawiązujemy połączenia w celu wysyłania za ich pomocą żądań. Można mieć wiele żądań na połączenie jednak nigdy żadne żądanie nie zostanie obsłużone bez zestawionego połączenia z racji tego, że HTTP najczęściej implementowane jest nad TCP/IP.
 
-Spójrz na poniższy zrzut:
+Spójrz na poniższy zrzut, który dodatkowo zawiera informację o protokole TLS w komunikacji:
 
 <p align="center">
   <img src="/assets/img/posts/http_conn_requests_over_tcp.png">
