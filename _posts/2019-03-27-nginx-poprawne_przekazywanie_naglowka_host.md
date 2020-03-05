@@ -12,9 +12,9 @@ seo:
 
 Nagłówek `Host` jest jednym z najważniejszych nagłówków w komunikacji HTTP. Informuje on serwer, którego wirtualnego hosta ma użyć, pod jaki adres chcemy wysłać zapytanie oraz określa, która witryna internetowa lub aplikacja internetowa powinna przetwarzać przychodzące żądanie HTTP.
 
-Nagłówek ten, wprowadzony w HTTP/1.1, to trzecia z najważniejszych informacji której można użyć, oprócz adresu IP i numeru portu, w celu jednoznacznego zidentyfikowania serwera aplikacji lub domeny internetowej. Możesz sobie wyobrazić, że jest on pewnego rodzaju mechanizmem routingu na poziomie aplikacji — na jego podstawie serwery aplikacyjne decydują o dalszym sposobie przetwarzania żądania a także umożliwiają obsługę wielu serwisów na jednym adresie IP.
+Nagłówek ten, wprowadzony w HTTP/1.1, to trzecia z najważniejszych informacji której można użyć, oprócz adresu IP i numeru portu, w celu jednoznacznego zidentyfikowania serwera aplikacji lub domeny internetowej. Możesz sobie wyobrazić, że jest on pewnego rodzaju mechanizmem routingu na poziomie aplikacji — na jego podstawie serwery aplikacyjne decydują o dalszym sposobie przetwarzania żądania, a także umożliwiają obsługę wielu serwisów na jednym adresie IP.
 
-W tym wpisie omówię za pomocą jakich zmiennych możemy zarządzać tym nagłówkiem oraz w jaki sposób przekazać poprawną wartość do warstwy backendu.
+W tym wpisie omówię, za pomocą jakich zmiennych możemy zarządzać tym nagłówkiem z poziomu serwera NGINX oraz w jaki sposób przekazać jego poprawną wartość do warstwy backendu.
 
 # Nagłówek Host a aplikacja
 
@@ -22,11 +22,11 @@ Bardzo często, po otrzymaniu żądania, aplikacja wykorzystuje przesłany nagł
 
 Jeśli serwer aplikacji nie jest właściwie skonfigurowany, napastnik będzie mógł wykorzystać technikę polegającą na sfałszowaniu wartości tego nagłówka, w celu uzyskania dostępu np. do funkcji administracyjnych serwera aplikacji lub zmylenia serwerów odpowiedzialnych za load-balancing, którym zdarza się podejmować decyzję o kierowaniu żądań na podstawie wartości tego nagłówka.
 
-Jednak jeśli obsługa nagłówka `Host` jest wymagana po stronie aplikacji, jako administratorzy powinniśmy zagwarantować jego poprawną wartość (tyle na ile jest to możliwe) aby upewnić się, że zachowanie hosta wirtualnego na dalszym serwerze działa tak, jak powinna.
+Jednak jeśli obsługa nagłówka `Host` jest wymagana po stronie aplikacji, jako administratorzy powinniśmy zagwarantować jego poprawną wartość (oczywiście na ile jest to możliwe) aby upewnić się, że zachowanie hosta wirtualnego na dalszym serwerze działa tak, jak powinna.
 
 Zgodnie z [RFC 7230 - Host](https://tools.ietf.org/html/rfc7230#section-5.4), gdy serwer proxy (który jest szczególnie wrażliwy na fałszowanie tego nagłówka) odbierze żądanie w formie bezwzględnej ([absolute-form](https://tools.ietf.org/html/rfc7230#section-5.3.2), przykład: `GET https://example.com/index.html HTTP/1.1` zamiast „standardowej” postaci tj. `GET /index.html HTTP/1.1 Host: example.com`) docelowego żądania, musi zignorować otrzymane pole nagłówka `Host` (jeśli istnieje) i zamiast tego zastąpić je informacją o hoście będącym celem żądania.
 
-Serwer proxy, który przekazuje takie żądanie musi wygenerować nową wartość nagłówka na podstawie otrzymanego celu żądania, a nie przekazywać odebraną wartość pola `Host`. W takiej sytuacja serwer musi odpowiedzieć kodem 400 (Bad Request) na każdy komunikat żądania HTTP, który nie ma pola nagłówka `Host`, i na każdy komunikat żądania zawierający więcej niż jedno pole tego nagłówka lub zawierające niepoprawną wartością (według mnie, także adres IP).
+Serwer proxy, który przekazuje takie żądanie, musi wygenerować nową wartość nagłówka na podstawie otrzymanego celu żądania, a nie przekazywać odebraną wartość pola `Host`. W takiej sytuacja serwer musi odpowiedzieć kodem 400 (Bad Request) na każdy komunikat żądania HTTP, który nie ma pola nagłówka `Host`, i na każdy komunikat żądania zawierający więcej niż jedno pole tego nagłówka lub zawierające niepoprawną wartością (według mnie, także adres IP).
 
 Oczywiście najważniejszą linią obrony jest odpowiednia implementacja mechanizmów weryfikujących po stronie aplikacji, np. wykorzystanie listy dozwolonych wartości nagłówka `Host`. Twoja aplikacja powinna być w pełni zgodna z [RFC 7230](https://tools.ietf.org/html/rfc7230), aby uniknąć problemów spowodowanych niespójną interpretacją hosta w celu powiązania go z daną transakcją HTTP. Zgodnie z RFC 7230 poprawnym rozwiązaniem jest traktowanie wielu nagłówków `Host` i białych znaków wokół nazw pól jako błędów.
 
@@ -54,7 +54,7 @@ Różnicę wyjaśniono w dokumentacji NGINX:
 
 `$http_host` ponadto jest lepszy niż konstrukcja `$host:$server_port`, ponieważ używa portu obecnego w adresie URL, w przeciwieństwie do `$server_port`, który używa portu, na którym nasłuchuje NGINX.
 
-W związku z tym aby poprawnie przekazać wartość nagłówka `Host` do aplikacji należy:
+W związku z tym, aby poprawnie przekazać wartość nagłówka `Host` do aplikacji należy:
 
 ```nginx
 proxy_set_header Host $host;
@@ -66,11 +66,11 @@ Z drugiej strony, użycie zmiennej `$host` ma swoją własną podatność; musis
 
   > Jeśli wymagane jest użycie origynalnej nazwy wirtualnego hosta z pierwotnego żądania, możesz użyć zmiennej `$http_host` zamiast `$host`.
 
-Aby temu zapobiec, należy wykorzystać wirtualne hosty typu catch-all. Są to bloki, do których odwołuje się serwer NGINX, jeśli w żądaniu klienta pojawia się nierozpoznany/niezdefiniowany nagłówek `Host`. Dobrym pomysłem jest także podanie dokładnej (nie wieloznacznej) wartości w dyrektywie `server_name`.
+Aby temu zapobiec, należy wykorzystać wirtualne hosty typu catch-all. Są to bloki, do których odwołuje się serwer NGINX, jeśli w żądaniu klienta pojawia się nierozpoznany/niezdefiniowany nagłówek `Host`. Dobrym pomysłem jest także podanie dokładnej (niewieloznacznej) wartości w dyrektywie `server_name`.
 
 # Alterntywy dla nagłówka Host
 
-Spójrz co mówi na ten temat [RFC 7540 - Request Pseudo-Header Fields](https://tools.ietf.org/html/rfc7540#section-8.1.2.3):
+Spójrz, co mówi na ten temat [RFC 7540 - Request Pseudo-Header Fields](https://tools.ietf.org/html/rfc7540#section-8.1.2.3):
 
   > _To ensure that the HTTP/1.1 request line can be reproduced accurately, this pseudo-header field MUST be omitted when translating from an HTTP/1.1 request that has a request target in origin or asterisk form. Clients that generate HTTP/2 requests directly SHOULD use the ":authority" pseudo-header field instead of the Host header field. An intermediary that converts an HTTP/2 request to HTTP/1.1 MUST create a Host header field if one is not present in a request by copying the value of the ":authority" pseudo-header field._
 
