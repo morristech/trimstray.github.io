@@ -56,7 +56,7 @@ add_header Allow "GET, HEAD, POST" always;
 
 if ($request_method !~ ^(GET|HEAD|POST)$) {
 
-  # You can also use 'add_header' inside 'if' context instead of outside 'if':
+  # You can also use 'add_header' inside 'if' context:
   # add_header Allow "GET, HEAD, POST" always;
   return 405;
 
