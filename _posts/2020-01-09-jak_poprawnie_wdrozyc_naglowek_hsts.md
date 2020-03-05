@@ -93,7 +93,11 @@ Myślę, że rozsądnie jest także przyjąć następujące kroki:
 
 Na każdym etapie sprawdzaj, czy po wejścu na stronę nie zwraca ona żadnych błędów. Pamiętaj także o monitorowaniu ruchu i wpływu wprowadzonych zmian na wyszukiwarki, roboty oraz innych klientów. Jeżeli pojawią się jakiekolwiek problemy na danym etapie, zlokalizuj problem i go napraw, a następnie poczekaj ponownie pełen maksymalny czas etapu, zanim przejdziesz dalej.
 
-Jeżeli weryfikacja ostatniego etapu (tj. odczekanie pełnego miesiąca) przejdzie pomyślnie, zwiększ maksymalny wiek do 12 lub 24 miesięcy i dodaj swoją witrynę na listę wstępnego ładowania, pamiętając o odpowiednim ustawieniu nagłówka: `max-age=63072000; includeSubDomains; preload`.
+Jeżeli weryfikacja ostatniego etapu (tj. odczekanie pełnego miesiąca) przejdzie pomyślnie, zwiększ maksymalny wiek do 12 lub 24 miesięcy i dodaj swoją witrynę na listę wstępnego ładowania, pamiętając o odpowiednim ustawieniu nagłówka:
+
+```
+max-age=63072000; includeSubDomains; preload
+```
 
 Na zakończenie polecam przeczytać:
 

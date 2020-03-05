@@ -60,7 +60,7 @@ Atrybut `SameSite` pozwala zadeklarować, czy twoje ciastko powinno być ogranic
 
   > Na podstawie danych zebranych przez serwis [Can I use](https://caniuse.com/#feat=same-site-cookie-attribute), cookie z atrybutem `SameSite` ma już globalną obsługę 86,58% przeglądarek.
 
-Wprowadzona modyfikacja zapewnia też bardzo solidną ochronę przed atakami polegającymi na fałszowaniu żądań między witrynami ([Cross-site request forgery (CSRF)](https://portswigger.net/web-security/csrf)), które de facto, nie są już w pierwszej dziesiątce OWASP Top 10.
+Wprowadzona modyfikacja zapewnia też bardzo solidną ochronę przed atakami polegającymi na fałszowaniu żądań między witrynami ([Cross-site request forgery (CSRF)](https://portswigger.net/web-security/csrf)), które de fakto, nie są już w pierwszej dziesiątce OWASP Top 10.
 
 W celu pogłębienia swojej wiedzy zapoznaj się ze świetnymi wyjaśnieniami:
 
