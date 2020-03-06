@@ -14,6 +14,10 @@ Początki konwencji `X-` można znaleźć w sugestii Briana Harveya z 1975 r. w 
 
 Używanie niestandardowych nagłówków z prefiksem `X` nie jest zabronione, ale odradzane. Innymi słowy, możesz nadal używać nagłówków rozpoczynających się tym prefiksem, jednak nie jest to zalecane i nie możesz ich traktować tak, jakby były ogólnym standardem.
 
+<p align="center">
+  <img src="/assets/img/posts/http_headers_x_prefix.png">
+</p>
+
 `X` przed nazwą nagłówka zwyczajowo oznaczało, że jest on eksperymentalny/niestandardowy dla danego dostawcy lub produktu. Gdy nagłówek taki stanie się standardową częścią protokołu HTTP, powinien utracić prefiks zawarty w swojej nazwie.
 
 Oczywiście nie zawsze tak się dzieje i w wielu przypadkach stosowane nagłówki posiadają w swojej nazwie ten prefiks, np. `X-Forwarded-For` lub `X-Requested-With` (jednak są one nadal traktowane jako niestandardowe).
