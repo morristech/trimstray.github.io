@@ -14,6 +14,18 @@ Istnieje wiele potencjalnych zagrożeń związanych z wdrażaniem konfiguracji p
 
 W tym wpisie chciałbym poruszyć kwestię obsługiwanych wersji TLS, na przykładzie serwera NGINX. Przedstawię także na co powinniśmy zwracać uwagę oraz dlaczego określenie zalecanych wersji tego protokołu jest tak ważne.
 
+Poniżej znajduje się tabela z wszystkimi dostępnymi wersjami SSL/TLS:
+
+| <b>PROTOCOL</b> | <b>RFC</b> | <b>PUBLISHED</b> | <b>STATUS</b> |
+| :---:        | :---:        | :---:        | :---         |
+| SSL 1.0 | | Unpublished | Unpublished |
+| SSL 2.0 | | 1995 | Depracated in 2011 ([RFC 6176](https://tools.ietf.org/html/rfc6176)) <sup>[IETF]</sup> |
+| SSL 3.0 | | 1996 | Depracated in 2015 ([RFC 7568](https://tools.ietf.org/html/rfc7568)) <sup>[IETF]</sup> |
+| TLS 1.0 | [RFC 2246](https://tools.ietf.org/html/rfc2246) <sup>[IETF]</sup> | 1999 | Deprecation in 2020 |
+| TLS 1.1 | [RFC 4346](https://tools.ietf.org/html/rfc4346) <sup>[IETF]</sup> | 2006 | Deprecation in 2020 |
+| TLS 1.2 | [RFC 5246](https://tools.ietf.org/html/rfc5246) <sup>[IETF]</sup> | 2008 | Still secure |
+| TLS 1.3 | [RFC 8446](https://tools.ietf.org/html/rfc8446) <sup>[IETF]</sup> | 2018 | Still secure |
+
 # Używaj tylko TLS w wersji 1.3 oraz 1.2
 
 Zaleca się włączyć TLSv1.2/v1.3 oraz całkowicie wyłączyć SSLv2, SSLv3, TLSv1.0 i TLSv1.1, które mają słabości protokołu i używają starszych zestawów szyfrów (nie zapewniają żadnych nowoczesnych trybów szyfrowania), których tak naprawdę nie powinniśmy obecnie używać.
@@ -54,11 +66,21 @@ Sama aktualizacja nie jest wystarczająca. Musisz wyłączyć SSLv2 i SSLv3 - wi
 
 Jeżeli chodzi o najnowsze wersje TLS, zarówno TLSv1.2, jak i TLSv1.3 nie mają problemów z bezpieczeństwem (TLSv1.2 tak naprawdę dopiero po spełnieniu określonych warunków, np. wyłączenie szyfrów `CBC`). Tylko te wersje zapewniają nowoczesne algorytmy kryptograficzne oraz dodają rozszerzenia TLS i zestawy szyfrów. TLSv1.2 poprawia pakiety szyfrów, które zmniejszają zależność od szyfrów blokowych, które zostały wykorzystane przez ataki typu BEAST i wspomnianego POODLE.
 
-TLSv1.3 to nowa wersja TLS, która zapewnia szybszą i bezpieczniejszą komunikację przez kilka następnych lat. Co więcej, TLSv1.3 jest dostarczany bez mnóstwa rzeczy (zostały usunięty): renegocjacja, kompresja i wiele starych i słabych szyfrów, tj. `DSA`, `RC4`, `SHA1`, `MD5` i `CBC`. Ponadto, jak już wspomnianiałem, protokoły TLSv1.0 i TLSv1.1 zostaną usunięte z przeglądarek na początku 2020 r.
-
 Co ciekawe, Craig Young, badacz bezpieczeństwa komputerowego w zespole badań nad zagrożeniami i narażeniem Tripwire, znalazł luki w następcy SSL 3.0, TLSv1.2, które pozwalają na ataki podobne do POODLE ze względu na ciągłe wsparcie TLSv1.2 dla dawno przestarzała metoda kryptograficzna: łańcuchowe blokowanie szyfrów (`CBC`). Usterki umożliwiają ataki typu man-in-the-middle (MitM) na zaszyfrowane sesje internetowe użytkownika.
 
-TLSv1.2 wymaga starannej konfiguracji, aby zapewnić, że przestarzałe zestawy szyfrów ze zidentyfikowanymi podatnościami nie będą używane w połączeniu z nim. TLSv1.3 eliminuje potrzebę podejmowania tych decyzji i nie wymaga żadnej konkretnej konfiguracji, ponieważ wszystkie szyfry są bezpieczne, a domyślnie OpenSSL włącza tylko GCM i Chacha20 / Poly1305 dla TLSv1.3, bez włączania CCM. Wersja TLSv1.3 poprawia także bezpieczeństwo, prywatność i wydajność TLSv1.2.
+TLSv1.2 wymaga starannej konfiguracji, aby zapewnić, że przestarzałe zestawy szyfrów ze zidentyfikowanymi podatnościami nie będą używane w połączeniu z nim. TLSv1.3 eliminuje potrzebę podejmowania tych decyzji i nie wymaga żadnej konkretnej konfiguracji, ponieważ wszystkie szyfry są bezpieczne, a domyślnie OpenSSL włącza tylko `GCM` i `Chacha20/Poly1305` dla TLSv1.3, bez włączania CCM. Wersja TLSv1.3 poprawia także bezpieczeństwo, prywatność i wydajność TLSv1.2.
+
+# Włączenie TLSv1.3
+
+TLSv1.3 to nowa wersja TLS, która zapewnia szybszą i bezpieczniejszą komunikację przez kilka następnych lat. Co więcej, TLSv1.3 jest dostarczany bez mnóstwa rzeczy (zostały usunięty): renegocjacja, kompresja i wiele starych i słabych szyfrów, tj. `DSA`, `RC4`, `SHA1`, `MD5` i `CBC`. Ponadto, jak już wspomnianiałem, protokoły TLSv1.0 i TLSv1.1 zostaną usunięte z przeglądarek na początku 2020 r.
+
+Niestety nie jest jeszcze w pełni wspierany przez wszystkich klientów:
+
+<p align="center">
+  <img src="/assets/img/posts/tlsv1.3_support.png">
+</p>
+
+NGINX wspiera TLSv1.3 od wersji 1.13.0 wydanej w kwietniu 2017 r., pod warunkiem, że obsługiwaną wersją biblioteki OpenSSL jest min. 1.1.1 (lub nowszy).
 
 # Zalecenia
 
