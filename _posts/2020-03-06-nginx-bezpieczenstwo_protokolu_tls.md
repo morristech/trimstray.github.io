@@ -50,3 +50,127 @@ server {
 
 }
 ```
+
+Zewnętrzne zasoby:
+
+- [Understanding the Nginx Configuration File Structure and Configuration Contexts](https://www.digitalocean.com/community/tutorials/understanding-the-nginx-configuration-file-structure-and-configuration-contexts)
+- [Configuring HTTPS servers](http://nginx.org/en/docs/http/configuring_https_servers.html)
+
+# Wspólna konfiguracja TLS dla adresów nasłuchiwania
+
+Reguła ta także dotyczy organizacji konfiguracji. Ułatwia ona debugowanie i utrzymanie, a także zapobiega wykorzystaniu wielu konfiguracji TLS dla tego samego adresu nasłuchiwania (co jest nie do końca prawdą).
+
+Powinieneś użyć jednej konfiguracji TLS do współdzielenia jednego adresu IP między kilkoma konfiguracjami HTTPS (np. protokoły, szyfry, krzywe eliptyczne). Ma to na celu zapobieganie błędom i chaosowi konfiguracji.
+
+Używanie wspólnej konfiguracji TLS (przechowywanej w jednym pliku i dodawanej za pomocą dyrektywy `include`) dla wszystkich kontekstów `server` zapobiega dziwnym zachowaniom. Myślę, że nie ma lepszego lekarstwa na możliwy bałagan konfiguracji.
+
+Pamiętaj, że niezależnie od parametrów TLS możesz używać wielu certyfikatów SSL w tej samej dyrektywie nasłuchiwania (adres IP). Również niektóre parametry TLS mogą się różnić.
+
+Pamiętaj również o konfiguracji domyślnego serwera. Jest to ważne, ponieważ jeśli żadna z dyrektyw nasłuchiwania nie ma parametru `default_server`, to serwerem domyślnym będzie pierwszym serwer w konfiguracji.
+
+Przykład konfiguracji:
+
+```nginx
+# Store it in a file, e.g. https.conf:
+ssl_protocols TLSv1.2;
+ssl_ciphers "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305";
+
+ssl_prefer_server_ciphers on;
+
+ssl_ecdh_curve secp521r1:secp384r1;
+
+...
+
+# Include this file to the server context (attach domain-a.com for specific listen directive):
+server {
+
+  listen 192.168.252.10:443 default_server ssl http2;
+
+  include /etc/nginx/https.conf;
+
+  server_name domain-a.com;
+
+  ssl_certificate domain-a.com.crt;
+  ssl_certificate_key domain-a.com.key;
+
+  ...
+
+}
+
+# Include this file to the server context (attach domain-b.com for specific listen directive):
+server {
+
+  listen 192.168.252.10:443 ssl;
+
+  include /etc/nginx/https.conf;
+
+  server_name domain-b.com;
+
+  ssl_certificate domain-b.com.crt;
+  ssl_certificate_key domain-b.com.key;
+
+  ...
+
+}
+```
+
+Zewnętrzne zasoby:
+
+- [Nginx one ip and multiple ssl certificates](https://serverfault.com/questions/766831/nginx-one-ip-and-multiple-ssl-certificates)
+- [Configuring HTTPS servers](http://nginx.org/en/docs/http/configuring_https_servers.html)
+
+# Wymuszenie wszystkich połączeń za pomocą TLS
+
+Protokół TLS zapewnia dwie główne usługi. Po pierwsze, sprawdza tożsamość serwera, z którym użytkownik się łączy. Po drugie chroni przesyłanie poufnych informacji od użytkownika do serwera.
+
+Moim zdaniem zawsze powinieneś używać HTTPS zamiast HTTP (użyj HTTP tylko do przekierowania do HTTPS), aby chronić swoją witrynę, nawet jeśli nie obsługuje ona poufnej komunikacji i nie zawiera żadnych mieszanych treści. Aplikacja może mieć wiele wrażliwych miejsc, które powinny być chronione.
+
+Zawsze umieszczaj strony logowania, formularze rejestracyjne, wszystkie kolejne uwierzytelnione strony, formularze kontaktowe i formularze szczegółów płatności w HTTPS, aby zapobiec sniffowaniu i wstrzykiwaniu (atakujący może wstrzyknąć kod do niezaszyfrowanej transmisji HTTP, więc zawsze zwiększa ryzyko zmiany treści, nawet jeśli ktoś czyta tylko treści niekrytyczne. Zobacz atak typu [Man-in-the-browser](https://owasp.org/www-community/attacks/Man-in-the-browser_attack)). Dostęp do nich można uzyskać tylko przez TLS, aby zapewnić bezpieczeństwo ruchu.
+
+Jeśli aplikacja jest dostępna przez TLS, musi składać się całkowicie z treści przesyłanych przez TLS. Żądanie półśrodków przy użyciu niezabezpieczonego protokołu HTTP osłabia bezpieczeństwo całego serwisu jak i samego protokołu HTTPS. Nowoczesne przeglądarki powinny domyślnie blokować lub zgłaszać wszystkie treści mieszane dostarczane przez HTTP.
+
+Pamiętaj także o wdrożeniu polityki [HTTP Strict Transport Security (HSTS)](HST) i zapewnieniu właściwej konfiguracji TLS (wersja protokołu, zestawy szyfrów, odpowiedni łańcuch certyfikatów i inne).
+
+Przykład przekierowania całego ruchu z HTTP na HTTPS:
+
+```nginx
+server {
+
+  listen 10.240.20.2:80;
+
+  server_name example.com;
+
+  return 301 https://$host$request_uri;
+
+}
+
+server {
+
+  listen 10.240.20.2:443 ssl;
+
+  server_name example.com;
+
+  ...
+
+}
+```
+
+Przekierowanie tylko strony logowania:
+
+```nginx
+server {
+
+  listen 10.240.20.2:80;
+
+  server_name example.com;
+
+  ...
+
+  location ^~ /login {
+
+    return 301 https://example.com$request_uri;
+
+  }
+
+}
+```
