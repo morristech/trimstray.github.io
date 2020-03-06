@@ -68,13 +68,15 @@ Sama aktualizacja nie jest wystarczająca. Musisz wyłączyć SSLv2 i SSLv3 - wi
 
 Jeżeli chodzi o najnowsze wersje TLS, zarówno TLSv1.2, jak i TLSv1.3 nie mają problemów z bezpieczeństwem (TLSv1.2 tak naprawdę dopiero po spełnieniu określonych warunków, np. wyłączenie szyfrów `CBC`). Tylko te wersje zapewniają nowoczesne algorytmy kryptograficzne oraz dodają rozszerzenia TLS i zestawy szyfrów. TLSv1.2 poprawia zestawy szyfrów, które zmniejszają zależność od szyfrów blokowych, które zostały wykorzystane przez ataki typu BEAST i wspomniany wcześniej POODLE.
 
-Co ciekawe, Craig Young, badacz bezpieczeństwa komputerowego w zespole firmy Tripwire zajmujący się badaniem zagrożeń, znalazł luki w TLSv1.2, które pozwalają na ataki podobne do POODLE ze względu na ciągłe wsparcie TLSv1.2 dla dawno przestarzałyc metod kryptograficznych, tj. szyfrów blokowych `CBC`. Znalezione słabości umożliwiają ataki typu man-in-the-middle (MitM) na zaszyfrowane sesje użytkownika.
+Co ciekawe, Craig Young, badacz bezpieczeństwa w zespole firmy Tripwire, znalazł luki w TLSv1.2, które pozwalają na ataki podobne do POODLE ze względu na ciągłe wsparcie TLSv1.2 dla dawno przestarzałych metod kryptograficznych, tj. szyfrów blokowych `CBC`. Znalezione słabości umożliwiają ataki typu man-in-the-middle (MitM) na zaszyfrowane sesje użytkownika.
 
-Oprócz tego TLSv1.2 wymaga starannej konfiguracji, aby zapewnić, że przestarzałe zestawy szyfrów ze zidentyfikowanymi podatnościami nie będą używane. TLSv1.3 eliminuje potrzebę podejmowania tych decyzji i nie wymaga żadnej konkretnej konfiguracji, ponieważ wszystkie szyfry są bezpieczne, a domyślnie OpenSSL włącza tylko `GCM` i `Chacha20/Poly1305` dla TLSv1.3, bez włączania CCM.
+  > Używanie szyfrów `CBC` nie stanowi samo w sobie luki, którymi de fakto są luki w zabezpieczeniach, takie jak Zombie POODLE, GOLDENDOODLE, 0-Length OpenSSL i Sleeping POODLE, które zostały opublikowane dla serwisów korzystających z trybów szyfrowania blokowego `CBC` (ang. _Cipher Block Chaining_). Luki te mają zastosowanie tylko wtedy, gdy serwer używa TLSv1.0, TLSv1.1 lub TLSv1.2 z trybami szyfrowania `CBC`. Spójrz na [Zombie POODLE, GOLDENDOODLE, & How TLSv1.3 Can Save Us All](https://i.blackhat.com/asia-19/Fri-March-29/bh-asia-Young-Zombie-Poodle-Goldendoodle-and-How-TLSv13-Can-Save-Us-All.pdf) <sup>[pdf]</sup>  z Black Hat Asia 2019. Na TLSv1.0 i TLSv1.1 mogą mieć wpływ luki, takie jak [FREAK, POODLE, BEAST i CRIME](https://www.acunetix.com/blog/articles/tls-vulnerabilities-attacks-final-part/).
+
+Oprócz tego TLSv1.2 wymaga starannej konfiguracji, aby zapewnić, że przestarzałe zestawy szyfrów ze zidentyfikowanymi podatnościami nie będą używane. TLSv1.3 eliminuje potrzebę podejmowania tych decyzji i nie wymaga żadnej konkretnej konfiguracji, ponieważ wszystkie szyfry są bezpieczne, a domyślnie OpenSSL włącza tylko tryby `GCM` i `Chacha20/Poly1305` dla TLSv1.3, bez włączania `CCM`.
 
 # Włączenie TLSv1.3
 
-TLSv1.3 to nowa wersja TLS, która zapewnia szybszą i bezpieczniejszą komunikację przez kilka następnych lat (poprawia także bezpieczeństwo, prywatność i wydajność TLSv1.2). Co więcej, TLSv1.3 jest dostarczany bez wielu rzeczy (zostały usunięte): renegocjacja, kompresja i wiele starych i słabych szyfrów, tj. `DSA`, `RC4`, `SHA1`, `MD5` i `CBC`. Ponadto, jak już wspomnianiałem, protokoły TLSv1.0 i TLSv1.1 zostaną usunięte z przeglądarek na początku 2020 r.
+TLSv1.3 to nowa wersja TLS, która zapewnia szybszą i bezpieczniejszą komunikację przez kilka następnych lat (poprawia także bezpieczeństwo, prywatność i wydajność TLSv1.2). Co więcej, TLSv1.3 jest dostarczany bez wielu rzeczy (zostały usunięte): renegocjacja, kompresja i wiele starych i słabych szyfrów, tj. `DSA`, `RC4`, `SHA1`, `MD5` i `CBC`.
 
 Niestety nie jest jeszcze w pełni wspierany przez wszystkich klientów:
 
@@ -86,13 +88,11 @@ NGINX wspiera TLSv1.3 od wersji 1.13.0 wydanej w kwietniu 2017 r., pod warunkiem
 
 # Zalecenia
 
-Myślę, że najlepszym sposobem na wdrożenie bezpiecznej konfiguracji jest włączenie TLSv1.2 (jako minimalna obsługiwana wersja) bez szyfrów `CBC` (`ChaCha20` + `Poly1305` lub `AES/GCM` powinny być preferowane nad `CBC` (por. atak BEAST), jednak, używanie szyfrów `CBC` nie stanowi samo w sobie luki, Zombie POODLE itp. to luki) lub TLSv1.3, który jest bezpieczniejszy ze względu na poprawę obsługi i wykluczenie wszystkiego, co stało się przestarzałe od czasu pojawienia się TLSv1.2. Zatem uczynienie TLSv1.2 „minimalnym poziomem protokołu” to solidny wybór i najlepsza praktyka w branży (wszystkie standardy branżowe, takie jak PCI-DSS, HIPAA, NIST, zdecydowanie sugerują stosowanie TLSv1.2 niż TLSv1.1/1.0).
+Myślę, że najlepszym sposobem na wdrożenie bezpiecznej konfiguracji jest włączenie TLSv1.2 (jako minimalna obsługiwana wersja) bez szyfrów `CBC` z jawnym wskazaniem szyfrów `ChaCha20` + `Poly1305` lub `AES/GCM`, które powinny być preferowane nad `CBC` (por. atak BEAST) lub TLSv1.3, który jest bezpieczniejszy ze względu na poprawę obsługi i wykluczenie wszystkiego, co stało się przestarzałe od czasu pojawienia się TLSv1.2.
 
-  > Istnieją luki w zabezpieczeniach, takie jak Zombie POODLE, GOLDENDOODLE, 0-Length OpenSSL i Sleeping POODLE, które zostały opublikowane dla serwisów korzystających z trybów szyfrowania blokowego `CBC` (ang. _Cipher Block Chaining_). Luki te mają zastosowanie tylko wtedy, gdy serwer używa TLSv1.0, TLSv1.1 lub TLSv1.2 z trybami szyfrowania `CBC`. Spójrz na [Zombie POODLE, GOLDENDOODLE, & How TLSv1.3 Can Save Us All](https://i.blackhat.com/asia-19/Fri-March-29/bh-asia-Young-Zombie-Poodle-Goldendoodle-and-How-TLSv13-Can-Save-Us-All.pdf) <sup>[pdf]</sup>  z Black Hat Asia 2019. Na TLSv1.0 i TLSv1.1 mogą mieć wpływ luki, takie jak [FREAK, POODLE, BEAST i CRIME](https://www.acunetix.com/blog/articles/tls-vulnerabilities-attacks-final-part/).
+Zatem uczynienie TLSv1.2 „minimalnym poziomem protokołu” to solidny wybór i najlepsza praktyka w branży (wszystkie standardy branżowe, takie jak PCI-DSS, HIPAA, NIST, zdecydowanie sugerują stosowanie TLSv1.2 niż TLSv1.1/v1.0).
 
 TLSv1.2 jest prawdopodobnie niewystarczający do obsługi starszego klienta. Wytyczne NIST nie mają zastosowania do wszystkich przypadków użycia i zawsze należy przeanalizować bazę użytkowników przed podjęciem decyzji, które protokoły mają być obsługiwane lub nie (na przykład poprzez dodanie zmiennych formatów TLS i szyfrów do formatu dziennika). Należy pamiętać, że nie każdy klient obsługuje najnowszą i najlepszą ofertę TLS.
-
-Jeśli wskazaliśmy, aby NGINX używał TLSv1.3, użyje TLSv1.3, tylko wtedy, kiedy jest dostępny. NGINX obsługuje TLSv1.3 od wersji 1.13.0 (wydanej w kwietniu 2017 r.), Gdy jest zbudowany na OpenSSL 1.1.1 lub nowszym.
 
   > W przypadku TLSv1.3 zastanów się nad użyciem [ssl_early_data](https://github.com/tlswg/tls13-spec/issues/1001), aby zezwolić na uzgadnianie TLSv1.3 0-RTT.
 
