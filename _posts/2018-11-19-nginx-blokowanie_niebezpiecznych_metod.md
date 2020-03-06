@@ -14,7 +14,7 @@ Zwykły serwer HTTP obsługuje metody `GET`, `HEAD` i `POST` w celu pobierania z
 
 Niektóre z tych metod są zazwyczaj niebezpieczne, a inne są po prostu niepotrzebne w środowisku produkcyjnym. Według mnie warto je wyłączyć, ponieważ prawdopodobnie nie będziesz ich potrzebować. Listę dostępnych metod znajdziesz w dokumencie [Hypertext Transfer Protocol (HTTP) Method Registry](https://www.iana.org/assignments/http-methods/http-methods.xhtml) <sup>[IANA]</sup>.
 
-  > Możesz także spróbować ominąć mechanizmy filtrujące aplikacji lub serwera HTTP, wysyłając dowolne ciągi znaków, takie jak `gEt` lub nawet `AsdF`, jako metody HTTP przekazane w żądaniu.
+  > Niepoprawna walidacja metod pozwala na ominięcie mechanizmów filtrujących aplikacji lub serwera HTTP. Nie trzeba nawet stosować metod wysokiego ryzyka — testowanie powinno obejmować także dowolne ciągi znaków, takie jak `gEt` lub `FooBar`, jako metody HTTP przekazane w żądaniu.
 
 Dodatkowo polecam zaznajomić się z poniższymi zasobami:
 
@@ -23,11 +23,11 @@ Dodatkowo polecam zaznajomić się z poniższymi zasobami:
 
 Obsługa metody `TRACE` może umożliwić atak typu Cross-Site Tracing, który może ułatwić przechwycenie identyfikatora sesji innego użytkownika aplikacji. Ponadto, tej metody można użyć do próby zidentyfikowania dodatkowych informacji o środowisku, w którym działa aplikacja (np. istnienie serwerów cache'ujących na ścieżce do aplikacji).
 
-Moim zdaniem, obsługa metody `OPTIONS` nie jest bezpośrednim zagrożeniem, ale może być źródłem dodatkowych informacji dla atakującego, które mogą ułatwić przeprowadzenie skutecznego ataku.
+Metoda `OPTIONS` nie jest bezpośrednim zagrożeniem, ale może być źródłem dodatkowych informacji dla atakującego, które mogą ułatwić przeprowadzenie skutecznego ataku.
 
   > Niektóre interfejsy API (np. RESTful API) korzystają również z innych metod. Oprócz ochrony po stronie serwera architekci aplikacji powinni również weryfikować przychodzące żądania.
 
-Co ciekawe, obsługa metody `HEAD` jest również ryzykowna (naprawdę!), ponieważ może przyspieszyć proces ataku, ograniczając ilość danych wysyłanych z serwera. Co wiecej, może być wykorzystana do zaatakowania aplikacji poprzez tzw. Mimicking Attack, polegający na naśladowaniu metody `GET`, dzięki czemu można pominąć mechanizmu uwierzytelniania. Wiele artykułów uznaje metodę `HEAD` za w pełni bezpieczną jednak należy mieć świadomość ewentualnych zagrożeń.
+Co ciekawe, obsługa metody `HEAD` jest również ryzykowna (naprawdę!), ponieważ może przyspieszyć proces ataku, ograniczając ilość danych wysyłanych z serwera. Co wiecej, może być wykorzystana do zaatakowania aplikacji poprzez tzw. Mimicking Attack, polegający na naśladowaniu zachowania metody `GET`, dzięki czemu można np. ominąć mechanizmy uwierzytelniania. Wiele artykułów uznaje metodę `HEAD` za w pełni bezpieczną jednak należy mieć świadomość ewentualnych zagrożeń.
 
   > Jeśli mechanizmy autoryzacji są oparte na `GET` i `POST`, metoda `HEAD` może także pozwolić na ominięcie tych zabezpieczeń.
 
@@ -39,16 +39,16 @@ Zanim zaczniesz blokować potencjalnie niebezpieczne metody, chciałbym zwróci�
 
 Odpowiedź nie jest wcale taka oczywista (z jednej strony, ponieważ mam nadzieję, że każdy pomyślał o kodzie 405) i jest związana z kolejnością kodów odpowiedzi, które powinny zostać zwrócone przez poprawnie napisany i skonfigurowany serwer HTTP — czyli w pełni zgodny z [RFC7230](https://tools.ietf.org/html/rfc7230), [RFC7231](https://tools.ietf.org/html/rfc7231), [RFC7232](https://tools.ietf.org/html/rfc7232), [RFC7233](https://tools.ietf.org/html/rfc7233), [RFC7234](https://tools.ietf.org/html/rfc7234) a także [RFC7235](https://tools.ietf.org/html/rfc7235).
 
-Spójrz na poniższe wyjaśnie opisujące różnice oraz pierwszeństwo typowej implementacji:
+Spójrz na poniższe wyjaśnie opisujące różnice oraz pierwszeństwo w typowej implementacji:
 
 - 0: Przychodzi żądanie...
 - 1: `405 Method Not Allowed` oznacza, że serwer nie zezwala na tę metodę dla tego identyfikatora URI
 - 2: `401 Unauthorized` oznacza, że użytkownik nie jest uwierzytelniony
 - 3: `403 Forbidden` oznacza, że klient uzyskujący dostęp nie jest upoważniony do wykonania tego żądania
 
-Zgodnie z tym, odpowiednim kodem odpowiedzi jest `405 Method Not Allowed`. Moim zdaniem, jeśli zasób HTTP nie jest w stanie obsłużyć żądania przy użyciu danej metody HTTP, powinien wysłać nagłówek `Allow`, aby przekazać klientowi listę dozwolonych metod HTTP. W tym celu możesz użyć dyrektywy `add_header`, ale pamiętaj o potencjalnych problemach.
+Zgodnie z tym, odpowiednim kodem odpowiedzi jest `405 Method Not Allowed`. Moim zdaniem, jeśli zasób HTTP nie jest w stanie obsłużyć żądania przy użyciu danej metody HTTP, serwer powinien wysłać nagłówek `Allow`, aby przekazać klientowi listę dozwolonych metod. W tym celu możesz użyć dyrektywy `add_header`, ale pamiętaj o potencjalnych problemach.
 
-Na koniec przykłady konfiguracji. Pierwsza rekomendowana (mimo wykorzystania `if`):
+Na koniec przykłady konfiguracji. Pierwsza rekomendowana (mimo wykorzystania `if`) zwraca kod 405:
 
 ```nginx
 # If we are in server context, it’s good to use construction like this:
@@ -63,7 +63,7 @@ if ($request_method !~ ^(GET|HEAD|POST)$) {
 }
 ```
 
-Oraz druga, będąca alternatywą:
+Oraz druga, będąca alternatywą, zwraca kod 403:
 
 ```nginx
 # Note: allowing the GET method makes the HEAD method also allowed.

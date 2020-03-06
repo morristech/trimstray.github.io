@@ -90,7 +90,7 @@ Możesz użyć [GDB](https://www.gnu.org/software/gdb/) do wyodrębnienia przyda
 
 Jest to bardzo przydatne, gdy trzeba sprawdzić, która konfiguracja została załadowana i przywrócić poprzednią, jeśli wersja zapisana na dysku została przypadkowo usunięta lub nadpisana.
 
-Zapisz parametry gdb do pliku, np. `nginx-config.gdb`:
+Zapisz parametry gdb do pliku, np. `nginx.gdb`:
 
 ```
 set $cd = ngx_cycle->config_dump
@@ -121,7 +121,6 @@ less nginx.conf.running
 Poniżej znajduje się alternatywne rozwiązanie:
 
 ```
-# Save gdb functions to a file, e.g. nginx.gdb:
 define dump_config
   set $cd = ngx_cycle->config_dump
   set $nelts = $cd.nelts
@@ -149,13 +148,12 @@ less nginx.conf.running
 Aby móc wyciągnąć dane zapisywane przez dyrektywę `error_log` należy ustawić dla niej odpowiednie parametry:
 
 ```
-error_log   memory:64m debug;
+error_log memory:64m debug;
 ```
 
 Następnie:
 
 ```
-# Save gdb functions to a file, e.g. nginx.gdb:
 define dump_debug_log
   set $log = ngx_cycle->log
   while ($log != 0) && ($log->writer != ngx_log_memory_writer)
