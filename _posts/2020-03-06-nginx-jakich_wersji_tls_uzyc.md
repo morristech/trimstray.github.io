@@ -58,7 +58,7 @@ Obecnie przeglądarki także podchodzą do tematu obsługiwanych wersji TLS dosy
 
 Moim zdaniem, trzymanie się TLSv1.0 to bardzo zły i dość niebezpieczny pomysł. Ta wersja może być podatna na ataki [POODLE](https://en.wikipedia.org/wiki/POODLE), [BEAST](https://en.wikipedia.org/wiki/Transport_Layer_Security#BEAST_attack), a także [padding-Oracle](https://en.wikipedia.org/wiki/Padding_oracle_attack). Nadal obowiązuje wiele innych słabości posiadających identyfikatory CVE, których nie można naprawić, chyba że przez wyłączenie TLSv1.0.
 
-Obsługa wersji TLSv1.1 jest tylko złym kompromisem, chociaż ta wersja jest w połowie wolna od problemów TLSv1.0. Z drugiej strony czasami ich stosowanie jest nadal wymagane w praktyce (do obsługi starszych klientów). Istnieje wiele innych zagrożeń bezpieczeństwa spowodowanych wykorzystywaniem TLSv1.0 lub 1.1, dlatego zdecydowanie polecam wszystkim aktualizację oprogramowania, usług i urządzeń w celu obsługi min. TLSv1.2.
+Obsługa wersji TLSv1.1 jest tylko złym kompromisem, chociaż ta wersja jest w połowie wolna od problemów TLSv1.0. Z drugiej strony czasami jej stosowanie jest nadal wymagane w praktyce (do obsługi starszych klientów). Istnieje wiele innych zagrożeń bezpieczeństwa spowodowanych wykorzystywaniem TLSv1.0 lub TLSv1.1, dlatego zdecydowanie zalecam aktualizację oprogramowania, usług i urządzeń w celu obsługi min. TLSv1.2.
 
 Usunięcie starszych wersji SSL/TLS jest często jedynym sposobem zapobiegania atakom na obniżenie wersji. Google zaproponowało rozszerzenie protokołu SSL/TLS o nazwie `TLS_FALLBACK_SCSV`, które ma na celu zapobieganie wymuszonym obniżeniom wersji SSL/TLS (rozszerzenie zostało przyjęte jako [RFC 7507](https://tools.ietf.org/html/rfc7507) w kwietniu 2015 r.).
 
@@ -66,15 +66,15 @@ Sama aktualizacja nie jest wystarczająca. Musisz wyłączyć SSLv2 i SSLv3 - wi
 
 # Czy TLSv1.2 jest w pełni bezpieczny?
 
-Jeżeli chodzi o najnowsze wersje TLS, zarówno TLSv1.2, jak i TLSv1.3 nie mają problemów z bezpieczeństwem (TLSv1.2 tak naprawdę dopiero po spełnieniu określonych warunków, np. wyłączenie szyfrów `CBC`). Tylko te wersje zapewniają nowoczesne algorytmy kryptograficzne oraz dodają rozszerzenia TLS i zestawy szyfrów. TLSv1.2 poprawia pakiety szyfrów, które zmniejszają zależność od szyfrów blokowych, które zostały wykorzystane przez ataki typu BEAST i wspomnianego POODLE.
+Jeżeli chodzi o najnowsze wersje TLS, zarówno TLSv1.2, jak i TLSv1.3 nie mają problemów z bezpieczeństwem (TLSv1.2 tak naprawdę dopiero po spełnieniu określonych warunków, np. wyłączenie szyfrów `CBC`). Tylko te wersje zapewniają nowoczesne algorytmy kryptograficzne oraz dodają rozszerzenia TLS i zestawy szyfrów. TLSv1.2 poprawia zestawy szyfrów, które zmniejszają zależność od szyfrów blokowych, które zostały wykorzystane przez ataki typu BEAST i wspomniany wcześniej POODLE.
 
-Co ciekawe, Craig Young, badacz bezpieczeństwa komputerowego w zespole badań nad zagrożeniami i narażeniem Tripwire, znalazł luki w następcy SSL 3.0, TLSv1.2, które pozwalają na ataki podobne do POODLE ze względu na ciągłe wsparcie TLSv1.2 dla dawno przestarzała metoda kryptograficzna: łańcuchowe blokowanie szyfrów (`CBC`). Usterki umożliwiają ataki typu man-in-the-middle (MitM) na zaszyfrowane sesje internetowe użytkownika.
+Co ciekawe, Craig Young, badacz bezpieczeństwa komputerowego w zespole firmy Tripwire zajmujący się badaniem zagrożeń, znalazł luki w TLSv1.2, które pozwalają na ataki podobne do POODLE ze względu na ciągłe wsparcie TLSv1.2 dla dawno przestarzałyc metod kryptograficznych, tj. szyfrów blokowych `CBC`. Znalezione słabości umożliwiają ataki typu man-in-the-middle (MitM) na zaszyfrowane sesje użytkownika.
 
-TLSv1.2 wymaga starannej konfiguracji, aby zapewnić, że przestarzałe zestawy szyfrów ze zidentyfikowanymi podatnościami nie będą używane w połączeniu z nim. TLSv1.3 eliminuje potrzebę podejmowania tych decyzji i nie wymaga żadnej konkretnej konfiguracji, ponieważ wszystkie szyfry są bezpieczne, a domyślnie OpenSSL włącza tylko `GCM` i `Chacha20/Poly1305` dla TLSv1.3, bez włączania CCM. Wersja TLSv1.3 poprawia także bezpieczeństwo, prywatność i wydajność TLSv1.2.
+Oprócz tego, TLSv1.2 wymaga starannej konfiguracji, aby zapewnić, że przestarzałe zestawy szyfrów ze zidentyfikowanymi podatnościami nie będą używane. TLSv1.3 eliminuje potrzebę podejmowania tych decyzji i nie wymaga żadnej konkretnej konfiguracji, ponieważ wszystkie szyfry są bezpieczne, a domyślnie OpenSSL włącza tylko `GCM` i `Chacha20/Poly1305` dla TLSv1.3, bez włączania CCM.
 
 # Włączenie TLSv1.3
 
-TLSv1.3 to nowa wersja TLS, która zapewnia szybszą i bezpieczniejszą komunikację przez kilka następnych lat. Co więcej, TLSv1.3 jest dostarczany bez mnóstwa rzeczy (zostały usunięty): renegocjacja, kompresja i wiele starych i słabych szyfrów, tj. `DSA`, `RC4`, `SHA1`, `MD5` i `CBC`. Ponadto, jak już wspomnianiałem, protokoły TLSv1.0 i TLSv1.1 zostaną usunięte z przeglądarek na początku 2020 r.
+TLSv1.3 to nowa wersja TLS, która zapewnia szybszą i bezpieczniejszą komunikację przez kilka następnych lat (poprawia także bezpieczeństwo, prywatność i wydajność TLSv1.2). Co więcej, TLSv1.3 jest dostarczany bez mnóstwa rzeczy (zostały usunięty): renegocjacja, kompresja i wiele starych i słabych szyfrów, tj. `DSA`, `RC4`, `SHA1`, `MD5` i `CBC`. Ponadto, jak już wspomnianiałem, protokoły TLSv1.0 i TLSv1.1 zostaną usunięte z przeglądarek na początku 2020 r.
 
 Niestety nie jest jeszcze w pełni wspierany przez wszystkich klientów:
 
