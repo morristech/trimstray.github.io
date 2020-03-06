@@ -40,7 +40,9 @@ Protokół TLSv1.3 jest najnowszą i bardziej niezawodną wersją. Powinien być
 
 ## Szyfry AEAD
 
-Szyfry `AEAD` dostarczają wyspecjalizowane tryby działania szyfru blokowego zwane szyfrowaniem uwierzytelnionym z powiązanymi/dodatkowymi danymi (ang. _Authenticated Encryption with Associated Data_). Łączą one funkcje trybów gwarantujących poufność a także zapewniają silne uwierzytelnanie oraz wymianę kluczy z funkcją forward secrecy. Potrzeba ich użycia wynika ze słabości wcześniejszych schematów szyfrowania. Moim zdaniem powinno się ich używać tam gdzie to możliwe. Szyfry te są jedynymi obsługiwanymi szyframi w TLSv1.3. Powinniśmy z nich korzystać także w przypadku TLSv1.2 włączając tylko te szyfry wykorzystujące algorytmy `AES-GCM` i `ChaCha20-Poly1305`.
+Szyfry `AEAD` dostarczają wyspecjalizowane tryby działania szyfru blokowego zwane szyfrowaniem uwierzytelnionym z powiązanymi/dodatkowymi danymi (ang. _Authenticated Encryption with Associated Data_). Łączą one funkcje trybów gwarantujących poufność a także zapewniają silne uwierzytelnanie oraz wymianę kluczy z funkcją forward secrecy (tzw. utajnianie z wyprzedzeniem).
+
+Potrzeba ich użycia wynika ze słabości wcześniejszych schematów szyfrowania. Moim zdaniem powinno się ich używać tam gdzie to możliwe. Szyfry te są jedynymi obsługiwanymi szyframi w TLSv1.3. Powinniśmy z nich korzystać także w przypadku TLSv1.2 włączając tylko te szyfry wykorzystujące algorytmy `AES-GCM` i `ChaCha20-Poly1305`.
 
 Co do szyfrów `AEAD`, zacytują to wyjaśnienie:
 
