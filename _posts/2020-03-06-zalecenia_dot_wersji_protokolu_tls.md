@@ -26,7 +26,7 @@ Poniżej znajduje się tabela z wszystkimi dostępnymi wersjami SSL/TLS:
 | TLS 1.2 | [RFC 5246](https://tools.ietf.org/html/rfc5246) <sup>[IETF]</sup> | 2008 | Still secure |
 | TLS 1.3 | [RFC 8446](https://tools.ietf.org/html/rfc8446) <sup>[IETF]</sup> | 2018 | Still secure |
 
-# Używaj tylko TLS w wersji 1.3/1.2
+# TLS w wersji 1.3/1.2
 
 Zaleca się włączyć TLSv1.2 oraz TLSv1.3, oraz całkowicie wyłączyć SSLv2, SSLv3, TLSv1.0 i TLSv1.1, które mają słabości protokołu i używają starszych zestawów szyfrów (nie zapewniają żadnych nowoczesnych trybów szyfrowania), których tak naprawdę nie powinniśmy obecnie używać.
 
