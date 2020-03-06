@@ -212,6 +212,8 @@ TLS 1.2 wymaga starannej konfiguracji, aby zapewnić, że przestarzałe zestawy 
 
 Myślę, że najlepszym sposobem na wdrożenie bezpiecznej konfiguracji jest: włączenie TLS 1.2 (jako wersja minimalna; jest wystarczająco bezpieczny) bez szyfrów `CBC` (`ChaCha20` + `Poly1305` lub `AES/GCM` powinny być preferowane nad `CBC` (por. atak BEAST), jednak, używanie szyfrów CBC nie stanowi samo w sobie luki, Zombie POODLE itp. to luki) i / lub TLS 1.3, który jest bezpieczniejszy ze względu na poprawę obsługi i wykluczenie wszystkiego, co stało się przestarzałe od czasu pojawienia się TLS 1.2. Zatem uczynienie TLS 1.2 „minimalnym poziomem protokołu” to solidny wybór i najlepsza praktyka w branży (wszystkie standardy branżowe, takie jak PCI-DSS, HIPAA, NIST, zdecydowanie sugerują stosowanie TLS 1.2 niż TLS 1.1/1.0).
 
+  > Istnieją luki w zabezpieczeniach, takie jak Zombie POODLE, GOLDENDOODLE, 0-Length OpenSSL i Sleeping POODLE, które zostały opublikowane dla stron internetowych korzystających z trybów szyfrowania blokowego CBC (Cipher Block Chaining). Luki te mają zastosowanie tylko wtedy, gdy serwer używa TLS 1.0, TLS 1.1 lub TLS 1.2 z trybami szyfrowania CBC. Spójrz na [Zombie POODLE, GOLDENDOODLE, & How TLSv1.3 Can Save Us All](https://i.blackhat.com/asia-19/Fri-March-29/bh-asia-Young-Zombie-Poodle-Goldendoodle-and-How-TLSv13-Can-Save-Us-All.pdf) <sup>[pdf]</sup>  z Black Hat Asia 2019. Na TLS 1.0 i TLS 1.1 mogą mieć wpływ luki, takie jak [FREAK, POODLE, BEAST i CRIME](https://www.acunetix.com/blog/articles/tls-vulnerabilities-attacks-final-part/).
+
 TLS 1.2 jest prawdopodobnie niewystarczający do obsługi starszego klienta. Wytyczne NIST nie mają zastosowania do wszystkich przypadków użycia i zawsze należy przeanalizować bazę użytkowników przed podjęciem decyzji, które protokoły mają być obsługiwane lub upuszczane (na przykład poprzez dodanie zmiennych formatów TLS i szyfrów do formatu dziennika). Należy pamiętać, że nie każdy klient obsługuje najnowszą i najlepszą ofertę TLS.
 
 Jeśli powiedziałeś NGINX, aby używał TLS 1.3, użyje TLS 1.3 tylko tam, gdzie jest dostępny. NGINX obsługuje TLS 1.3 od wersji 1.13.0 (wydanej w kwietniu 2017 r.), Gdy jest zbudowany na OpenSSL 1.1.1 lub nowszym.
@@ -232,7 +234,7 @@ TLS 1.2:
 ssl_protocols TLSv1.2;
 ```
 
-&nbsp;&nbsp;:arrow_right: ssllabs score: <b>100%</b>
+&nbsp;&nbsp; ssllabs score: <b>100%</b>
 
 TLS 1.3 + 1.2 + 1.1:
 
@@ -246,7 +248,7 @@ TLS 1.2 + 1.1:
 ssl_protocols TLSv1.2 TLSv1.1;
 ```
 
-&nbsp;&nbsp;:arrow_right: ssllabs score: <b>95%</b>
+&nbsp;&nbsp; ssllabs score: <b>95%</b>
 
 Zewnętrzne zasoby:
 
@@ -290,3 +292,130 @@ Zewnętrzne zasoby:
 - [What level of SSL or TLS is required for HIPAA compliance?](https://luxsci.com/blog/level-ssl-tls-required-hipaa.html)
 - [SSL Labs Grade Change for TLS 1.0 and TLS 1.1 Protocols](https://blog.qualys.com/ssllabs/2018/11/19/grade-change-for-tls-1-0-and-tls-1-1-protocols)
 - [ImperialViolet - TLS 1.3 and Proxies](https://www.imperialviolet.org/2018/03/10/tls13.html)
+
+# Używaj tylko silnych szyfrów
+
+Ten parametr zmienia się częściej niż inne, zalecana konfiguracja na dziś może być nieaktualna jutro. Moim zdaniem dobrze przemyślana i aktualna lista wysoce bezpiecznych pakietów szyfrów jest ważna dla komunikacji TLS o wysokim poziomie bezpieczeństwa. W razie wątpliwości powinieneś stosować [Mozilla Security/Server Side TLS](https://wiki.mozilla.org/Security/Server_Side_TLS) (to naprawdę świetne źródło; wszystkie strony i wdrożenia Mozilli powinny być zgodne z zaleceniami z tego dokumentu).
+
+Bez starannego wyboru zestawu szyfrów (TLS 1.3 robi to za Ciebie!) ryzykujesz negocjacje ze słabym (mniej bezpiecznym i nie wyprzedzeniem najnowszych luk; zobacz [to](https://ciphersuite.info/page/faq/) wyjaśnienie) pakiet szyfrów, który może zostać naruszony. Jeśli inna strona nie obsługuje pakietu szyfrów zgodnego z Twoimi standardami, a Ty bardzo cenisz bezpieczeństwo tego połączenia, nie pozwól, aby Twój system działał z niższymi zestawami szyfrów.
+
+Dla większego bezpieczeństwa używaj tylko silnych i nie narażonych na szwank pakietów szyfrów. Umieść `ECDHE+AESGCM` (zgodnie z analizą Alexa Top 1 Million Security Analysis, ponad 92,8% stron internetowych korzystających z szyfrowania woli używać szyfrów opartych na `ECDHE`) i pakiety `DHE` na górze listy (także jeśli martwisz się wydajnością, priorytetowo ustaw `ECDHE-ECDSA` i `ECDHE-RSA` zamiast `DHE`; Chrome będzie traktować priorytetowo szyfry oparte na `ECDHE` przed szyframi opartymi na `DHE`). `DHE` jest ogólnie wolny i w TLS 1.2 i niższych jest wrażliwy na słabe grupy (mniej niż 2048 bitów w tej chwili). Co więcej, nie określono żadnych ograniczeń dotyczących używania grup. Te problemy nie wpływają na `ECDHE`, dlatego dziś jest ogólnie preferowane.
+
+Kolejność jest ważna, ponieważ zestawy `ECDHE` są szybsze, więc chcesz ich używać, ilekroć klienci je obsługują. Zalecane są efemeryczne `DHE/ECDHE` i obsługujące Perfect Forward Secrecy (metodę, która nie ma podatności na rodzaj ataku powtórkowego, który mogłyby wprowadzić inne rozwiązania, gdyby nie był obsługiwany wysoce bezpieczny pakiet szyfrów). Wydajność `ECDHE-ECDSA` jest mniej więcej taka sama jak `RSA`, ale znacznie bezpieczniejsza. `ECDHE` z `RSA` działa wolniej, ale nadal jest znacznie bezpieczniejszy niż sam `RSA`.
+
+W celu zapewnienia kompatybilności wstecznej składniki oprogramowania pomyśl o mniej restrykcyjnych szyfrach. Nie tylko musisz włączyć co najmniej jeden specjalny szyfr `AES128` dla obsługi HTTP/2 w odniesieniu do [RFC 7540 - TLS 1.2 Cipher Suites](https://tools.ietf.org/html/rfc7540#section-9.2.2) <sup>[IETF]</sup>, musisz także zezwolić na krzywe eliptyczne `prime256`, co zmniejsza wynik wymiany kluczy o kolejne 10% nawet jeśli ustawiona jest preferowana kolejność bezpiecznego serwera.
+
+Serwery wykorzystują najbardziej preferowane oprogramowanie szyfrujące klienta lub własne. Większość serwerów używa własnych preferencji. Wyłączenie `DHE` usuwa zabezpieczenia do przodu, ale skutkuje znacznie szybszym czasem uzgadniania. Myślę, że dopóki kontrolujesz tylko jedną stronę konwersacji, niedorzeczne byłoby ograniczenie twojego systemu do obsługi tylko jednego zestawu szyfrów (odciąłoby to zbyt wielu klientów i zbyt duży ruch). Z drugiej strony spójrz na to, co powiedział o tym David Benjamin (z Chrome): _Servers should also disable `DHE` ciphers. Even if `ECDHE` is preferred, merely supporting a weak group leaves `DHE`-capable clients vulnerable._
+
+Również nowoczesne zestawy szyfrów (np. z rekomendacji Mozilli) cierpią z powodu problemów ze zgodnością głównie dlatego, że upuszczają `SHA-1` (zobacz, co Google powiedział o tym w 2014 r .: [Gradually sunsetting SHA-1](https://security.googleblog.com/2014/09/gradually-sunsetting-sha-1.html)). Ale bądź ostrożny, jeśli chcesz używać szyfrów z `HMAC-SHA-1`, ponieważ udowodniono, że są one podatne na ataki kolizyjne od 2017 roku ([wyjaśnienie](https://shattered.io/)). Chociaż nie wpływa to na jego użycie jako `MAC`, należy rozważyć bezpieczniejsze alternatywy, takie jak `SHA-256` lub `SHA-3`. Istnieje doskonale dobre wytłumaczenie, [dlaczego]((https://crypto.stackexchange.com/a/26518).
+
+Jeśli chcesz uzyskać A + ze 100% s na SSL Lab (w przypadku parametru Cipher Strength), zdecydowanie powinieneś wyłączyć 128-bitowe (to jest główny powód, dla którego nie powinieneś ich używać) i zestawy szyfrów `CBC`, które miały wiele słabych stron.
+
+Moim zdaniem 128-bitowe szyfrowanie symetryczne nie jest mniej bezpieczne. Co więcej, jest około 30% szybszy i nadal bezpieczny. Na przykład TLS 1.3 wykorzystuje `TLS_AES_128_GCM_SHA256` (0x1301) (dla aplikacji zgodnych z TLS).
+
+Powinieneś wyłączyć `CHACHA20_POLY1305` (np. `TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256` i `TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256`), aby postępować zgodnie z wytycznymi HIPAA i NIST, a także DSA w tym celu, aby użyć zgodnego z Mozilla i Cloudflare. Jest to jednak dla mnie dziwne (pozbycie się `CHACHA20_POLY1305`) i nie znalazłem racjonalnego wyjaśnienia, dlaczego powinniśmy to robić. `ChaCha20` jest prostszy niż `AES` i obecnie jest znacznie szybszym algorytmem szyfrowania, jeśli nie jest dostępne przyspieszenie sprzętowe `AES` (w praktyce `AES` jest często implementowany w sprzęcie, co daje mu przewagę).
+
+Mozilla zaleca pozostawienie domyślnych szyfrów dla TLSv1.3 i nie jawne włączanie ich w konfiguracji (TLSv1.3 nie wymaga żadnych szczególnych zmian). Jest to jedna ze zmian: musimy wiedzieć, że zestawy szyfrów są naprawione, chyba że aplikacja wyraźnie zdefiniuje zestawy szyfrów TLS 1.3. Dlatego wszystkie połączenia TLSv1.3 będą używać `AES-256-GCM`, `ChaCha20`, a następnie `AES-128-GCM`, w tej kolejności. Polecam także polegać na OpenSSL, ponieważ dla TLS 1.3 zestawy szyfrów są stałe, więc ich ustawienie nie będzie miało wpływu (automatycznie użyjesz tych trzech szyfrów).
+
+W przypadku TLS 1.2 należy rozważyć wyłączenie słabych szyfrów bez zachowania tajemnicy przekazywania, takich jak szyfry z algorytmem CBC. Tryb CBC jest podatny na ataki zwykłego tekstu za pomocą TLS 1.0, SSL 3.0 i niższych. Jednak prawdziwa poprawka jest zaimplementowana w TLS 1.2, w którym wprowadzono tryb GCM i który nie jest podatny na atak BEAST. Używanie ich również obniża ocenę końcową, ponieważ nie używają ulotnych kluczy. Moim zdaniem powinieneś używać szyfrów z szyfrowaniem AEAD (TLS 1.3 obsługuje tylko te pakiety), ponieważ nie mają żadnych znanych słabości.
+
+  > Domyślnie OpenSSL 1.1.1 * z TLSv1.3 wyłącza szyfrowanie TLS_AES_128_CCM_SHA256 i TLS_AES_128_CCM_8_SHA256. Moim zdaniem ChaCha20 + Poly1305 lub AES / GCM są bardzo wydajne w większości przypadków. W nowoczesnych procesorach wspólny szyfr i tryb AES-GCM jest przyspieszany przez dedykowany sprzęt, dzięki czemu implementacja tego algorytmu jest szybsza niż cokolwiek innego, z dużym marginesem. Jednak na starszych lub tańszych procesorach, które nie mają tej funkcji, szyfr ChaCha20 działa szybciej niż AES-GCM, tak jak zamierzali projektanci ChaCha20.
+
+Polecam wyłączyć tryby szyfrowania TLS korzystające z szyfrowania RSA (wszystkie szyfry rozpoczynające się od `TLS_RSA_WITH_*`), ponieważ są one naprawdę podatne na atak ROBOT. Zamiast tego należy dodać obsługę pakietów szyfrów korzystających z ECDHE lub DHE (w celu zgodności z NIST SP 800-56B) do transportu kluczy. Jeśli Twój serwer jest skonfigurowany do obsługi szyfrów zwanych szyframi z kluczem statycznym, powinieneś wiedzieć, że te szyfry nie obsługują „Forward Secrecy”. W nowej specyfikacji HTTP / 2 szyfry te zostały umieszczone na czarnej liście. Nie wszystkie serwery obsługujące wymianę kluczy RSA są podatne na atak, ale zaleca się wyłączenie szyfrów wymiany kluczy RSA, ponieważ nie obsługuje to tajemnicy przekazywania. Z drugiej strony, szyfry TLS_ECDHE_RSA mogą być OK, ponieważ RSA nie wykonuje transportu kluczy w tym przypadku. TLS 1.3 nie korzysta z wymiany kluczy RSA, ponieważ nie są one tajne.
+
+Powinieneś także całkowicie wyłączyć słabe szyfry niezależnie od używanej wersji TLS, jak te z DSS, DSA, DES / 3DES, RC4, MD5, SHA1, null, anon w nazwie.
+
+Mamy ładne narzędzie online do testowania kompatybilności zestawów szyfrów z klientami użytkownika: CryptCheck. Myślę, że będzie to dla ciebie bardzo pomocne.
+
+W razie wątpliwości skorzystaj z jednego z zalecanych zestawów Mozilli (patrz poniżej), sprawdź także Obsługiwane zestawy szyfrów i Kompatybilność z agentem użytkownika.
+
+Na koniec części opisowej, chciałbym zacytować dwa spostrzeżenia:
+
+  > _Weak does not mean insecure. [...] A cipher usually gets marked as weak because there is some fundamental design flaw that makes it difficult to implement securely._
+
+A także kilka ciekawych statystyk [Logjam: the latest TLS vulnerability explained](https://blog.cloudflare.com/logjam-the-latest-tls-vulnerability-explained/):
+
+  > _94% of the TLS connections to CloudFlare customer sites uses `ECDHE` (more precisely 90% of them being `ECDHE-RSA-AES` of some sort and 10% `ECDHE-RSA-CHACHA20-POLY1305`) and provides Forward Secrecy. The rest use static `RSA` (5.5% with `AES`, 0.6% with `3DES`)._
+
+Przykłady konfiguracji:
+
+Cipher suites for TLSv1.3:
+
+```nginx
+# - it's only example because for TLS 1.3 the cipher suites are fixed so setting them will not affect
+# - if you have no explicit cipher suites configuration then you will automatically use those three and will be able to negotiate TLSv1.3
+# - I recommend not setting ciphers for TLSv1.3 in NGINX
+ssl_ciphers "TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-256-GCM-SHA384";
+```
+
+Cipher suites for TLSv1.2:
+
+```nginx
+# Without DHE, only ECDHE:
+ssl_ciphers "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES256-SHA384";
+```
+
+&nbsp;&nbsp; ssllabs score: <b>100%</b>
+
+Cipher suites for TLSv1.3:
+
+```nginx
+# - it's only example because for TLS 1.3 the cipher suites are fixed so setting them will not affect
+# - if you have no explicit cipher suites configuration then you will automatically use those three and will be able to negotiate TLSv1.3
+# - I recommend not setting ciphers for TLSv1.3 in NGINX
+ssl_ciphers "TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-256-GCM-SHA384:TLS13-AES-128-GCM-SHA256";
+```
+
+Cipher suites for TLSv1.2:
+
+```nginx
+# 1)
+# With DHE (remember about min. 2048-bit DH params for DHE!):
+ssl_ciphers "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256";
+
+# 2)
+# Without DHE, only ECDHE (DH params are not required):
+ssl_ciphers "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256";
+
+# 3)
+# With DHE (remember about min. 2048-bit DH params for DHE!):
+ssl_ciphers "EECDH+CHACHA20:EDH+AESGCM:AES256+EECDH:AES256+EDH";
+```
+
+&nbsp;&nbsp; ssllabs score: <b>90%</b>
+
+This will also give a baseline for comparison with [Mozilla SSL Configuration Generator](https://mozilla.github.io/server-side-tls/ssl-config-generator/):
+
+Zewnętrzne zasoby:
+
+
+- [RFC 7525 - TLS Recommendations](https://tools.ietf.org/html/rfc7525) <sup>[IETF]</sup>
+- [TLS Cipher Suites](https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-4) <sup>[IANA]</sup>
+- [TLS Cipher Suite Search](https://ciphersuite.info/)
+- [Elliptic Curve Cryptography: a gentle introduction](https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/)
+- [SSL/TLS: How to choose your cipher suite](https://technology.amis.nl/2017/07/04/ssltls-choose-cipher-suite/)
+- [HTTP/2 and ECDSA Cipher Suites](https://sparanoid.com/note/http2-and-ecdsa-cipher-suites/)
+- [TLS 1.3 (with AEAD) and TLS 1.2 cipher suites demystified: how to pick your ciphers wisely](https://www.cloudinsidr.com/content/tls-1-3-and-tls-1-2-cipher-suites-demystified-how-to-pick-your-ciphers-wisely/)
+- [Which SSL/TLS Protocol Versions and Cipher Suites Should I Use?](https://www.securityevaluators.com/ssl-tls-protocol-versions-cipher-suites-use/)
+- [Recommendations for a cipher string by OWASP](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/TLS_Cipher_String_Cheat_Sheet.md)
+- [Recommendations for TLS/SSL Cipher Hardening by Acunetix](https://www.acunetix.com/blog/articles/tls-ssl-cipher-hardening/)
+- [Mozilla’s Modern compatibility suite](https://wiki.mozilla.org/Security/Server_Side_TLS#Modern_compatibility)
+- [Cloudflare SSL cipher, browser, and protocol support](https://support.cloudflare.com/hc/en-us/articles/203041594-Cloudflare-SSL-cipher-browser-and-protocol-support)
+- [TLS & Perfect Forward Secrecy](https://vincent.bernat.ch/en/blog/2011-ssl-perfect-forward-secrecy)
+- [Why use Ephemeral Diffie-Hellman](https://tls.mbed.org/kb/cryptography/ephemeral-diffie-hellman)
+- [Cipher Suite Breakdown](https://blogs.technet.microsoft.com/askpfeplat/2017/12/26/cipher-suite-breakdown/)
+- [Zombie POODLE and GOLDENDOODLE Vulnerabilities](https://blog.qualys.com/technology/2019/04/22/zombie-poodle-and-goldendoodle-vulnerabilities)
+- [SSL Labs Grading Update: Forward Secrecy, Authenticated Encryption and ROBOT](https://blog.qualys.com/ssllabs/2018/02/02/forward-secrecy-authenticated-encryption-and-robot-grading-update)
+- [Logjam: the latest TLS vulnerability explained](https://blog.cloudflare.com/logjam-the-latest-tls-vulnerability-explained/)
+- [Goodbye TLS_RSA](https://lightshipsec.com/goodbye-tls_rsa/)
+- [IETF drops RSA key transport from TLS 1.3](https://www.theinquirer.net/inquirer/news/2343117/ietf-drops-rsa-key-transport-from-ssl)
+- [Why TLS 1.3 is a Huge Improvement](https://securityboulevard.com/2018/12/why-tls-1-3-is-a-huge-improvement/)
+- [OpenSSL IANA Mapping](https://testssl.sh/openssl-iana.mapping.html)
+- [Testing for Weak SSL/TLS Ciphers, Insufficient Transport Layer Protection (OTG-CRYPST-001)](https://www.owasp.org/index.php/Testing_for_Weak_SSL/TLS_Ciphers,_Insufficient_Transport_Layer_Protection_(OTG-CRYPST-001))
+- [Bypassing Web-Application Firewalls by abusing SSL/TLS](https://0x09al.github.io/waf/bypass/ssl/2018/07/02/web-application-firewall-bypass.html)
+- [What level of SSL or TLS is required for HIPAA compliance?](https://luxsci.com/blog/level-ssl-tls-required-hipaa.html)
+- [Cryptographic Right Answers](https://latacora.micro.blog/2018/04/03/cryptographic-right-answers.html)
+- [ImperialViolet - ChaCha20 and Poly1305 for TLS](https://www.imperialviolet.org/2013/10/07/chacha20.html)
+- [Do the ChaCha: better mobile performance with cryptography](https://blog.cloudflare.com/do-the-chacha-better-mobile-performance-with-cryptography/)
+- [AES Is Great … But We Need A Fall-back: Meet ChaCha and Poly1305](https://medium.com/asecuritysite-when-bob-met-alice/aes-is-great-but-we-need-a-fall-back-meet-chacha-and-poly1305-76ee0ee61895)
+- [There’s never magic, but plenty of butterfly effects](https://docs.microsoft.com/en-us/archive/blogs/ieinternals/theres-never-magic-but-plenty-of-butterfly-effects)
