@@ -129,7 +129,7 @@ Zawsze umieszczaj strony logowania, formularze rejestracyjne, wszystkie kolejne 
 
 Jeśli aplikacja jest dostępna przez TLS, musi składać się całkowicie z treści przesyłanych przez TLS. Żądanie półśrodków przy użyciu niezabezpieczonego protokołu HTTP osłabia bezpieczeństwo całego serwisu jak i samego protokołu HTTPS. Nowoczesne przeglądarki powinny domyślnie blokować lub zgłaszać wszystkie treści mieszane dostarczane przez HTTP.
 
-Pamiętaj także o wdrożeniu polityki [HTTP Strict Transport Security (HSTS)](HST) i zapewnieniu właściwej konfiguracji TLS (wersja protokołu, zestawy szyfrów, odpowiedni łańcuch certyfikatów i inne).
+Pamiętaj także o wdrożeniu polityki [HTTP Strict Transport Security (HSTS)](https://blog.nsbox.int/publications/2020/01/09/jak_poprawnie_wdrozyc_naglowek_hsts.html) i zapewnieniu właściwej konfiguracji TLS (wersja protokołu, zestawy szyfrów, odpowiedni łańcuch certyfikatów i inne).
 
 Przykład przekierowania całego ruchu z HTTP na HTTPS:
 
@@ -174,3 +174,12 @@ server {
 
 }
 ```
+
+Zewnętrzne zasoby:
+
+- [Does My Site Need HTTPS?](https://doesmysiteneedhttps.com/)
+- [HTTP vs HTTPS Test](https://www.httpvshttps.com/)
+- [Let's Encrypt Documentation](https://letsencrypt.org/docs/)
+- [Should we force user to HTTPS on website?](https://security.stackexchange.com/questions/23646/should-we-force-user-to-https-on-website)
+- [Force a user to HTTPS](https://security.stackexchange.com/questions/137542/force-a-user-to-https)
+- [The Security Impact of HTTPS Interception](https://jhalderm.com/pub/papers/interception-ndss17.pdf) <sup>[pdf]</sup>
