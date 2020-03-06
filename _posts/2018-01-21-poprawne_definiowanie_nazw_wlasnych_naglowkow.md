@@ -10,7 +10,9 @@ seo:
   date_modified: 2020-02-18 22:13:20 +0100
 ---
 
-Początki konwencji `X-` można znaleźć w sugestii Briana Harveya z 1975 r. w odniesieniu do parametrów protokołu FTP [RFC691](https://tools.ietf.org/html/rfc691). Konwencja ta jest kontynuowana z różnymi specyfikacjami w tym dla nagłówków protokołu HTTP. W tym krótkim wpisie chciałbym omówić prawidłowy sposób definiowania nazw nowych nagłówków oraz dlaczego nie powinno się stosować nazewnictwa z prefiksem `X`.
+W tym krótkim wpisie chciałbym omówić prawidłowy sposób definiowania nazw nowych nagłówków oraz dlaczego nie powinno się stosować nazewnictwa z prefiksem `X`.
+
+Początki konwencji `X-` można znaleźć w sugestii Briana Harveya z 1975 r. w odniesieniu do parametrów protokołu FTP [RFC691](https://tools.ietf.org/html/rfc691). Konwencja ta jest kontynuowana z różnymi specyfikacjami w tym dla nagłówków protokołu HTTP.
 
 Używanie niestandardowych nagłówków z prefiksem `X` nie jest zabronione, ale odradzane. Innymi słowy, możesz nadal używać nagłówków rozpoczynających się tym prefiksem, jednak nie jest to zalecane i nie możesz ich traktować tak, jakby były ogólnym standardem.
 
