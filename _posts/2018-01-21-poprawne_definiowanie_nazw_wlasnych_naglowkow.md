@@ -30,9 +30,13 @@ Dokładne wyjaśnienie znajduje się w [RFC 6648](https://tools.ietf.org/html/rf
 
 A także:
 
-  > _3. Recommendations for Creators of New Parameters [...] SHOULD NOT prefix their parameter names with "X-" or similar constructs._
+- 3. Recommendations for Creators of New Parameters:
 
-  > _4. Recommendations for Protocol Designers [...] SHOULD NOT prohibit parameters with an "X-" prefix or similar constructs from being registered. [...] MUST NOT stipulate that a parameter with an "X-" prefix or similar constructs needs to be understood as unstandardized. [...] MUST NOT stipulate that a parameter without an "X-" prefix or similar constructs needs to be understood as standardized._
+  > _[...] SHOULD NOT prefix their parameter names with "X-" or similar constructs._
+
+- 4. Recommendations for Protocol Designers:
+
+  > _[...] SHOULD NOT prohibit parameters with an "X-" prefix or similar constructs from being registered. [...] MUST NOT stipulate that a parameter with an "X-" prefix or similar constructs needs to be understood as unstandardized. [...] MUST NOT stipulate that a parameter without an "X-" prefix or similar constructs needs to be understood as standardized._
 
 Jednak czy takie zalecenia nie wprowadzają lekkiego zamieszania? Moim zdaniem nie ma tragedii w stosowaniu obu sposobów nazewnictwa. Co więcej, niekiedy nagłówki z prefiksem `X` są łatwiejsze do interpretacji a ewentualne usunięcie początkowego `X` z nazwy może mieć negatywny wpływ na aplikację. Więc by zachować zgodność wstecz, w takim wypadku, należy je zachować.
 
