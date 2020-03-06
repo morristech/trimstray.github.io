@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'NGINX: Jakich wersji TLS użyć?'
+title: 'Zalecenia dot. wersji protokołu TLS'
 date: 2020-03-06 07:39:05
 categories: [publications]
 tags: [PL, http, https, nginx, tls, best-practices]

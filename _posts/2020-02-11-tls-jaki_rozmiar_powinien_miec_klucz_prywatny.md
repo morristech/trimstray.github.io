@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'TLS: Jaki rozmiar powinien mieć klucz prywatny?'
-date: 2020-02-29 12:29:39
+date: 2020-02-11 12:29:39
 categories: [publications]
 tags: [PL, http, https, security, ssl, tls, private-key]
 comments: false
