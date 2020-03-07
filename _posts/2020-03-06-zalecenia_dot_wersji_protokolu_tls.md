@@ -10,7 +10,7 @@ seo:
   date_modified: 2020-02-23 09:14:19 +0100
 ---
 
-Istnieje wiele potencjalnych zagrożeń związanych z wdrażaniem konfiguracji protokołu TLS. Każda konfiguracja wykorzystująca ten protokół powinna spełniać zalecenia poprawnej implementacji i być zgodna ze standardami branżowymi. Wydawać by się mogło, że konfiguracja TLS jest czynnością bardzo prostą i wdrożenie nie powinno być wymagającym procesem. Nic bardziej mylnego.
+Istnieje wiele potencjalnych zagrożeń związanych z wdrażaniem protokołu TLS. Każda konfiguracja wykorzystująca ten protokół powinna spełniać zalecenia poprawnej implementacji i być zgodna ze standardami branżowymi. Wydawać by się mogło, że konfiguracja TLS jest czynnością bardzo prostą i wdrożenie nie powinno być wymagającym procesem. Nic bardziej mylnego.
 
 W tym wpisie chciałbym poruszyć kwestię obsługiwanych wersji TLS, na przykładzie serwera NGINX. Przedstawię także na co powinniśmy zwracać uwagę oraz dlaczego określenie zalecanych wersji tego protokołu jest tak ważne.
 
@@ -26,9 +26,11 @@ Poniżej znajduje się tabela z wszystkimi dostępnymi wersjami SSL/TLS:
 | TLS 1.2 | [RFC 5246](https://tools.ietf.org/html/rfc5246) <sup>[IETF]</sup> | 2008 | Still secure |
 | TLS 1.3 | [RFC 8446](https://tools.ietf.org/html/rfc8446) <sup>[IETF]</sup> | 2018 | Still secure |
 
-# TLS w wersji 1.3/1.2
+# TLS w wersji 1.2 i 1.3
 
 Zaleca się włączyć TLSv1.2 oraz TLSv1.3, oraz całkowicie wyłączyć SSLv2, SSLv3, TLSv1.0 i TLSv1.1, które mają słabości protokołu i używają starszych zestawów szyfrów (nie zapewniają żadnych nowoczesnych trybów szyfrowania), których tak naprawdę nie powinniśmy obecnie używać.
+
+Największą zaletą porzucenia TLSv1.0/v1.1 jest to, że nowoczesne szyfry `AEAD` są obsługiwane tylko przez TLSv1.2 i nowsze wersje.
 
 TLSv1.2 jest obecnie najczęściej używaną wersją TLS i wprowadza kilka ulepszeń w zakresie bezpieczeństwa w porównaniu do starszych wersji. Zdecydowana większość witryn obsługuje TLSv1.2, ale wciąż istnieją takie, które tego nie robią (co więcej, wciąż nie wszyscy klienci są kompatybilni z każdą wersją TLS).
 
@@ -36,15 +38,15 @@ TLSv1.2 jest obecnie najczęściej używaną wersją TLS i wprowadza kilka uleps
   <img src="/assets/img/posts/qualys_tls_stats.png">
 </p>
 
-Protokół TLSv1.3 jest najnowszą i niezawodną wersją. Powinien być używany tam, gdzie to możliwe (i tam, gdzie nie jest wymagana kompatybilność wsteczna). Największą zaletą porzucenia TLSv1.0/v1.1 jest to, że nowoczesne szyfry `AEAD` są obsługiwane tylko przez TLSv1.2 i nowsze wersje.
+Protokół TLSv1.3 jest najnowszą i znacznie bezpieczniejszą wersją. Powinien być używany tam, gdzie to możliwe (i tam, gdzie nie jest wymagana kompatybilność wsteczna).
 
 ## Szyfry AEAD
 
-Szyfry `AEAD` dostarczają wyspecjalizowane tryby działania szyfru blokowego zwane szyfrowaniem uwierzytelnionym z powiązanymi/dodatkowymi danymi (ang. _Authenticated Encryption with Associated Data_). Łączą one funkcje trybów gwarantujących poufność, a także zapewniają silne uwierzytelnanie oraz wymianę kluczy z funkcją forward secrecy (tzw. utajnianie z wyprzedzeniem).
+Szyfry `AEAD` dostarczają wyspecjalizowane tryby działania szyfru blokowego zwane szyfrowaniem uwierzytelnionym z powiązanymi/dodatkowymi danymi (ang. _Authenticated Encryption with Associated Data_). Łączą one funkcje trybów gwarantujących poufność, a także zapewniają silne uwierzytelnanie oraz wymianę kluczy z funkcją utajniania z wyprzedzeniem (ang. _forward secrecy_).
 
-Potrzeba ich użycia wynika ze słabości wcześniejszych schematów szyfrowania. Moim zdaniem powinno się ich używać tam, gdzie to możliwe. Szyfry te są jedynymi obsługiwanymi szyframi w TLSv1.3. Powinniśmy z nich korzystać także w przypadku TLSv1.2, włączając tylko te szyfry wykorzystujące algorytmy `AES-GCM` i `ChaCha20-Poly1305`.
+Potrzeba ich użycia wynika ze słabości wcześniejszych schematów szyfrowania. Szyfry te są jedynymi obsługiwanymi szyframi w TLSv1.3. Powinniśmy z nich korzystać także w przypadku TLSv1.2, włączając tylko te szyfry wykorzystujące algorytmy `AES-GCM` i `ChaCha20-Poly1305`.
 
-Co do szyfrów `AEAD`, zacytują to wyjaśnienie:
+Jeżeli chodzi ten tym szyfrów, to pozwolę sobie zacytować pewną wypowiedź znalezioną na Stack Exchange:
 
   > _AEAD stands for "Authenticated Encryption with Additional Data" meaning there is a built-in message authentication code for integrity checking both the ciphertext and optionally additional authenticated (but unencrypted) data, and the only AEAD cipher suites in TLS are those using the AES-GCM and ChaCha20-Poly1305 algorithms, and they are indeed only supported in TLS 1.2. This means that if you have any clients trying to connect to this system that don't support either TLS 1.2, or even those that do support TLS 1.2 but not those specific cipher suites (and they're not mandatory... Only TLS_RSA_WITH_AES_128_CBC_SHA is mandatory, and it isn't an AEAD cipher suite) then those clients will not be able to connect at all._ - [Xander](https://security.stackexchange.com/a/136181)
 
@@ -52,17 +54,17 @@ Polecam także [TLS 1.3 (with AEAD) and TLS 1.2 cipher suites demystified: how t
 
 # Dlaczego powinniśmy wyłączyć starsze wersje SSL/TLS?
 
-TLSv1.0 i TLSv1.1 nie powinny być używane (patrz [Deprecating TLSv1.0 and TLSv1.1](https://tools.ietf.org/id/draft-moriarty-tls-oldversions-diediedie-00.html) <sup>[IETF]</sup>) i zostały zastąpione przez TLSv1.2, który sam został zastąpiony przez TLSv1.3 (musi zostać dołączony do 1 stycznia 2024 r.). Te wersje TLS są również aktywnie wycofywane zgodnie z wytycznymi agencji rządowych (np. [NIST Special Publication (SP) 800-52 Revision 2](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-52r2.pdf) <sup>[NIST, pdf]</sup>) i konsorcjów branżowych, takich jak PCI Payment Association Association (PCI) [PCI-TLS - Migrating from SSL and Early TLS (Information Suplement)](https://www.pcisecuritystandards.org/documents/Migrating-from-SSL-Early-TLS-Info-Supp-v1_1.pdf) <sup>[pdf]</sup>.
+TLSv1.0 i TLSv1.1 nie powinny być używane (patrz [Deprecating TLSv1.0 and TLSv1.1](https://tools.ietf.org/id/draft-moriarty-tls-oldversions-diediedie-00.html) <sup>[IETF]</sup>) i zostały zastąpione przez TLSv1.2, który sam został zastąpiony przez TLSv1.3 (powinien zostać dołączony do każdej konfiguracji do 1 stycznia 2024 r.). Te wersje TLS są również aktywnie wycofywane zgodnie z wytycznymi agencji rządowych (np. [NIST Special Publication (SP) 800-52 Revision 2](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-52r2.pdf) <sup>[NIST, pdf]</sup>) i konsorcjów branżowych, takich jak PCI Payment Association Association (PCI) [PCI-TLS - Migrating from SSL and Early TLS (Information Suplement)](https://www.pcisecuritystandards.org/documents/Migrating-from-SSL-Early-TLS-Info-Supp-v1_1.pdf) <sup>[pdf]</sup>.
 
 Obecnie przeglądarki także podchodzą do tematu obsługiwanych wersji TLS dosyć restrykcyjnie. Na przykład w marcu 2020 r. [Mozilla wyłączy obsługę TLSv1.0 i TLSv1.1](https://blog.mozilla.org/security/2018/10/15/removing-old-versions-of-tls/) w najnowszych wersjach przeglądarek Firefox.
 
-Moim zdaniem, trzymanie się TLSv1.0 to bardzo zły i dość niebezpieczny pomysł. Ta wersja może być podatna na ataki [POODLE](https://en.wikipedia.org/wiki/POODLE), [BEAST](https://en.wikipedia.org/wiki/Transport_Layer_Security#BEAST_attack), a także [padding-Oracle](https://en.wikipedia.org/wiki/Padding_oracle_attack). Nadal obowiązuje wiele innych słabości posiadających identyfikatory CVE, których nie można naprawić, chyba że przez wyłączenie TLSv1.0.
+Moim zdaniem, trzymanie się TLSv1.0 to bardzo zły i dość niebezpieczny pomysł. Ta wersja może być podatna na ataki [POODLE](https://en.wikipedia.org/wiki/POODLE), [BEAST](https://en.wikipedia.org/wiki/Transport_Layer_Security#BEAST_attack), a także [padding-Oracle](https://en.wikipedia.org/wiki/Padding_oracle_attack). Nadal obowiązuje wiele innych słabości posiadających identyfikatory CVE (niektóre zostały opisane w dokumencie [TLS Security 6: Examples of TLS Vulnerabilities and Attacks](https://www.acunetix.com/blog/articles/tls-vulnerabilities-attacks-final-part/), których nie można naprawić, chyba że przez wyłączenie TLSv1.0.
 
 Obsługa wersji TLSv1.1 jest tylko złym kompromisem, chociaż ta wersja jest w połowie wolna od problemów TLSv1.0. Z drugiej strony czasami jej stosowanie jest nadal wymagane w praktyce (do obsługi starszych klientów). Istnieje wiele innych zagrożeń bezpieczeństwa spowodowanych wykorzystywaniem TLSv1.0 lub TLSv1.1, dlatego zdecydowanie zalecam aktualizację oprogramowania, usług i urządzeń w celu obsługi min. TLSv1.2.
 
 Usunięcie starszych wersji SSL/TLS jest często jedynym sposobem zapobiegania atakom na obniżenie wersji. Google zaproponowało rozszerzenie protokołu SSL/TLS o nazwie `TLS_FALLBACK_SCSV`, które ma na celu zapobieganie wymuszonym obniżeniom wersji SSL/TLS (rozszerzenie zostało przyjęte jako [RFC 7507](https://tools.ietf.org/html/rfc7507) w kwietniu 2015 r.).
 
-Sama aktualizacja nie jest wystarczająca. Musisz wyłączyć SSLv2 i SSLv3 - więc jeśli twój serwer nie zezwala na połączenia SSLv3 (lub v2), atak typu downgrade nie zadziała. Technicznie `TLS_FALLBACK_SCSV` jest nadal przydatny przy wyłączonym SSL, ponieważ pomaga uniknąć obniżenia połączenia do TLS <1.2. Aby przetestować to rozszerzenie, przeczytaj [ten](https://dwradcliffe.com/2014/10/16/testing-tls-fallback.html) świetny artykuł.
+Sama aktualizacja nie jest wystarczająca. Musisz wyłączyć SSLv2 i SSLv3 - więc jeśli twój serwer nie zezwala na połączenia z tymi wersjami protokołu, atak typu downgrade nie zadziała. Technicznie `TLS_FALLBACK_SCSV` jest nadal przydatny przy wyłączonych wersjach SSL, ponieważ pomaga uniknąć obniżenia połączenia do TLS <1.2. Aby przetestować to rozszerzenie, przeczytaj [ten](https://dwradcliffe.com/2014/10/16/testing-tls-fallback.html) świetny artykuł.
 
 # Czy TLSv1.2 jest w pełni bezpieczny?
 
@@ -96,7 +98,11 @@ TLSv1.2 jest prawdopodobnie niewystarczający do obsługi starszego klienta. Wyt
 
   > W przypadku TLSv1.3 zastanów się nad użyciem [ssl_early_data](https://github.com/tlswg/tls13-spec/issues/1001), aby zezwolić na uzgadnianie TLSv1.3 0-RTT.
 
-Przykłady konfiguracji:
+Jeżeli masz wątpliwości związane z wyłączeniem starszych wersji TLS, np. jak wspomiałem wyłączenie TLSv1.1 może uniemożliwić komunikację starszym klientom, zastanów się jaki jest sens stosowania protokołów nie zapewniających odpowiedniego poziomu bezpieczeństwa, jeżeli dostępne są znacznie lepsze (pod każdym względem) wersje? Skoro mamy możliwość skonfigurowania naszych serwerów do obsługi protokołów technicznie przewyższających ich starsze odmiany, i to bardzo niskim kosztem, nie powinniśmy zastanawiać się ani chwili. Myślę, że jest to całkiem sensowny argument, mimo, że nie kluczowy.
+
+Oczywiście jest wiele opinii na ten temat. Powinniśmy mieć także świadomość tego, że ew. podatność nie zawsze jest prosta do wykorzystania i bardzo często musi zostać spełnionych kilka dodatkowych warunków aby możliwe było jej wykorzystanie.
+
+# Przykłady konfiguracji
 
 TLSv1.3 + 1.2:
 
