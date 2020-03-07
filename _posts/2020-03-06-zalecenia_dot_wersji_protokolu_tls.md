@@ -110,8 +110,8 @@ Myślę, że najlepszym sposobem na wdrożenie bezpiecznej konfiguracji jest:
 
 - włączenie TLSv1.2 (jako minimalnej obsługiwanej wersji)
   - bez szyfrów `CBC`
-  - z jawnym wskazaniem szyfrów `AES/GCM` i `ChaCha20-Poly1305`, które powinny być preferowane nad `CBC`
-- wlącznie TLSv1.3
+  - z jawnym wskazaniem szyfrów `AES/GCM` i `ChaCha20-Poly1305` jako priorytetowych
+- włącznie TLSv1.3
   - który jest bezpieczniejszy ze względu na poprawę obsługi i wykluczenie wszystkiego, co stało się przestarzałe od czasu pojawienia się TLSv1.2
 
 Zatem odpowiednia konfiguracja oraz uczynienie TLSv1.2 „minimalnym poziomem protokołu” to solidny wybór i najlepsza praktyka w branży (wszystkie standardy branżowe, takie jak PCI-DSS, HIPAA, NIST, zdecydowanie sugerują stosowanie TLSv1.2 niż TLSv1.1/v1.0).
