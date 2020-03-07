@@ -46,7 +46,7 @@ Szyfry `AEAD` dostarczają wyspecjalizowane tryby działania szyfru blokowego zw
 
 Potrzeba ich użycia wynika ze słabości wcześniejszych schematów szyfrowania. Szyfry te są jedynymi obsługiwanymi szyframi w TLSv1.3. Powinniśmy z nich korzystać także w przypadku TLSv1.2, włączając tylko te szyfry wykorzystujące algorytmy `AES-GCM` i `ChaCha20-Poly1305`.
 
-Jeżeli chodzi ten tym szyfrów, to pozwolę sobie zacytować pewną wypowiedź znalezioną na Stack Exchange:
+Jeżeli chodzi o ten typ szyfrów, to pozwolę sobie zacytować pewną wypowiedź znalezioną na Stack Exchange:
 
   > _AEAD stands for "Authenticated Encryption with Additional Data" meaning there is a built-in message authentication code for integrity checking both the ciphertext and optionally additional authenticated (but unencrypted) data, and the only AEAD cipher suites in TLS are those using the AES-GCM and ChaCha20-Poly1305 algorithms, and they are indeed only supported in TLS 1.2. This means that if you have any clients trying to connect to this system that don't support either TLS 1.2, or even those that do support TLS 1.2 but not those specific cipher suites (and they're not mandatory... Only TLS_RSA_WITH_AES_128_CBC_SHA is mandatory, and it isn't an AEAD cipher suite) then those clients will not be able to connect at all._ - [Xander](https://security.stackexchange.com/a/136181)
 
