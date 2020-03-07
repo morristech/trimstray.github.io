@@ -14,7 +14,7 @@ Istnieje wiele potencjalnych zagrożeń związanych z wdrożeniem protokołu TLS
 
 W tym wpisie chciałbym poruszyć kwestię obsługiwanych wersji TLS, na przykładzie serwera NGINX. Przedstawię także, na co powinniśmy zwracać uwagę oraz dlaczego określenie zalecanych wersji tego protokołu jest tak ważne.
 
-Na wstępie, zapoznaj się z tabelą opisującą wszystkie dostępne wersje SSL/TLS:
+Na wstępie, zapoznaj się z tabelą opisującą pokrótce wszystkie dostępne wersje SSL/TLS:
 
 | <b>PROTOCOL</b> | <b>RFC</b> | <b>PUBLISHED</b> | <b>STATUS</b> |
 | :---:        | :---:        | :---:        | :---         |
@@ -30,7 +30,7 @@ Na wstępie, zapoznaj się z tabelą opisującą wszystkie dostępne wersje SSL/
 
 Zaleca się, aby włączenie wersji TLSv1.2 oraz TLSv1.3 było najwyższym priorytetem dla każdej oragnizacji. Co więcej, należy całkowicie wyłączyć SSLv2, SSLv3, TLSv1.0 i TLSv1.1, które mają słabości protokołu i używają starszych zestawów szyfrów (nie zapewniają żadnych nowoczesnych trybów szyfrowania), których tak naprawdę nie powinniśmy obecnie używać.
 
-  > Największą zaletą porzucenia TLSv1.0/v1.1 jest to, że nowoczesne szyfry `AEAD` są obsługiwane tylko przez TLSv1.2 i nowsze wersje.
+  > Największą zaletą pełnego przejścia na wersje TLSv1.2 oraz TLSv1.3 jest zapewnienie pełnego wsparcia dla nowoczesnych zestawów szyfrów `AEAD`. Jednocześnie porzucenie TLSv1.0 a także TLSv1.1 powoduje pozbycie się wielu podatności odkrytych w tych protokołach.
 
 TLSv1.2 jest obecnie najczęściej używaną wersją TLS i wprowadza kilka ulepszeń w zakresie bezpieczeństwa w porównaniu do starszych wersji. Zdecydowana większość witryn obsługuje TLSv1.2, ale wciąż istnieją takie, które tego nie robią (co więcej, wciąż nie wszyscy klienci są kompatybilni z każdą wersją TLS).
 
@@ -38,11 +38,13 @@ TLSv1.2 jest obecnie najczęściej używaną wersją TLS i wprowadza kilka uleps
   <img src="/assets/img/posts/qualys_tls_stats.png">
 </p>
 
-Protokół TLSv1.3 jest najnowszą i znacznie bezpieczniejszą wersją. Powinien być używany tam, gdzie to możliwe (i tam, gdzie nie jest wymagana kompatybilność wsteczna).
+<sup><i>Oba wykresy pochodzą z serwisu [SSL Pulse](https://www.ssllabs.com/ssl-pulse/) firmy Qualys.</i></sup>
+
+Protokół TLSv1.3 jest najnowszą i znacznie bezpieczniejszą wersją wprowadzającą mnóstwo poprawek bezpieczeństwa i poprawiających wydajność. Powinien być używany tam, gdzie to możliwe (i tam, gdzie nie jest wymagana kompatybilność wsteczna).
 
 ## Szyfry AEAD
 
-Szyfry `AEAD` dostarczają wyspecjalizowane tryby działania szyfru blokowego zwane szyfrowaniem uwierzytelnionym z powiązanymi/dodatkowymi danymi (ang. _Authenticated Encryption with Associated Data_). Łączą one funkcje trybów gwarantujących poufność, a także zapewniają silne uwierzytelnanie oraz wymianę kluczy z funkcją utajniania z wyprzedzeniem (ang. _forward secrecy_).
+Szyfry `AEAD` dostarczają specjalne tryby działania szyfru blokowego zwane szyfrowaniem uwierzytelnionym z powiązanymi/dodatkowymi danymi (ang. _Authenticated Encryption with Associated Data_). Łączą one funkcje trybów gwarantujących poufność, a także zapewniają silne uwierzytelnianie oraz wymianę kluczy z funkcją utajniania z wyprzedzeniem (ang. _forward secrecy_).
 
 Potrzeba ich użycia wynika ze słabości wcześniejszych schematów szyfrowania. Szyfry te są jedynymi obsługiwanymi szyframi w TLSv1.3. Powinniśmy z nich korzystać także w przypadku TLSv1.2, włączając tylko te szyfry wykorzystujące algorytmy `AES-GCM` i `ChaCha20-Poly1305`.
 
@@ -181,7 +183,6 @@ ssl_protocols TLSv1.2 TLSv1.1;
 - [A Challenging but Feasible Blockwise-Adaptive Chosen-Plaintext Attack on SSL](https://eprint.iacr.org/2006/136)
 - [TLS/SSL hardening and compatibility Report 2011](http://www.g-sec.lu/sslharden/SSL_comp_report2011.pdf) <sup>[pdf]</sup>
 - [This POODLE bites: exploiting the SSL 3.0 fallback](https://security.googleblog.com/2014/10/this-poodle-bites-exploiting-ssl-30.html)
-- [The CBC Padding Oracle Problem](https://eklitzke.org/the-cbc-padding-oracle-problem)
 - [New Tricks For Defeating SSL In Practice](https://www.blackhat.com/presentations/bh-dc-09/Marlinspike/BlackHat-DC-09-Marlinspike-Defeating-SSL.pdf) <sup>[pdf]</sup>
 - [Are You Ready for 30 June 2018? Saying Goodbye to SSL/early TLS](https://blog.pcisecuritystandards.org/are-you-ready-for-30-june-2018-sayin-goodbye-to-ssl-early-tls)
 - [What Happens After 30 June 2018? New Guidance on Use of SSL/Early TLS](https://blog.pcisecuritystandards.org/what-happens-after-30-june-2018-new-guidance-on-use-of-ssl/early-tls-)
