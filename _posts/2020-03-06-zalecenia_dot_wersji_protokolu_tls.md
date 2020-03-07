@@ -68,7 +68,7 @@ Sama aktualizacja nie jest wystarczająca. Musisz wyłączyć SSLv2 i SSLv3 - wi
 
 # Czy TLSv1.2 jest w pełni bezpieczny?
 
-Jeżeli chodzi o najnowsze wersje TLS, to jedynie TLSv1.3 nie ma problemów z bezpieczeństwem a TLSv1.2 tak naprawdę dopiero po spełnieniu określonych warunków, np. wyłączenie szyfrów `CBC`. Tylko te wersje zapewniają nowoczesne algorytmy kryptograficzne, dostarczają bezpieczne zestawy szyfrów oraz dodają rozszerzenia TLS poprawiające wydajność i bezpieczeńśtwo. TLSv1.2 poprawia zestawy szyfrów, które zmniejszają zależność od szyfrów blokowych, które zostały wykorzystane przez wymienione wczesniej ataki typu BEAST oraz POODLE.
+Jeżeli chodzi o najnowsze wersje TLS, to jedynie TLSv1.3 nie ma problemów z bezpieczeństwem a TLSv1.2 tak naprawdę dopiero po spełnieniu określonych warunków, np. wyłączenie szyfrów `CBC`. Tylko te wersje zapewniają nowoczesne algorytmy kryptograficzne, dostarczają bezpieczne zestawy szyfrów oraz dodają rozszerzenia TLS poprawiające wydajność i bezpieczeńśtwo. TLSv1.2 poprawia zestawy szyfrów, które zmniejszają zależność od szyfrów blokowych, które to zostały wykorzystane przez wymienione wczesniej ataki typu BEAST oraz POODLE.
 
 Co ciekawe, Craig Young, badacz bezpieczeństwa w zespole firmy Tripwire, znalazł luki w TLSv1.2, które pozwalają na ataki podobne do POODLE ze względu na ciągłe wsparcie w protokole TLSv1.2 dla dawno przestarzałych metod kryptograficznych, tj. szyfrów blokowych `CBC`. Znalezione słabości umożliwiają ataki typu man-in-the-middle na zaszyfrowane sesje użytkownika.
 
@@ -88,9 +88,9 @@ TLSv1.3 rozwiązuje wiele problemów pojawiających się we wcześniejszych wers
   <img src="/assets/img/posts/tls_13vs12.jpg">
 </p>
 
-Jak już wspomniałem wyżej, TLSv1.3 eliminuje wiele problemów wystepujących w starszych wersjach. Usuwa stary i podatne zestawy szyfrów, rozwiązuje wiele krytycznych podatności, tj. [OpenSSL Key Recovery Attack on DH small subgroups (CVE-2016-0701)](http://blog.intothesymmetry.com/2016/01/openssl-key-recovery-attack-on-dh-small.html) czy atak [FREAK](https://censys.io/blog/freak).
+Jak już wspomniałem wyżej, TLSv1.3 eliminuje wiele problemów wystepujących w starszych wersjach. Usuwa stare i podatne zestawy szyfrów, rozwiązuje wiele krytycznych podatności, tj. [OpenSSL Key Recovery Attack on DH small subgroups (CVE-2016-0701)](http://blog.intothesymmetry.com/2016/01/openssl-key-recovery-attack-on-dh-small.html) czy atak [FREAK](https://censys.io/blog/freak).
 
-Jednak moim zdaniem, co najważniejsze, rozwiązuje w pełni największy problem związany z TLSv1.2, który często nie jest odpowiednio skonfigurowany, dlatego naraża aplikacje na ataki. Ponieważ protokół jest w pewnym sensie znacznie prostszy, przez to administratorzy i programiści mają mniejszą możliwość błędnej konfiguracji.
+Jednak moim zdaniem, co najważniejsze, rozwiązuje w pełni największy problem związany z TLSv1.2 — jego odpowiednią konfigurację. Dzięki temu, nie naraża aplikacje na ataki, ponieważ protokół jest w pewnym sensie znacznie prostszy, przez to administratorzy i programiści mają mniejszą możliwość jego błędnej konfiguracji.
 
 Niestety wersja TLSv1.3 nie jest jeszcze w pełni wspierana przez wszystkich klientów:
 
