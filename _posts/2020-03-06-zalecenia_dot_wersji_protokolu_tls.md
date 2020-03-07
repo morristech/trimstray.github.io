@@ -66,23 +66,23 @@ Obsługa wersji TLSv1.1 jest tylko złym kompromisem, chociaż ta wersja jest w 
 
 Usunięcie starszych wersji SSL/TLS jest często jedynym sposobem zapobiegania atakom na obniżenie wersji. Google zaproponowało rozszerzenie protokołu SSL/TLS o nazwie `TLS_FALLBACK_SCSV`, które ma na celu zapobieganie wymuszonym obniżeniom wersji SSL/TLS (rozszerzenie zostało przyjęte jako [RFC 7507](https://tools.ietf.org/html/rfc7507) w kwietniu 2015 r.).
 
-Sama aktualizacja nie jest wystarczająca. Musisz wyłączyć SSLv2 i SSLv3 - więc jeśli twój serwer nie zezwala na połączenia z tymi wersjami protokołu, atak typu downgrade nie zadziała. Technicznie `TLS_FALLBACK_SCSV` jest nadal przydatny przy wyłączonych wersjach SSL, ponieważ pomaga uniknąć obniżenia połączenia do TLS <1.2. Aby przetestować to rozszerzenie, przeczytaj [ten](https://dwradcliffe.com/2014/10/16/testing-tls-fallback.html) świetny artykuł.
+W tym wypadku sama aktualizacja nie jest wystarczająca. Musisz wyłączyć SSLv2 i SSLv3 - więc jeśli twój serwer nie zezwala na połączenia z tymi wersjami protokołu, atak typu downgrade nie zadziała. Technicznie `TLS_FALLBACK_SCSV` jest nadal przydatny przy wyłączonych wersjach SSL, ponieważ pomaga uniknąć obniżenia połączenia do TLS <1.2. Aby przetestować to rozszerzenie, przeczytaj [ten](https://dwradcliffe.com/2014/10/16/testing-tls-fallback.html) świetny artykuł.
 
 # Czy TLSv1.2 jest w pełni bezpieczny?
 
-Jeżeli chodzi o najnowsze wersje TLS, to jedynie TLSv1.3 nie ma problemów z bezpieczeństwem a TLSv1.2 tak naprawdę dopiero po spełnieniu określonych warunków, np. wyłączenie szyfrów `CBC`. Tylko te wersje zapewniają nowoczesne algorytmy kryptograficzne, dostarczają bezpieczne zestawy szyfrów oraz dodają rozszerzenia TLS poprawiające wydajność i bezpieczeńśtwo. TLSv1.2 poprawia zestawy szyfrów, które zmniejszają zależność od szyfrów blokowych, które to zostały wykorzystane przez wymienione wczesniej ataki typu BEAST oraz POODLE.
+Jeżeli chodzi o najnowsze wersje TLS, to jedynie TLSv1.3 nie ma problemów z bezpieczeństwem a TLSv1.2 tak naprawdę dopiero po spełnieniu określonych warunków, np. wyłączenie szyfrów `CBC`. Tylko te wersje zapewniają nowoczesne algorytmy kryptograficzne, dostarczają bezpieczne zestawy szyfrów oraz dodają wiele rozszerzeń poprawiających wydajność i bezpieczeńśtwo. TLSv1.2 poprawia zestawy szyfrów, które zmniejszają zależność od szyfrów blokowych, które to zostały wykorzystane przez wymienione wczesniej ataki typu BEAST oraz POODLE.
 
 Co ciekawe, Craig Young, badacz bezpieczeństwa w zespole firmy Tripwire, znalazł luki w TLSv1.2, które pozwalają na ataki podobne do POODLE ze względu na ciągłe wsparcie w protokole TLSv1.2 dla dawno przestarzałych metod kryptograficznych, tj. szyfrów blokowych `CBC`. Znalezione słabości umożliwiają ataki typu man-in-the-middle na zaszyfrowane sesje użytkownika.
 
   > Używanie szyfrów `CBC` (ang. _Cipher Block Chaining_) nie stanowi samo w sobie luki, którymi de fakto są luki w zabezpieczeniach, takie jak Zombie POODLE, GOLDENDOODLE, 0-Length OpenSSL i Sleeping POODLE, które zostały opublikowane dla serwisów korzystających z trybów szyfrowania blokowego `CBC`. Luki te mają zastosowanie tylko wtedy, gdy serwer używa TLSv1.0, TLSv1.1 lub TLSv1.2 z tymi trybami szyfrowania. Spójrz na [Zombie POODLE, GOLDENDOODLE, & How TLSv1.3 Can Save Us All](https://i.blackhat.com/asia-19/Fri-March-29/bh-asia-Young-Zombie-Poodle-Goldendoodle-and-How-TLSv13-Can-Save-Us-All.pdf) <sup>[pdf]</sup>  z Black Hat Asia 2019. Na TLSv1.0 i TLSv1.1 mogą mieć wpływ luki, takie jak [FREAK, POODLE, BEAST i CRIME](https://www.acunetix.com/blog/articles/tls-vulnerabilities-attacks-final-part/).
 
-Oprócz tego TLSv1.2 wymaga starannej konfiguracji i przerzuca całą odpowiedzialność jej poprawnej implementacji na administratora, w celu zapewnienia, że m.in. przestarzałe zestawy szyfrów ze zidentyfikowanymi podatnościami nie będą używane. TLSv1.3 eliminuje potrzebę podejmowania tych decyzji i nie wymaga żadnej konkretnej konfiguracji, ponieważ wszystkie szyfry są bezpieczne, a domyślnie OpenSSL włącza tylko tryby `GCM` i `Chacha20/Poly1305` dla TLSv1.3, bez włączania `CCM`.
+Oprócz tego TLSv1.2 wymaga starannej konfiguracji i przerzuca całą odpowiedzialność jej poprawnej implementacji na administratora, w celu zapewnienia, m.in. że przestarzałe zestawy szyfrów ze zidentyfikowanymi podatnościami nie będą używane. TLSv1.3 eliminuje potrzebę podejmowania tych decyzji i nie wymaga żadnej konkretnej konfiguracji, ponieważ wszystkie szyfry są bezpieczne, a domyślnie OpenSSL włącza tylko tryby `GCM` i `Chacha20/Poly1305` dla TLSv1.3, bez włączania `CCM`, który zarezerwowany jest dla urządzeń charakteryzujących się słabszą konfiguracją sprzętową.
 
 # Czy włączenie TLSv1.3 ma sens?
 
-TLSv1.3 to nowa wersja TLS, która zapewnia szybszą i bezpieczniejszą komunikację przez kilka następnych lat (poprawia także bezpieczeństwo, prywatność i wydajność TLSv1.2). Co więcej, TLSv1.3 jest dostarczany bez wielu rzeczy (zostały usunięte): renegocjacja, kompresja i wiele starych i słabych szyfrów, tj. `DSA`, `RC4`, `SHA1`, `MD5` i `CBC`.
+TLSv1.3 to nowa wersja TLS, która zapewnia szybszą i bezpieczniejszą komunikację przez kilka następnych lat (poprawia także bezpieczeństwo, prywatność i wydajność TLSv1.2). Co więcej, TLSv1.3 jest dostarczany bez wielu rzeczy (zostały usunięte): renegocjacji, kompresji oraz wielu starych i słabych szyfrów, tj. `DSA`, `RC4`, `SHA1`, `MD5` i `CBC`.
 
-TLSv1.3 rozwiązuje wiele problemów pojawiających się we wcześniejszych wersjach. Jeszcze bardziej przyspiesza szyfrowane połączenia dzięki takim funkcjom, jak fałszywy start TLS (opisany w [RFC 7918](https://tools.ietf.org/html/rfc7918)) oraz zerowy czas podróży w obie strony (0-RTT) opisany w [Introducing Zero Round Trip Time Resumption (0-RTT)](https://blog.cloudflare.com/introducing-0-rtt/).
+TLSv1.3 rozwiązuje wiele problemów pojawiających się we wcześniejszych wersjach. Jeszcze bardziej przyspiesza szyfrowane połączenia dzięki takim rozszerzeniom, jak _TLS False Start_ ([RFC 7918](https://tools.ietf.org/html/rfc7918)) czy 0-RTT opisany w artykule [Introducing Zero Round Trip Time Resumption (0-RTT)](https://blog.cloudflare.com/introducing-0-rtt/).
 
   > Mówiąc najprościej, w przypadku TLSv1.2 potrzebne były dwa przejścia w celu dokończenia uzgadniania TLS. Wersja TLSv1.3 wymaga tylko jednej operacji w obie strony, co z kolei zmniejsza opóźnienie szyfrowania o połowę.
 
@@ -92,7 +92,7 @@ TLSv1.3 rozwiązuje wiele problemów pojawiających się we wcześniejszych wers
 
 Jak już wspomniałem wyżej, TLSv1.3 eliminuje wiele problemów wystepujących w starszych wersjach. Usuwa stare i podatne zestawy szyfrów, rozwiązuje wiele krytycznych podatności, tj. [OpenSSL Key Recovery Attack on DH small subgroups (CVE-2016-0701)](http://blog.intothesymmetry.com/2016/01/openssl-key-recovery-attack-on-dh-small.html) czy atak [FREAK](https://censys.io/blog/freak).
 
-Jednak moim zdaniem, co najważniejsze, rozwiązuje w pełni największy problem związany z TLSv1.2 — jego odpowiednią konfigurację. Dzięki temu nie naraża aplikacje na ataki, ponieważ protokół jest w pewnym sensie znacznie prostszy, przez to administratorzy i programiści mają mniejszą możliwość jego błędnej konfiguracji.
+Jednak moim zdaniem, co najważniejsze, rozwiązuje w pełni największy problem związany z TLSv1.2 — jego odpowiednią konfigurację. Dzięki temu nie naraża aplikacji na wiele wcześniejszych ataków, ponieważ protokół jest w pewnym sensie znacznie prostszy, przez to administratorzy i programiści mają mniejszą możliwość jego błędnej konfiguracji.
 
 Niestety wersja TLSv1.3 nie jest jeszcze w pełni wspierana przez wszystkich klientów:
 
@@ -110,19 +110,23 @@ Myślę, że najlepszym sposobem na wdrożenie bezpiecznej konfiguracji jest:
 
 - włączenie TLSv1.2 (jako minimalnej obsługiwanej wersji)
   - bez szyfrów `CBC`
-  - z jawnym wskazaniem szyfrów `ChaCha20-Poly1305` i `AES/GCM`, które powinny być preferowane nad `CBC`
+  - z jawnym wskazaniem szyfrów `AES/GCM` i `ChaCha20-Poly1305`, które powinny być preferowane nad `CBC`
 - wlącznie TLSv1.3
   - który jest bezpieczniejszy ze względu na poprawę obsługi i wykluczenie wszystkiego, co stało się przestarzałe od czasu pojawienia się TLSv1.2
 
-Zatem uczynienie TLSv1.2 „minimalnym poziomem protokołu” i odpowiednio skonfigurowanym to solidny wybór i najlepsza praktyka w branży (wszystkie standardy branżowe, takie jak PCI-DSS, HIPAA, NIST, zdecydowanie sugerują stosowanie TLSv1.2 niż TLSv1.1/v1.0).
+Zatem odpowiednia konfiguracja oraz uczynienie TLSv1.2 „minimalnym poziomem protokołu” to solidny wybór i najlepsza praktyka w branży (wszystkie standardy branżowe, takie jak PCI-DSS, HIPAA, NIST, zdecydowanie sugerują stosowanie TLSv1.2 niż TLSv1.1/v1.0).
 
-TLSv1.2 jest prawdopodobnie niewystarczający do obsługi starszego klienta. Wytyczne NIST nie mają zastosowania do wszystkich przypadków użycia i zawsze należy przeanalizować bazę użytkowników przed podjęciem decyzji, które protokoły mają być obsługiwane lub nie (na przykład poprzez dodanie zmiennych formatów TLS i szyfrów do formatu dziennika).
+Należy mieć jednak świadomość, że TLSv1.2 jest prawdopodobnie niewystarczający do obsługi starszego klienta. Wytyczne NIST nie mają zastosowania do wszystkich przypadków użycia i zawsze należy przeanalizować bazę użytkowników (na przykład poprzez dodanie do formatu dziennika logowania wersji TLS i szyfrów) przed podjęciem decyzji, które protokoły mają być obsługiwane lub nie.
 
   > W przypadku TLSv1.3 zastanów się nad użyciem [ssl_early_data](https://github.com/tlswg/tls13-spec/issues/1001), aby zezwolić na uzgadnianie TLSv1.3 0-RTT.
 
-Jeżeli masz wątpliwości związane z wyłączeniem starszych wersji TLS, np. jak wspomiałem wyłączenie TLSv1.1 może uniemożliwić komunikację starszym klientom, zastanów się, jaki jest sens stosowania protokołów niezapewniających odpowiedniego poziomu bezpieczeństwa, jeżeli dostępne są znacznie lepsze (pod każdym względem) wersje? Skoro mamy możliwość skonfigurowania naszych serwerów do obsługi protokołów technicznie przewyższających ich starsze odmiany, i to bardzo niskim kosztem, nie powinniśmy zastanawiać się ani chwili. Myślę, że jest to całkiem sensowny argument, mimo że nie kluczowy.
+Jeżeli masz wątpliwości związane z wyłączeniem starszych wersji TLS, np. jak wspomniałem wyłączenie TLSv1.1 może uniemożliwić komunikację starszym klientom, zastanów się, jaki jest sens stosowania protokołów niezapewniających odpowiedniego poziomu bezpieczeństwa? Zwłaszcza jeżeli dostępne są znacznie lepsze (pod każdym względem) wersje? Skoro mamy możliwość skonfigurowania naszych serwerów do obsługi protokołów technicznie przewyższających ich starsze odmiany, i to bardzo niskim kosztem, nie powinniśmy zastanawiać się ani chwili. Myślę, że jest to całkiem sensowny argument, mimo że nie kluczowy.
 
-Oczywiście jest wiele opinii na ten temat. Powinniśmy mieć także świadomość, że ew. podatność nie zawsze jest prosta do wykorzystania i bardzo często musi zostać spełnionych kilka dodatkowych warunków, aby możliwe było jej wykorzystanie. Stąd pozostawienie wersji TLSv1.1 nie oznacza od razu końca świata — powinno być jednak zaplanowane jego wyłączenie jako jeden z etapów całej strategii obsługi TLS przez nasze serwery, w którym niewątpliwie powinno znaleźć się także odpowiednie uświadomienie klientów o możliwych konsekwencjach jego pozostawienia.
+Oczywiście jest wiele opinii na ten temat. Powinniśmy mieć także świadomość, że ew. podatność nie zawsze jest prosta do wykorzystania i bardzo często musi zostać spełnionych kilka dodatkowych warunków, aby możliwe było jej wykorzystanie. Nie powinien to być jednak argument za pozostawieniem lub odwlekaniem wyłączenia wątpliwych wersji TLS.
+
+Tymczasowe wykorzystanie TLSv1.1 nie oznacza od razu końca świata — jednak jego wyłączenie powinno być moim zdaniem jednym z etapów planowania strategii obsługi TLS przez nasze serwery, w której niewątpliwie powinno znaleźć się także odpowiednie uświadomienie klientów o możliwych konsekwencjach jego pozostawienia.
+
+Na koniec przytoczę Prawo Gumpersona: _Prawdopodobieństwo każdego zdarzenia jest odwrotnie proporcjonalne do stopnia, w jakim jest ono pożądane._
 
 # Przykłady konfiguracji
 
@@ -195,5 +199,6 @@ ssl_protocols TLSv1.2 TLSv1.1;
 - [SSL and TLS Deployment Best Practices](https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices)
 - [What level of SSL or TLS is required for HIPAA compliance?](https://luxsci.com/blog/level-ssl-tls-required-hipaa.html)
 - [AEAD Ciphers - shadowsocks](https://shadowsocks.org/en/spec/AEAD-Ciphers.html)
+- [Building a faster and more secure web with TCP Fast Open, TLS False Start, and TLS 1.3](https://blogs.windows.com/msedgedev/2016/06/15/building-a-faster-and-more-secure-web-with-tcp-fast-open-tls-false-start-and-tls-1-3/)
 - [SSL Labs Grade Change for TLS 1.0 and TLS 1.1 Protocols](https://blog.qualys.com/ssllabs/2018/11/19/grade-change-for-tls-1-0-and-tls-1-1-protocols)
 - [ImperialViolet - TLS 1.3 and Proxies](https://www.imperialviolet.org/2018/03/10/tls13.html)
