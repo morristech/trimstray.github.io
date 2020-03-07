@@ -82,7 +82,7 @@ Oprócz tego TLSv1.2 wymaga starannej konfiguracji i przerzuca całą odpowiedzi
 
 TLSv1.3 to nowa wersja TLS, która zapewnia szybszą i bezpieczniejszą komunikację przez kilka następnych lat (poprawia także bezpieczeństwo, prywatność i wydajność TLSv1.2). Co więcej, TLSv1.3 jest dostarczany bez wielu rzeczy (zostały usunięte): renegocjacji, kompresji oraz wielu starych i słabych szyfrów, tj. `DSA`, `RC4`, `SHA1`, `MD5` i `CBC`.
 
-TLSv1.3 rozwiązuje wiele problemów pojawiających się we wcześniejszych wersjach. Jeszcze bardziej przyspiesza szyfrowane połączenia dzięki takim rozszerzeniom, jak _TLS False Start_ ([RFC 7918](https://tools.ietf.org/html/rfc7918)) czy 0-RTT opisany w artykule [Introducing Zero Round Trip Time Resumption (0-RTT)](https://blog.cloudflare.com/introducing-0-rtt/).
+TLSv1.3 rozwiązuje wiele problemów pojawiających się we wcześniejszych wersjach. Jeszcze bardziej przyspiesza szyfrowane połączenia dzięki takim rozszerzeniom, jak TLS False Start (patrz: [RFC 7918](https://tools.ietf.org/html/rfc7918)) czy 0-RTT opisany w artykule [Introducing Zero Round Trip Time Resumption (0-RTT)](https://blog.cloudflare.com/introducing-0-rtt/).
 
   > Mówiąc najprościej, w przypadku TLSv1.2 potrzebne były dwa przejścia w celu dokończenia uzgadniania TLS. Wersja TLSv1.3 wymaga tylko jednej operacji w obie strony, co z kolei zmniejsza opóźnienie szyfrowania o połowę.
 
@@ -100,7 +100,7 @@ Niestety wersja TLSv1.3 nie jest jeszcze w pełni wspierana przez wszystkich kli
   <img src="/assets/img/posts/tlsv1.3_support.png">
 </p>
 
-Cloudflare ma doskonały artykuł na temat tego, [dlaczego TLS 1.3 nie jest jeszcze dostępny we wszystkich przeglądarkach](https://blog.cloudflare.com/why-tls-1-3-isnt-in-browsers-yet/).
+Cloudflare udostępnił świetny [artykuł](https://blog.cloudflare.com/why-tls-1-3-isnt-in-browsers-yet/) na temat tego, dlaczego TLS 1.3 nie jest jeszcze dostępny we wszystkich przeglądarkach oraz dlaczego cały proces trwa tak długo.
 
 NGINX wspiera TLSv1.3 od wersji 1.13.0 wydanej w kwietniu 2017 r., pod warunkiem, że obsługiwaną wersją biblioteki OpenSSL jest min. 1.1.1 (lub nowszy).
 
@@ -111,7 +111,7 @@ Myślę, że najlepszym sposobem na wdrożenie bezpiecznej konfiguracji jest:
 - włączenie TLSv1.2 (jako minimalnej obsługiwanej wersji)
   - bez szyfrów `CBC`
   - z jawnym wskazaniem szyfrów `AES/GCM` i `ChaCha20-Poly1305` jako priorytetowych
-- włącznie TLSv1.3
+- włączenie TLSv1.3
   - który jest bezpieczniejszy ze względu na poprawę obsługi i wykluczenie wszystkiego, co stało się przestarzałe od czasu pojawienia się TLSv1.2
 
 Zatem odpowiednia konfiguracja oraz uczynienie TLSv1.2 „minimalnym poziomem protokołu” to solidny wybór i najlepsza praktyka w branży (wszystkie standardy branżowe, takie jak PCI-DSS, HIPAA, NIST, zdecydowanie sugerują stosowanie TLSv1.2 niż TLSv1.1/v1.0).
