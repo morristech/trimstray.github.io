@@ -14,6 +14,8 @@ Niedawno jednym z problemów jaki miałem okazję rozwiązać, było umożliwien
 
 Nie dało się tego wykonać za pomocą standardowych przekierowań, tj. **301** i **302**. Rozwiązaniem było wykorzystanie przekierowania o kodzie **307** lub **308** tylko dla metody `POST`, dzięki czemu pierwotna metoda nie była zamieniana na metodę `GET` w związku z "przejściem" pod inne miejsce docelowe.
 
+Dlatego zaleca się stosowanie kodu 301 tylko w odpowiedzi na metody `GET` lub `HEAD` oraz zamiast tego stosowanie stałego przekierowania 308 dla metod `POST`, ponieważ zmiana metody jest wyraźnie zabroniona w tym stanie (źródło: [Mozilla Web Docs - 301 Moved Permanently](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301)).
+
 # Opis wybranych przekierowań
 
 Protokół **HTTP** definiuje kilka typów przekierowań. Najczęściej wykorzystywane są te o kodach **301** oraz **302**.
