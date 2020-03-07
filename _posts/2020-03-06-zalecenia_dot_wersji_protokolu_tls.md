@@ -28,9 +28,9 @@ Poniżej znajduje się tabela z wszystkimi dostępnymi wersjami SSL/TLS:
 
 # TLS w wersji 1.2 i 1.3
 
-Zaleca się włączyć TLSv1.2 oraz TLSv1.3, oraz całkowicie wyłączyć SSLv2, SSLv3, TLSv1.0 i TLSv1.1, które mają słabości protokołu i używają starszych zestawów szyfrów (nie zapewniają żadnych nowoczesnych trybów szyfrowania), których tak naprawdę nie powinniśmy obecnie używać.
+Zaleca się, aby włączenie tylko wersji TLSv1.2 oraz TLSv1.3 było najwyższym priorytetem dla każdej oragnizacji. Co więcej, należy całkowicie wyłączyć SSLv2, SSLv3, TLSv1.0 i TLSv1.1, które mają słabości protokołu i używają starszych zestawów szyfrów (nie zapewniają żadnych nowoczesnych trybów szyfrowania), których tak naprawdę nie powinniśmy obecnie używać.
 
-Największą zaletą porzucenia TLSv1.0/v1.1 jest to, że nowoczesne szyfry `AEAD` są obsługiwane tylko przez TLSv1.2 i nowsze wersje.
+  > Największą zaletą porzucenia TLSv1.0/v1.1 jest to, że nowoczesne szyfry `AEAD` są obsługiwane tylko przez TLSv1.2 i nowsze wersje.
 
 TLSv1.2 jest obecnie najczęściej używaną wersją TLS i wprowadza kilka ulepszeń w zakresie bezpieczeństwa w porównaniu do starszych wersji. Zdecydowana większość witryn obsługuje TLSv1.2, ale wciąż istnieją takie, które tego nie robią (co więcej, wciąż nie wszyscy klienci są kompatybilni z każdą wersją TLS).
 
