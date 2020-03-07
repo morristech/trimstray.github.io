@@ -104,7 +104,13 @@ NGINX wspiera TLSv1.3 od wersji 1.13.0 wydanej w kwietniu 2017 r., pod warunkiem
 
 # Zalecenia
 
-Myślę, że najlepszym sposobem na wdrożenie bezpiecznej konfiguracji jest włączenie TLSv1.2 (jako minimalnej obsługiwanej wersji) bez szyfrów `CBC`, z jawnym wskazaniem szyfrów `ChaCha20` + `Poly1305` lub `AES/GCM`, które powinny być preferowane nad `CBC` (por. atak BEAST) lub TLSv1.3, który jest bezpieczniejszy ze względu na poprawę obsługi i wykluczenie wszystkiego, co stało się przestarzałe od czasu pojawienia się TLSv1.2.
+Myślę, że najlepszym sposobem na wdrożenie bezpiecznej konfiguracji jest:
+
+- włączenie TLSv1.2 (jako minimalnej obsługiwanej wersji)
+  - bez szyfrów `CBC`
+  - z jawnym wskazaniem szyfrów `ChaCha20-Poly1305` i `AES/GCM`, które powinny być preferowane nad `CBC`
+- wlącznie TLSv1.3
+  - który jest bezpieczniejszy ze względu na poprawę obsługi i wykluczenie wszystkiego, co stało się przestarzałe od czasu pojawienia się TLSv1.2
 
 Zatem uczynienie TLSv1.2 „minimalnym poziomem protokołu” i odpowiednio skonfigurowanym to solidny wybór i najlepsza praktyka w branży (wszystkie standardy branżowe, takie jak PCI-DSS, HIPAA, NIST, zdecydowanie sugerują stosowanie TLSv1.2 niż TLSv1.1/v1.0).
 
@@ -146,7 +152,7 @@ ssl_protocols TLSv1.2 TLSv1.1;
 
 &nbsp;&nbsp; ssllabs score: <b>95%</b>
 
-Zewnętrzne zasoby:
+# Zewnętrzne zasoby
 
 - [The Transport Layer Security (TLS) Protocol Version 1.2](https://www.ietf.org/rfc/rfc5246.txt) <sup>[IETF]</sup>
 - [The Transport Layer Security (TLS) Protocol Version 1.3](https://tools.ietf.org/html/draft-ietf-tls-tls13-18) <sup>[IETF]</sup>
